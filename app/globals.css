@@ -2,8 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
+@layer {
+  @import url(https://fonts.googleapis.com/css?family=Mulish:200,300,regular,500,600,700,800,900,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic);
+  @import url(https://fonts.googleapis.com/css?family=Montserrat:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic);
+  html {
+    font-family: "Mulish", sans-serif;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: "Montserrat", sans-serif;
+  }
+
+  .inner {
+    width: min(140ch, 100% - 4rem);
+    margin-inline: auto;
+  }
+  input {
+    appearance: none;
+    outline: none;
+  }
 }
 
 @layer base {
