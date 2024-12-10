@@ -13,6 +13,7 @@ import { useState } from "react";
 import { advantages, disadvantages } from "@/constants/prosCons";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Footer from "@/components/landing/Footer";
+import DropDownNav from "@/components/landing/DropDownNav";
 
 export default function Home() {
   const [showAll, setShowAll] = useState<boolean>(false);
@@ -25,11 +26,12 @@ export default function Home() {
   const visibleItems = visibleRows * itemsPerRow;
 
   return (
-    <div className="bg-white relative dark:bg-appDarkGradient">
+    <div className="bg-white relative dark:bg-appDarkGradient overflow-x-hidden w-full">
       <div className="fixed w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <CryptoBg />
       </div>
       <PublicNav />
+      <DropDownNav />
       <section className="min-h-screen grid mb-12 justify-items-center before:block before:h-32">
         <div className="inner text-center mt-12 grid justify-items-center gap-4">
           <motion.div
@@ -37,7 +39,7 @@ export default function Home() {
             whileInView={{ opacity: 1, translateY: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <h1 className="text-7xl font-bold">
+            <h1 className="text-3xl md:text-7xl font-bold">
               Simplify Success, <br /> Trade Smarter
             </h1>
           </motion.div>
@@ -52,7 +54,7 @@ export default function Home() {
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
           >
-            <p className="max-w-prose">
+            <p className="max-w-prose text-sm">
               Copy-Trading Markets empowers you to achieve your financial goals
               by following strategies that work. Harness the expertise of
               seasoned traders and make informed decisions with confidence.
@@ -63,7 +65,7 @@ export default function Home() {
           initial={{ opacity: 0, translateY: 50 }}
           whileInView={{ opacity: 1, translateY: 0 }}
           transition={{ duration: 0.5 }}
-          className="max-w-3xl opacity-75 relative mt-6 rounded-lg overflow-hidden aspect-video"
+          className="max-w-3xl mx-4 w-full opacity-75 relative mt-6 rounded-lg overflow-hidden aspect-video"
         >
           <Image
             src={dashboardImg}
@@ -79,7 +81,7 @@ export default function Home() {
       </section>
 
       <section className="py-12">
-        <div className="inner grid gap-2-b text-center justify-items-center">
+        <div className="inner grid gap-2 text-center justify-items-center">
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
@@ -88,26 +90,25 @@ export default function Home() {
           >
             Tailored for Every Investor
           </motion.span>
-          <motion.div
+
+          <motion.h1
             initial={{ opacity: 0, translateY: -50 }}
             whileInView={{ opacity: 1, translateY: 0 }}
             transition={{ duration: 0.5 }}
+            className="text-2xl md:text-5xl mb-3 font-bold"
           >
-            <h1 className="text-5xl mb-3 font-bold">
-              Effortless Trading, <br /> Real Results
-            </h1>
-          </motion.div>
-          <motion.div
+            Effortless Trading, <br /> Real Results
+          </motion.h1>
+          <motion.p
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
+            className="max-w-prose text-base"
           >
-            <p className="max-w-prose text-base">
-              Whether you're a beginner or an experienced investor, Copy-Trading
-              Markets adapts to your needs. Dive into a world where your success
-              is guided by expert insights and powerful tools.
-            </p>
-          </motion.div>
-          <div className="flex justify-center max-w-4xl gap-8 mt-12">
+            Whether you're a beginner or an experienced investor, Copy-Trading
+            Markets adapts to your needs. Dive into a world where your success
+            is guided by expert insights and powerful tools.
+          </motion.p>
+          <div className="flex flex-col sm:flex-row justify-center max-w-4xl gap-8 mt-12">
             <motion.div
               initial={{ opacity: 0, translateX: -70 }}
               whileInView={{ opacity: 1, translateX: 0 }}
@@ -120,7 +121,7 @@ export default function Home() {
               }}
               className="text-start border-opacity-45 max-w-2xl items-center rounded-3xl overflow-hidden backdrop-blur-md border border-appDarkCard dark:border-appGold200"
             >
-              <div className="aspect-video w-full rounded-b-3xl opacity-55 overflow-hidden">
+              <div className="aspect-video w-full rounded-b-3xl dark:opacity-55 overflow-hidden">
                 <Image
                   src={tradingView}
                   className="w-full object-cover"
@@ -129,10 +130,10 @@ export default function Home() {
               </div>
               <div className="p-8 min-h-72 flex flex-col justify-between items-start">
                 <div>
-                  <h1 className="font-semibold text-3xl mb-2">
+                  <h1 className="font-semibold text-xl sm:text-3xl mb-2">
                     Intelligent Automation
                   </h1>
-                  <p className="max-w-[50ch]">
+                  <p className="max-w-[50ch] text-sm sm:text-base">
                     Let the system work while you focus on what matters:
                     Reliable results optimized for maximum gains and hands-free
                     management that handles the complexity for you.
@@ -155,7 +156,7 @@ export default function Home() {
               }}
               className="text-start border-opacity-45 max-w-2xl items-center rounded-3xl overflow-hidden backdrop-blur-md border border-appDarkCard dark:border-appGold200"
             >
-              <div className="aspect-video w-full rounded-b-3xl opacity-55 overflow-hidden">
+              <div className="aspect-video w-full rounded-b-3xl dark:opacity-55 overflow-hidden">
                 <Image
                   src={marketsImg}
                   className="w-full object-cover"
@@ -164,10 +165,10 @@ export default function Home() {
               </div>
               <div className="p-8 min-h-72 flex flex-col justify-between items-start">
                 <div>
-                  <h1 className="font-semibold text-3xl mb-2">
+                  <h1 className="font-semibold text-xl sm:text-3xl mb-2">
                     Expert Guidance
                   </h1>
-                  <p className="max-w-[50ch]">
+                  <p className="max-w-[50ch] text-sm sm:text-base">
                     Follow top-performing traders, access their performance
                     metrics, and replicate proven strategies with real-time
                     support
@@ -207,7 +208,15 @@ export default function Home() {
 
       <section className="relative min-h-72 py-12">
         <div className="inner flex flex-col items-center">
-          <h2 className="text-3xl font-semibold mb-4">
+          <motion.span
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
+          >
+            Easy Setup
+          </motion.span>
+          <h2 className="text-xl sm:text-3xl text-center font-semibold mb-4">
             Get Started in Three Simple Steps
           </h2>
           <AnimatedSlideshow />
@@ -224,15 +233,15 @@ export default function Home() {
           >
             Why Choose Us
           </motion.span>
-          <h2 className="text-3xl font-semibold mb-2">
+          <h2 className="text-xl sm:text-3xl font-semibold mb-2">
             Why Copy-Trading Markets is the Clear Choice
           </h2>
-          <p className="text-base max-w-prose dark:text-appGold100">
+          <p className="text-sm sm:text-base max-w-prose dark:text-appGold100">
             Copy-Trading Markets stands out as the ultimate platform, delivering
             unmatched value and solutions that redefine the trading experience.
           </p>
 
-          <div className="flex justify-center max-w-4xl gap-8 mt-12">
+          <div className="flex flex-col sm:flex-row justify-center max-w-4xl gap-8 mt-12">
             <motion.div
               initial={{ opacity: 0, translateX: -70 }}
               whileInView={{ opacity: 1, translateX: 0 }}
@@ -243,7 +252,7 @@ export default function Home() {
                 damping: 30,
                 delay: 0.5,
               }}
-              className="text-start border-opacity-45 w-1/2 max-w-2xl p-8 items-center rounded-3xl overflow-hidden bg-appCardGold text-appDarkCard backdrop-blur-md border border-appDarkCard dark:border-appGold200"
+              className="text-start border-opacity-45 sm:w-1/2 max-w-2xl p-4 md:p-8 items-center rounded-3xl overflow-hidden bg-appCardGold text-appDarkCard backdrop-blur-md border border-appDarkCard dark:border-appGold200"
             >
               <div>
                 <h1 className="font-semibold text-xl mb-4">
@@ -275,7 +284,7 @@ export default function Home() {
                 damping: 30,
                 delay: 0.5,
               }}
-              className="text-start border-opacity-45 w-1/2 max-w-2xl p-8 items-center rounded-3xl overflow-hidden backdrop-blur-md border border-appDarkCard dark:border-appGold200"
+              className="text-start border-opacity-45 sm:w-1/2 max-w-2xl p-4 md:p-8 items-center rounded-3xl overflow-hidden backdrop-blur-md border border-appDarkCard dark:border-appGold200"
             >
               <div>
                 <h1 className="font-semibold text-xl mb-4">
@@ -315,11 +324,11 @@ export default function Home() {
           >
             Testimonials
           </motion.span>
-          <h2 className="text-3xl font-semibold mb-4">
+          <h2 className="text-xl sm:text-3xl text-center font-semibold mb-4">
             What Our Users Have to Say
           </h2>
           <div
-            className={`grid grid-cols-3 gap-4 max-w-4xl overflow-hidden ${
+            className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl overflow-hidden ${
               showAll ? "" : "max-h-[500px]" // Adjust height based on rows
             }`}
           >
@@ -357,7 +366,7 @@ export default function Home() {
       </section>
 
       <section className="relative py-12 bg-white dark:bg-appDarkGradient">
-        <div className="inner grid justify-items-center">
+        <div className="inner grid text-center justify-items-center">
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
@@ -370,7 +379,7 @@ export default function Home() {
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="text-3xl font-semibold mb-4"
+            className="text-xl sm:text-3xl font-semibold mb-2 sm:mb-4"
           >
             Trade Smarter with Copy-Trading Markets
           </motion.h2>
@@ -378,6 +387,7 @@ export default function Home() {
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
+            className="text-sm"
           >
             Your journey to financial success starts here. Ready to make your
             move?

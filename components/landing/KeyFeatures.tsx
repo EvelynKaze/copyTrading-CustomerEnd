@@ -4,8 +4,10 @@ import { motion } from "framer-motion";
 const KeyFeatures = () => {
   return (
     <div className="max-w-4xl grid justify-items-center">
-      <h2 className="text-3xl mb-8">Everything You Need to Maximize Profits</h2>
-      <div className="grid grid-cols-3">
+      <h2 className="text-xl sm:text-3xl mb-8">
+        Everything You Need to Maximize Profits
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-3">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           whileInView={{ scale: 1, opacity: 1 }}

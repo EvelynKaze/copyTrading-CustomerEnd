@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AnimatePresence } from "framer-motion";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Copy-Trades",
@@ -15,11 +16,13 @@ export default function RootLayout({
 }>) {
   return (
     <ThemeProvider>
-      <AnimatePresence>
-        <html lang="en">
-          <body className={`antialiased`}>{children}</body>
-        </html>
-      </AnimatePresence>
+      <Providers>
+        <AnimatePresence>
+          <html lang="en">
+            <body className={`antialiased`}>{children}</body>
+          </html>
+        </AnimatePresence>
+      </Providers>
     </ThemeProvider>
   );
 }
