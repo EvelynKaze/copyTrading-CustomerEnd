@@ -15,14 +15,14 @@ export default function Testimonials({
   avatar,
 }: Testimonial) {
   return (
-    <Card className="backdrop-blur-md bg-transparent border border-appGold20 hover:border-t-appGold100 hover:shadow-highlight-top hover:shadow-appGold100 transition-all duration-300 ease-linear shadow-inner shadow-appGold20">
+    <Card className="backdrop-blur-md bg-transparent border border-appDarkCard dark:border-appGold20 hover:border-t-appGold100 hover:shadow-highlight-top hover:shadow-appGold100 transition-all duration-300 ease-linear shadow-inner shadow-appGold20">
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
           <Avatar className="h-10 w-10 border">
             {avatar ? (
               <AvatarImage src={avatar} alt={name} />
             ) : (
-              <AvatarFallback className="bg-[#1D2033] text-white">
+              <AvatarFallback className="bg-[#1D2033] dark:text-white">
                 {name
                   .split(" ")
                   .map((n) => n[0])
@@ -31,11 +31,12 @@ export default function Testimonials({
             )}
           </Avatar>
           <div className="flex flex-col">
-            <div className="font-semibold text-white">{name}</div>
-            <div className="text-sm text-gray-400">{role}</div>
+            <div className="font-semibold dar:text-white">{name}</div>
+            <div className="text-sm dark:text-gray-400">{role}</div>
           </div>
         </div>
-        <div className="mt-4 text-gray-300 text-sm leading-relaxed">
+        <div className="mt-4 dark:text-gray-300 text-
+        sm leading-relaxed">
           {content}
         </div>
       </CardContent>

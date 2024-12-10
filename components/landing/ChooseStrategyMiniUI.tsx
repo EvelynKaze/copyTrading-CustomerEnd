@@ -7,7 +7,7 @@ export function ChooseStrategyMiniUI() {
         2
       </p>
       <h3 className="text-lg font-semibold mb-4">Choose Your Strategy</h3>
-      <p className="text-sm text-appGold100 mb-4">
+      <p className="text-sm dark:text-appGold100 mb-4">
         Select traders to follow or customize your plan.
       </p>
       <div className="space-y-3">

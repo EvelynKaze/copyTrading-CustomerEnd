@@ -38,7 +38,7 @@ export default function CryptoBg() {
         >
           <Icon
             icon={cryptoIcons[currentIconIndex].iconName}
-            className="text-[400px] text-appGold200"
+            className="text-[400px] dark:text-appGold200"
           />
         </motion.div>
       </AnimatePresence>

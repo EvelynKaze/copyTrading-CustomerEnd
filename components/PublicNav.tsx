@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const PublicNav = () => {
   return (
-    <nav className="fixed z-40 bg-appDarkGradient w-full flex justify-between items-center h-24 border-b  px-8 py-2">
+    <nav className="fixed z-40 backdrop-blur-md dark:bg-appDarkGradient w-full flex justify-between items-center h-24 border-b  px-8 py-2">
       <div className="flex items-center gap-4">
         <div className="border-r pr-4">
           <Logo />
