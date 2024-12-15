@@ -46,7 +46,7 @@ const Footer = () => {
   return (
     <div className="bg-appCardGold text-appDarkCard py-12 relative">
       <div className="absolute w-full h-full top-0 left-0 bg-appDarkGradient opacity-25"></div>
-      <div className="inner relative flex gap-3 flex-col sm:flex-row items-start z-10">
+      <div className="inner relative flex justify-between gap-3 flex-col sm:flex-row items-start z-10">
         <div className=" grid items-start grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
           {linksArray.map((linkSet, index) => (
             <FooterLinksSet
