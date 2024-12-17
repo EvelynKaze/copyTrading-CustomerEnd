@@ -1,101 +1,409 @@
+"use client";
+import CryptoBg from "@/components/landing/coins-bg";
+import { motion } from "framer-motion";
+import PublicNav from "../components/PublicNav";
 import Image from "next/image";
+import { dashboardImg, marketsImg, tradingView } from "@/constants/AppImages";
+import KeyFeatures from "@/components/landing/KeyFeatures";
+import AnimatedLine from "@/components/landing/AnimatedLine";
+import AnimatedSlideshow from "@/components/landing/StartingSteps";
+import testimonials from "@/constants/testimonials";
+import Testimonials from "@/components/landing/TestimonialCard";
+import { useState } from "react";
+import { advantages, disadvantages } from "@/constants/prosCons";
+import { Icon } from "@iconify/react/dist/iconify.js";
+import Footer from "@/components/landing/Footer";
+import DropDownNav from "@/components/landing/DropDownNav";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [showAll, setShowAll] = useState<boolean>(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  // Number of rows to show initially
+  const visibleRows = 2;
+  const itemsPerRow = 3;
+
+  // Calculate items to show based on the number of visible rows
+  const visibleItems = visibleRows * itemsPerRow;
+
+  return (
+    <div className="bg-white relative dark:bg-appDarkGradient overflow-x-hidden w-full">
+      <div className="fixed w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <CryptoBg />
+      </div>
+      <PublicNav />
+      <DropDownNav />
+      <section className="min-h-screen grid mb-12 justify-items-center before:block before:h-32">
+        <div className="inner text-center mt-12 grid justify-items-center gap-4">
+          <motion.div
+            initial={{ opacity: 0, translateY: -50 }}
+            whileInView={{ opacity: 1, translateY: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <h1 className="text-3xl md:text-7xl font-bold">
+              Simplify Success, <br /> Trade Smarter
+            </h1>
+          </motion.div>
+          <span className="dark:text-appGold200 flex gap-4 opacity-70 justify-center items-center">
+            <p>Learn</p>
+            <span>.</span>
+            <p>Copy</p>
+            <span>.</span>
+            <p>Succeed</p>
+          </span>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
           >
-            Read our docs
-          </a>
+            <p className="max-w-prose text-sm">
+              Copy-Trading Markets empowers you to achieve your financial goals
+              by following strategies that work. Harness the expertise of
+              seasoned traders and make informed decisions with confidence.
+            </p>
+          </motion.div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <motion.div
+          initial={{ opacity: 0, translateY: 50 }}
+          whileInView={{ opacity: 1, translateY: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-3xl mx-4 w-full opacity-75 relative mt-6 rounded-lg overflow-hidden aspect-video"
         >
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            src={dashboardImg}
+            alt="dashboard preview"
+            className="object-cover"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        </motion.div>
+      </section>
+      <section className="my-12">
+        <div className="inner w-full flex justify-center">
+          <AnimatedLine />
+        </div>
+      </section>
+
+      <section className="py-12">
+        <div className="inner grid gap-2 text-center justify-items-center">
+          <motion.span
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
+          >
+            Tailored for Every Investor
+          </motion.span>
+
+          <motion.h1
+            initial={{ opacity: 0, translateY: -50 }}
+            whileInView={{ opacity: 1, translateY: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-2xl md:text-5xl mb-3 font-bold"
+          >
+            Effortless Trading, <br /> Real Results
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="max-w-prose text-base"
+          >
+            Whether you're a beginner or an experienced investor, Copy-Trading
+            Markets adapts to your needs. Dive into a world where your success
+            is guided by expert insights and powerful tools.
+          </motion.p>
+          <div className="flex flex-col sm:flex-row justify-center max-w-4xl gap-8 mt-12">
+            <motion.div
+              initial={{ opacity: 0, translateX: -70 }}
+              whileInView={{ opacity: 1, translateX: 0 }}
+              transition={{
+                duration: 0.5,
+                type: "spring",
+                stiffness: 400,
+                damping: 30,
+                delay: 0.5,
+              }}
+              className="text-start border-opacity-45 max-w-2xl items-center rounded-3xl overflow-hidden backdrop-blur-md border border-appDarkCard dark:border-appGold200"
+            >
+              <div className="aspect-video w-full rounded-b-3xl dark:opacity-55 overflow-hidden">
+                <Image
+                  src={tradingView}
+                  className="w-full object-cover"
+                  alt="Markets"
+                />
+              </div>
+              <div className="p-8 min-h-72 flex flex-col justify-between items-start">
+                <div>
+                  <h1 className="font-semibold text-xl sm:text-3xl mb-2">
+                    Intelligent Automation
+                  </h1>
+                  <p className="max-w-[50ch] text-sm sm:text-base">
+                    Let the system work while you focus on what matters:
+                    Reliable results optimized for maximum gains and hands-free
+                    management that handles the complexity for you.
+                  </p>
+                </div>
+                <button className="px-4 py-1 text-sm rounded bg-appCardGold text-appDarkCard mt-6">
+                  Learn More
+                </button>
+              </div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, translateX: 70 }}
+              whileInView={{ opacity: 1, translateX: 0 }}
+              transition={{
+                duration: 0.5,
+                type: "spring",
+                stiffness: 400,
+                damping: 30,
+                delay: 0.5,
+              }}
+              className="text-start border-opacity-45 max-w-2xl items-center rounded-3xl overflow-hidden backdrop-blur-md border border-appDarkCard dark:border-appGold200"
+            >
+              <div className="aspect-video w-full rounded-b-3xl dark:opacity-55 overflow-hidden">
+                <Image
+                  src={marketsImg}
+                  className="w-full object-cover"
+                  alt="Markets"
+                />
+              </div>
+              <div className="p-8 min-h-72 flex flex-col justify-between items-start">
+                <div>
+                  <h1 className="font-semibold text-xl sm:text-3xl mb-2">
+                    Expert Guidance
+                  </h1>
+                  <p className="max-w-[50ch] text-sm sm:text-base">
+                    Follow top-performing traders, access their performance
+                    metrics, and replicate proven strategies with real-time
+                    support
+                  </p>
+                </div>
+                <button className="px-4 py-1 text-sm rounded bg-appCardGold text-appDarkCard mt-6">
+                  Discover More
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+      <section className="my-8">
+        <div className="inner w-full flex justify-center">
+          <AnimatedLine />
+        </div>
+      </section>
+      <section className="py-12">
+        <div className="inner grid justify-items-center text-center">
+          <motion.span
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
+          >
+            Key Features
+          </motion.span>
+          <KeyFeatures />
+        </div>
+      </section>
+      <section className="my-8">
+        <div className="inner w-full flex justify-center">
+          <AnimatedLine />
+        </div>
+      </section>
+
+      <section className="relative min-h-72 py-12">
+        <div className="inner flex flex-col items-center">
+          <motion.span
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
+          >
+            Easy Setup
+          </motion.span>
+          <h2 className="text-xl sm:text-3xl text-center font-semibold mb-4">
+            Get Started in Three Simple Steps
+          </h2>
+          <AnimatedSlideshow />
+        </div>
+      </section>
+
+      <section className="relative py-12">
+        <div className="inner grid justify-items-center text-center">
+          <motion.span
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
+          >
+            Why Choose Us
+          </motion.span>
+          <h2 className="text-xl sm:text-3xl font-semibold mb-2">
+            Why Copy-Trading Markets is the Clear Choice
+          </h2>
+          <p className="text-sm sm:text-base max-w-prose dark:text-appGold100">
+            Copy-Trading Markets stands out as the ultimate platform, delivering
+            unmatched value and solutions that redefine the trading experience.
+          </p>
+
+          <div className="flex flex-col sm:flex-row justify-center max-w-4xl gap-8 mt-12">
+            <motion.div
+              initial={{ opacity: 0, translateX: -70 }}
+              whileInView={{ opacity: 1, translateX: 0 }}
+              transition={{
+                duration: 0.5,
+                type: "spring",
+                stiffness: 400,
+                damping: 30,
+                delay: 0.5,
+              }}
+              className="text-start border-opacity-45 sm:w-1/2 max-w-2xl p-4 md:p-8 items-center rounded-3xl overflow-hidden bg-appCardGold text-appDarkCard backdrop-blur-md border border-appDarkCard dark:border-appGold200"
+            >
+              <div>
+                <h1 className="font-semibold text-xl mb-4">
+                  What Sets Us Apart?
+                </h1>
+                <ul className="grid gap-2">
+                  {advantages.map((item, index) => (
+                    <motion.li
+                      initial={{ opacity: 0, translateX: -50 }}
+                      whileInView={{ opacity: 1, translateX: 0 }}
+                      transition={{ duration: 0.5, delay: 0.8 }}
+                      className="border-b border-appDarkCard border-opacity-25 text-sm pb-2 flex gap-1 items-start"
+                      key={index}
+                    >
+                      <Icon className="mt-[2px]" icon={"charm:tick"} />
+                      {item}
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, translateX: 70 }}
+              whileInView={{ opacity: 1, translateX: 0 }}
+              transition={{
+                duration: 0.5,
+                type: "spring",
+                stiffness: 400,
+                damping: 30,
+                delay: 0.5,
+              }}
+              className="text-start border-opacity-45 sm:w-1/2 max-w-2xl p-4 md:p-8 items-center rounded-3xl overflow-hidden backdrop-blur-md border border-appDarkCard dark:border-appGold200"
+            >
+              <div>
+                <h1 className="font-semibold text-xl mb-4">
+                  The Pitfalls of Other Platforms
+                </h1>
+                <ul className="grid gap-2">
+                  {disadvantages.map((item, index) => (
+                    <motion.li
+                      initial={{ opacity: 0, translateX: -50 }}
+                      whileInView={{ opacity: 1, translateX: 0 }}
+                      transition={{ duration: 0.5, delay: 0.8 }}
+                      className="border-b border-appGold20 text-sm pb-2 flex gap-1 items-start"
+                      key={index}
+                    >
+                      <Icon className="mt-[2px]" icon={"mingcute:close-line"} />
+                      {item}
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+      <section className="my-8">
+        <div className="inner w-full flex justify-center">
+          <AnimatedLine />
+        </div>
+      </section>
+      <section className="relative py-12">
+        <div className="inner grid justify-items-center">
+          <motion.span
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
+          >
+            Testimonials
+          </motion.span>
+          <h2 className="text-xl sm:text-3xl text-center font-semibold mb-4">
+            What Our Users Have to Say
+          </h2>
+          <div
+            className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl overflow-hidden ${
+              showAll ? "" : "max-h-[500px]" // Adjust height based on rows
+            }`}
+          >
+            {testimonials
+              .slice(0, showAll ? testimonials.length : visibleItems)
+              .map((item, index) => (
+                <motion.div
+                  initial={{ opacity: 0, translateY: -50 }}
+                  whileInView={{ opacity: 1, translateY: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  key={index}
+                >
+                  <Testimonials
+                    name={item.name}
+                    avatar={item.avatar}
+                    role={item.role}
+                    content={item.content}
+                  />
+                </motion.div>
+              ))}
+          </div>
+
+          {/* View More Button */}
+          <button
+            className={`mt-4 px-4 py-2 ${
+              showAll
+                ? "shadow-inner shadow-appGold20 backdrop-blur-md"
+                : "text-appDarkCard bg-appCardGold"
+            } text-sm font-semibold rounded`}
+            onClick={() => setShowAll(!showAll)}
+          >
+            {showAll ? "View Less" : "View More"}
+          </button>
+        </div>
+      </section>
+
+      <section className="relative py-12 bg-white dark:bg-appDarkGradient">
+        <div className="inner grid text-center justify-items-center">
+          <motion.span
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
+          >
+            Get Started
+          </motion.span>
+          <motion.h2
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="text-xl sm:text-3xl font-semibold mb-2 sm:mb-4"
+          >
+            Trade Smarter with Copy-Trading Markets
+          </motion.h2>
+          <motion.p
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="text-sm"
+          >
+            Your journey to financial success starts here. Ready to make your
+            move?
+          </motion.p>
+          <motion.button
+            initial={{ scale: 0.8, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="mt-4 px-4 py-2 text-appDarkCard bg-appCardGold text-sm font-semibold rounded"
+          >
+            Get Started Today
+          </motion.button>
+        </div>
+      </section>
+
+      <Footer />
     </div>
   );
 }
