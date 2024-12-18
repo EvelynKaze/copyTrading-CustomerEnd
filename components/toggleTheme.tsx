@@ -9,7 +9,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 text-xl rounded text-appDarkCard dark:text-white"
+      className="text-xl rounded text-appDarkCard dark:text-white"
     >
       <Icon
         icon={
