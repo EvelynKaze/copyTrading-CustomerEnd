@@ -2,7 +2,7 @@
 
 import { Header } from "@/components/header";
 import { MobileSidebar } from "@/components/mobile-sidebar";
-import { Sidebar } from "@/components/sidebar";
+import Sidebar from "@/components/sidebar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <MobileSidebar />
       <div className="w-full md:flex-grow h-full">
         <Header />
-        <div className="p-2 h-[calc(100dvh-6rem)] md:p-12">{children}</div>
+        <div className="h-[calc(100dvh-6rem)] md:p-12">{children}</div>
       </div>
     </div>
   );

@@ -22,11 +22,15 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@radix-ui/react-select";
+} from "@/components/ui/select";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
+import { Copy } from "lucide-react";
+import DepositModal from "@/components/modals/deposit-modal";
+import { openModal } from "@/store/modalSlice";
+import { useDispatch } from "react-redux";
 
 // Define the cryptocurrencies and their wallet addresses
 const cryptocurrencies = [
@@ -56,7 +60,9 @@ type DepositFormValues = z.infer<typeof depositSchema>;
 
 const Deposit = () => {
   const { toast } = useToast();
+  const dispatch = useDispatch();
   const [selectedAddress, setSelectedAddress] = useState<string>("");
+  const [copied, setCopied] = useState(false);
   const form = useForm<DepositFormValues>({
     resolver: zodResolver(depositSchema),
     defaultValues: {
@@ -66,10 +72,16 @@ const Deposit = () => {
   });
 
   const onSubmit = (data: DepositFormValues) => {
-    toast({
-      title: "Deposit Successful",
-      description: `You have successfully deposited ${data.amount} to ${selectedAddress}.`,
-    });
+    dispatch(
+      openModal({
+        modalType: "deposit",
+        modalProps: {
+          address: selectedAddress,
+          currency: data.currency,
+          amount: data.amount,
+        },
+      })
+    );
   };
 
   const handleCurrencyChange = (currency: string) => {
@@ -77,14 +89,34 @@ const Deposit = () => {
       (crypto) => crypto.value === currency
     );
     setSelectedAddress(selectedCrypto?.address || "");
-    console.log(selectedCrypto, selectedAddress);
+    form.setValue("currency", currency);
+  };
+
+  const handleCopyAddress = async () => {
+    if (selectedAddress) {
+      try {
+        await navigator.clipboard.writeText(selectedAddress);
+        toast({
+          title: "Copied!",
+          description: "Wallet address has been copied to clipboard.",
+        });
+        setCopied(true);
+        setTimeout(() => setCopied(false), 3000);
+      } catch (err) {
+        toast({
+          title: "Copy failed",
+          description: "Failed to copy wallet address. Please try again.",
+          variant: "destructive",
+        });
+      }
+    }
   };
 
   return (
     <div className="flex h-full justify-center items-center w-full gap-6">
       <div className="p-8 grid justify-items-center">
-        <h1 className="text-4xl font-bold">Deposit Funds</h1>
-        <p className="mb-10 text-base">via Crypto Wallet</p>
+        <h1 className="text-2xl md:text-4xl font-bold">Deposit Funds</h1>
+        <p className="mb-10 text-sm md:text-base">via Crypto Wallet</p>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
@@ -109,52 +141,46 @@ const Deposit = () => {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Cryptocurrency</FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={(value) => {
-                              field.onChange(value);
-                              handleCurrencyChange(value);
-                            }}
-                          >
+                        <Select
+                          onValueChange={handleCurrencyChange}
+                          value={field.value}
+                        >
+                          <FormControl>
                             <SelectTrigger className="w-full text-start text-xs p-2 border border-appGold20">
                               <SelectValue placeholder="Select a currency" />
                             </SelectTrigger>
-                            <SelectContent className="bg-appDark grid gap-2 p-2 rounded text-sm">
-                              {cryptocurrencies.map((crypto) => (
-                                <SelectItem
-                                  className="hover:bg-appGold20 outline-none hover:border-none p-1 rounded"
-                                  key={crypto.value}
-                                  value={crypto.value}
-                                >
-                                  {crypto.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
+                          </FormControl>
+                          <SelectContent className="bg-appDark grid gap-2 p-2 rounded text-sm">
+                            {cryptocurrencies.map((crypto) => (
+                              <SelectItem
+                                className="hover:bg-appGold20 outline-none hover:border-none p-1 rounded"
+                                key={crypto.value}
+                                value={crypto.value}
+                              >
+                                {crypto.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
                   {/* Wallet Address Display */}
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm text-muted-foreground">
+                  <div className="flex items-end gap-2">
+                    <p className="text-sm w-5/6 overflow-x-scroll text-muted-foreground">
                       Wallet Address:{" "}
                       <span className="font-medium">{selectedAddress}</span>
                     </p>
                     <Button
+                      type="button"
                       variant="ghost"
                       size="sm"
-                      onClick={() => {
-                        navigator.clipboard.writeText(selectedAddress);
-                        toast({
-                          title: "Copied!",
-                          description:
-                            "Wallet address has been copied to clipboard.",
-                        });
-                      }}
+                      onClick={handleCopyAddress}
+                      disabled={!selectedAddress}
                     >
-                      Copy
+                      <Copy className="h-4 w-4" />
+                      {copied ? "Copied!" : "Copy"}
                     </Button>
                   </div>
                   <FormField
@@ -184,6 +210,7 @@ const Deposit = () => {
           </Card>
         </motion.div>
       </div>
+      <DepositModal />
     </div>
   );
 };

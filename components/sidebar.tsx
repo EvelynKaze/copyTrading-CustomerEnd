@@ -1,43 +1,36 @@
 "use client";
 
 import Link from "next/link";
-
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import ThemeToggle from "./toggleTheme";
 import { useTheme } from "./ThemeProvider";
 import DashLogo from "./dashlogo";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { closeSidebar } from "@/store/sideBar";
+import { useDispatch } from "react-redux";
 
 const navigation = [
-  { name: "Dashboard", href: "/", icon: "iconamoon:home-light", current: true },
-  {
-    name: "Deposit",
-    href: "/deposit",
-    icon: "ph:hand-deposit",
-    current: false,
-  },
-  {
-    name: "Withdraw",
-    href: "/withdraw",
-    icon: "ph:hand-withdraw",
-    current: false,
-  },
-  {
-    name: "History",
-    href: "/history",
-    icon: "solar:history-bold",
-    current: false,
-  },
+  { name: "Dashboard", href: "/dashboard", icon: "iconamoon:home-light" },
+  { name: "Deposit", href: "/dashboard/deposit", icon: "ph:hand-deposit" },
+  { name: "Withdraw", href: "/dashboard/withdraw", icon: "ph:hand-withdraw" },
+  { name: "History", href: "/dashboard/history", icon: "solar:history-bold" },
 ];
 
 const secondaryNavigation = [
-  { name: "Settings", href: "/settings", icon: "solar:settings-linear" },
-  { name: "Help", href: "/help", icon: "tabler:help" },
-  { name: "Log out", href: "/logout", icon: "solar:logout-outline" },
+  {
+    name: "Settings",
+    href: "/dashboard/settings",
+    icon: "solar:settings-linear",
+  },
+  { name: "Help", href: "/dashboard/help", icon: "tabler:help" },
+  { name: "Log out", href: "/dashboard/logout", icon: "solar:logout-outline" },
 ];
 
-export function Sidebar() {
+export default function Sidebar() {
+  const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
+  const dispatch = useDispatch();
+
   return (
     <div className="flex h-full w-56 flex-col border-r bg-white dark:bg-appDark">
       <div className="p-6">
@@ -46,25 +39,29 @@ export function Sidebar() {
         </Link>
       </div>
       <nav className="flex-1 space-y-1 px-3">
-        {navigation.map((item) => (
-          <Link
-            key={item.name}
-            href={item.href}
-            className={cn(
-              "group flex items-center gap-3 text-appDarkCard dark:text-white rounded-lg px-3 py-2 text-sm font-medium",
-              item.current
-                ? "bg-appCardGold dark:text-appDarkCard"
-                : "hover:bg-appGold20"
-            )}
-          >
-            <Icon
-              strokeWidth={1.5}
-              icon={`${item.icon}`}
-              className="h-5 w-5 text-3xl"
-            />
-            {item.name}
-          </Link>
-        ))}
+        {navigation.map((item) => {
+          const isActive = pathname === item.href;
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              onClick={() => dispatch(closeSidebar())}
+              className={cn(
+                "group flex items-center gap-3 text-appDarkCard dark:text-white rounded-lg px-3 py-2 text-sm font-medium",
+                isActive
+                  ? "bg-appCardGold dark:text-appDarkCard"
+                  : "hover:bg-appGold20"
+              )}
+            >
+              <Icon
+                strokeWidth={1.5}
+                icon={`${item.icon}`}
+                className="h-5 w-5 text-3xl"
+              />
+              {item.name}
+            </Link>
+          );
+        })}
       </nav>
       <nav className="mt-auto space-y-1 border-t px-3 py-4">
         <span
@@ -86,7 +83,12 @@ export function Sidebar() {
           <Link
             key={item.name}
             href={item.href}
-            className="group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium dark:text-white text-appDarkCard hover:bg-appGold20"
+            className={cn(
+              "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium dark:text-white text-appDarkCard hover:bg-appGold20",
+              pathname === item.href
+                ? "bg-appCardGold dark:text-appDarkCard"
+                : ""
+            )}
           >
             <Icon
               strokeWidth={1.5}

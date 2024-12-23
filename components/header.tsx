@@ -7,9 +7,9 @@ import ToggleSidebar from "./toggle-sidebar";
 
 export function Header() {
   return (
-    <header className="flex items-center justify-between border-b px-2 md:px-6 h-24 py-4">
+    <header className="flex items-center justify-between w-full border-b px-4 md:px-6 h-24 py-4">
       <ToggleSidebar />
-      <div className="flex flex-col md:gap-1">
+      <div className="sm:flex hidden flex-col md:gap-1">
         <h1 className="text-base sm:text-lg md:text-2xl font-semibold">
           Welcome Zarror!
         </h1>

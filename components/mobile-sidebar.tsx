@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
 import { closeSidebar } from "@/store/sideBar";
-import { Sidebar } from "@/components/sidebar";
+import Sidebar from "@/components/sidebar";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 export const MobileSidebar: React.FC = () => {
