@@ -12,10 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Header } from "../../../components/header";
 import { MarketTrends } from "../../../components/market-trends";
 import { QuickTransfer } from "../../../components/quick-transfer";
-import { Sidebar } from "../../../components/sidebar";
 import { StatsCards } from "../../../components/stats-cards";
 
 // Sample data
@@ -89,7 +87,7 @@ export default function UserDashboard() {
         </Card>
         <MarketTrends trends={trends} />
       </div>
-      <div className="w-80 space-y-6">
+      <div className="w-80 hidden lg:block space-y-6">
         <Card className="p-6">
           <div className="mb-4 flex items-center justify-between">
             <Button variant="ghost" className="font-semibold text-primary">
@@ -105,7 +103,18 @@ export default function UserDashboard() {
               <div className="text-2xl font-bold">$3,110.31</div>
             </div>
             <div className="space-y-2">
-              <Input defaultValue="0.1824" />
+              <div className="flex items-center gap-2">
+                <Input defaultValue="0.1824" />
+                <Select defaultValue="btc">
+                  <SelectTrigger className="w-20">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="eth">ETH</SelectItem>
+                    <SelectItem value="btc">BTC</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               <div className="flex items-center gap-2">
                 <Input defaultValue="0.1824" />
                 <Select defaultValue="eth">
@@ -118,7 +127,9 @@ export default function UserDashboard() {
                   </SelectContent>
                 </Select>
               </div>
-              <Button className="w-full">Buy ETH</Button>
+              <Button className="w-full bg-appCardGold text-appDark">
+                Buy ETH
+              </Button>
             </div>
           </div>
         </Card>

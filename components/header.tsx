@@ -3,18 +3,22 @@ import Image from "next/image";
 
 import { Input } from "@/components/ui/input";
 import { profilepic } from "@/constants/AppImages";
+import ToggleSidebar from "./toggle-sidebar";
 
 export function Header() {
   return (
-    <header className="flex items-center justify-between border-b px-6 h-24 py-4">
-      <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold">Welcome Zarror!</h1>
-        <p className="text-sm text-muted-foreground">
+    <header className="flex items-center justify-between border-b px-2 md:px-6 h-24 py-4">
+      <ToggleSidebar />
+      <div className="flex flex-col md:gap-1">
+        <h1 className="text-base sm:text-lg md:text-2xl font-semibold">
+          Welcome Zarror!
+        </h1>
+        <p className="text-xs sm:text-xs md:text-sm text-muted-foreground">
           Hope you are healthy and happy today...
         </p>
       </div>
       <div className="flex items-center gap-4">
-        <div className="relative">
+        <div className="relative hidden md:block">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input type="search" placeholder="Search..." className="w-64 pl-8" />
         </div>

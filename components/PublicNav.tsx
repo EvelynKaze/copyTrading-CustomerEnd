@@ -13,11 +13,6 @@ const PublicNav = () => {
         <div className="border-r">
           <Logo />
         </div>
-        <div className="text-base hidden md:flex gap-4 items-center">
-          <p>Solutions</p>
-          <p>Company</p>
-          <p>Resources</p>
-        </div>
       </div>
       <div className="flex items-center gap-2">
         <div className="hidden md:flex gap-1">
