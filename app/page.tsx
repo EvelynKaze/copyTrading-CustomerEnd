@@ -26,7 +26,7 @@ export default function Home() {
   const visibleItems = visibleRows * itemsPerRow;
 
   return (
-    <div className="bg-white relative dark:bg-appDarkGradient overflow-x-hidden w-full">
+    <div className="bg-white relative dark:bg-appDarkGradient w-full">
       <div className="fixed w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <CryptoBg />
       </div>

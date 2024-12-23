@@ -8,9 +8,9 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -27,39 +27,52 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
-const loginSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters long" }),
-});
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+const signupSchema = z
+  .object({
+    name: z
+      .string()
+      .min(2, { message: "Name must be at least 2 characters long" }),
+    email: z.string().email({ message: "Please enter a valid email address" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long" }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
-export default function LoginForm() {
+type SignupFormValues = z.infer<typeof signupSchema>;
+
+export default function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<SignupFormValues>({
+    resolver: zodResolver(signupSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
   const onSubmit = () => {
     setIsLoading(true);
+    // Simulate API call
     setIsLoading(false);
 
     toast({
-      title: "Login Successful",
-      description: "You have been successfully logged in.",
+      title: "Account created",
+      description: "You have successfully created an account.",
     });
   };
 
   return (
-    <div className="flex justify-center relative items-center w-full h-screen">
+    <div className="flex justify-center gap-4 relative items-center w-full h-screen">
       <div className="absolute top-8 right-8">
         <ThemeToggle />
       </div>
@@ -70,22 +83,35 @@ export default function LoginForm() {
         <Logo />
       </motion.div>
       <motion.div
-        initial={{ opacity: 0, translateX: 50 }}
-        whileInView={{ opacity: 1, translateX: 0 }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        whileInView={{ opacity: 1, scale: 1 }}
       >
-        <Card className="w-[300px] mx-4 sm:w-[350px]">
-          <CardHeader className="">
-            <CardTitle>Login</CardTitle>
+        <Card className=" w-[300px] sm:w-[350px]">
+          <CardHeader>
+            <CardTitle>Sign Up</CardTitle>
             <CardDescription>
-              Enter your email and password to log in.
+              Create a new account to get started.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4"
+                className="space-y-2"
               >
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter your name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="email"
@@ -108,7 +134,24 @@ export default function LoginForm() {
                       <FormControl>
                         <Input
                           type="password"
-                          placeholder="Enter your password"
+                          placeholder="Create a password"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Confirm Password</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="password"
+                          placeholder="Confirm your password"
                           {...field}
                         />
                       </FormControl>
@@ -121,19 +164,19 @@ export default function LoginForm() {
                   className="w-full bg-appCardGold text-appDark"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Logging in..." : "Log in"}
+                  {isLoading ? "Creating account..." : "Sign up"}
                 </Button>
               </form>
             </Form>
           </CardContent>
           <CardFooter className="flex justify-center">
             <p className="text-sm text-muted-foreground">
-              Don&apos;t have an account?{" "}
+              Already have an account?{" "}
               <Link
-                href={"/signup"}
-                className="text-appGold100 cursor-pointer hover:underline"
+                href={"/login"}
+                className="p-0 text-appGold100 cursor-pointer"
               >
-                Sign up
+                Log in
               </Link>
             </p>
           </CardFooter>

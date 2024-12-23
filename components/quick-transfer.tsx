@@ -1,9 +1,10 @@
 import { Plus } from "lucide-react";
-import Image from "next/image";
+// import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { QuickTransferUser } from "@/types/dashboard";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 interface QuickTransferProps {
   users: QuickTransferUser[];
@@ -19,13 +20,14 @@ export function QuickTransfer({ users }: QuickTransferProps) {
             key={user.id}
             className="flex h-10 w-10 items-center justify-center rounded-full hover:opacity-80"
           >
-            <Image
+            {/* <Image
               src={user.avatar}
               alt={user.name}
               width={40}
               height={40}
               className="rounded-full"
-            />
+            /> */}
+            <Icon icon={"solar:user-broken"} />
           </button>
         ))}
         <button className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
@@ -37,7 +39,7 @@ export function QuickTransfer({ users }: QuickTransferProps) {
           <label className="text-sm text-muted-foreground">Amount</label>
           <Input placeholder="$1,500" />
         </div>
-        <Button className="w-full">Transfer</Button>
+        <Button className="w-full bg-appCardGold text-appDark">Transfer</Button>
       </div>
     </div>
   );
