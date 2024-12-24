@@ -73,7 +73,6 @@ const mockTransactions = [
     status: "Completed",
     date: "2023-06-05T11:20:00Z",
   },
-  // Add more mock transactions as needed
 ];
 
 const TransactionHistory = () => {
@@ -127,7 +126,6 @@ const TransactionHistory = () => {
   );
 
   const handleDownload = () => {
-    // In a real application, you would generate a CSV here
     toast({
       title: "Download Started",
       description: "Your transaction history is being downloaded.",
@@ -145,26 +143,32 @@ const TransactionHistory = () => {
   };
 
   return (
-    <div className="flex h-full justify-center w-full">
+    <div className="flex h-full justify-center w-full sm:px-4 sm:px-0">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         whileInView={{ opacity: 1, scale: 1 }}
         className="w-full"
       >
         <Card className="border-0 shadow-none">
-          <CardHeader className="flex flex-row items-center justify-between">
+          <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-2 sm:space-y-0">
             <CardTitle className="text-2xl font-bold">
               Transaction History
             </CardTitle>
-            <Button onClick={handleDownload} className="bg-appCardGold">
-              <Download className="mr-2 h-4 w-4" />
-              Download CSV
+            <Button
+              onClick={handleDownload}
+              className="w-full text-appDarkCard sm:w-auto bg-appCardGold"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              <span>Download CSV</span>
             </Button>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-wrap gap-4 mb-4">
-              <Select onValueChange={(value) => handleFilter("type", value)}>
-                <SelectTrigger className="w-[180px]">
+            <div className="flex flex-col sm:flex-row gap-4 mb-4">
+              <Select
+                onValueChange={(value) => handleFilter("type", value)}
+                className="w-full sm:w-[180px]"
+              >
+                <SelectTrigger>
                   <SelectValue placeholder="Filter by Type" />
                 </SelectTrigger>
                 <SelectContent>
@@ -175,8 +179,9 @@ const TransactionHistory = () => {
               </Select>
               <Select
                 onValueChange={(value) => handleFilter("currency", value)}
+                className="w-full sm:w-[180px]"
               >
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger>
                   <SelectValue placeholder="Filter by Currency" />
                 </SelectTrigger>
                 <SelectContent>
@@ -186,8 +191,11 @@ const TransactionHistory = () => {
                   <SelectItem value="USDT">Tether (USDT)</SelectItem>
                 </SelectContent>
               </Select>
-              <Select onValueChange={(value) => handleFilter("status", value)}>
-                <SelectTrigger className="w-[180px]">
+              <Select
+                onValueChange={(value) => handleFilter("status", value)}
+                className="w-full sm:w-[180px]"
+              >
+                <SelectTrigger>
                   <SelectValue placeholder="Filter by Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -197,87 +205,92 @@ const TransactionHistory = () => {
                 </SelectContent>
               </Select>
               <Input
-                className="w-[200px]"
+                className="w-full sm:w-[200px]"
                 type="text"
                 placeholder="Search transactions..."
                 onChange={(e) => {
-                  // Implement search functionality here
                   console.log("Search:", e.target.value);
                 }}
               />
             </div>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead
-                    onClick={() => handleSort("type")}
-                    className="cursor-pointer"
-                  >
-                    Type{" "}
-                    {sortConfig.key === "type" && (
-                      <ArrowUpDown className="ml-2 h-4 w-4 inline" />
-                    )}
-                  </TableHead>
-                  <TableHead
-                    onClick={() => handleSort("amount")}
-                    className="cursor-pointer"
-                  >
-                    Amount{" "}
-                    {sortConfig.key === "amount" && (
-                      <ArrowUpDown className="ml-2 h-4 w-4 inline" />
-                    )}
-                  </TableHead>
-                  <TableHead
-                    onClick={() => handleSort("currency")}
-                    className="cursor-pointer"
-                  >
-                    Currency{" "}
-                    {sortConfig.key === "currency" && (
-                      <ArrowUpDown className="ml-2 h-4 w-4 inline" />
-                    )}
-                  </TableHead>
-                  <TableHead
-                    onClick={() => handleSort("status")}
-                    className="cursor-pointer"
-                  >
-                    Status{" "}
-                    {sortConfig.key === "status" && (
-                      <ArrowUpDown className="ml-2 h-4 w-4 inline" />
-                    )}
-                  </TableHead>
-                  <TableHead
-                    onClick={() => handleSort("date")}
-                    className="cursor-pointer"
-                  >
-                    Date{" "}
-                    {sortConfig.key === "date" && (
-                      <ArrowUpDown className="ml-2 h-4 w-4 inline" />
-                    )}
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {paginatedTransactions.map((transaction) => (
-                  <TableRow key={transaction.id}>
-                    <TableCell>{transaction.type}</TableCell>
-                    <TableCell>{transaction.amount}</TableCell>
-                    <TableCell>{transaction.currency}</TableCell>
-                    <TableCell>
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs ${
-                          transaction.status === "Completed"
-                            ? "bg-green-200 text-green-800"
-                            : "bg-yellow-200 text-yellow-800"
-                        }`}
-                      >
-                        {transaction.status}
-                      </span>
-                    </TableCell>
-                    <TableCell>{formatDate(transaction.date)}</TableCell>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead
+                      onClick={() => handleSort("type")}
+                      className="cursor-pointer"
+                    >
+                      Type{" "}
+                      {sortConfig.key === "type" && (
+                        <ArrowUpDown className="ml-2 h-4 w-4 inline" />
+                      )}
+                    </TableHead>
+                    <TableHead
+                      onClick={() => handleSort("amount")}
+                      className="cursor-pointer"
+                    >
+                      Amount{" "}
+                      {sortConfig.key === "amount" && (
+                        <ArrowUpDown className="ml-2 h-4 w-4 inline" />
+                      )}
+                    </TableHead>
+                    <TableHead
+                      onClick={() => handleSort("currency")}
+                      className="cursor-pointer"
+                    >
+                      Currency{" "}
+                      {sortConfig.key === "currency" && (
+                        <ArrowUpDown className="ml-2 h-4 w-4 inline" />
+                      )}
+                    </TableHead>
+                    <TableHead
+                      onClick={() => handleSort("status")}
+                      className="cursor-pointer"
+                    >
+                      Status{" "}
+                      {sortConfig.key === "status" && (
+                        <ArrowUpDown className="ml-2 h-4 w-4 inline" />
+                      )}
+                    </TableHead>
+                    <TableHead
+                      onClick={() => handleSort("date")}
+                      className="cursor-pointer"
+                    >
+                      Date{" "}
+                      {sortConfig.key === "date" && (
+                        <ArrowUpDown className="ml-2 h-4 w-4 inline" />
+                      )}
+                    </TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {paginatedTransactions.map((transaction) => (
+                    <TableRow key={transaction.id}>
+                      <TableCell className="font-medium">
+                        {transaction.type}
+                      </TableCell>
+                      <TableCell>{transaction.amount}</TableCell>
+                      <TableCell>{transaction.currency}</TableCell>
+                      <TableCell>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${
+                            transaction.status === "Completed"
+                              ? "bg-green-200 text-green-800"
+                              : "bg-yellow-200 text-yellow-800"
+                          }`}
+                        >
+                          {transaction.status}
+                        </span>
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {formatDate(transaction.date)}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
             <Pagination className="mt-4">
               <PaginationContent>
                 <PaginationItem>
@@ -290,16 +303,9 @@ const TransactionHistory = () => {
                     }
                   />
                 </PaginationItem>
-                {[...Array(pageCount)].map((_, i) => (
-                  <PaginationItem key={i}>
-                    <PaginationLink
-                      onClick={() => setCurrentPage(i + 1)}
-                      isActive={currentPage === i + 1}
-                    >
-                      {i + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
+                <PaginationItem>
+                  <PaginationLink isActive>{currentPage}</PaginationLink>
+                </PaginationItem>
                 <PaginationItem>
                   <PaginationNext
                     onClick={() =>

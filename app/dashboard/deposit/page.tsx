@@ -201,7 +201,10 @@ const Deposit = () => {
                     )}
                   />
 
-                  <Button type="submit" className="w-full bg-appCardGold">
+                  <Button
+                    type="submit"
+                    className="w-full text-appDarkCard bg-appCardGold"
+                  >
                     Deposit
                   </Button>
                 </form>

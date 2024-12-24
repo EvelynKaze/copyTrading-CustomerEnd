@@ -72,10 +72,13 @@ export default function SignupForm() {
   };
 
   return (
-    <div className="flex justify-center gap-4 relative items-center w-full h-screen">
+    <div className="flex flex-col md:flex-row-reverse justify-center gap-4 relative items-center w-full h-screen">
       <div className="absolute top-8 right-8">
         <ThemeToggle />
       </div>
+      <Link href="/" className="absolute top-8 left-8 text-sm">
+        Return
+      </Link>
       <motion.div
         initial={{ opacity: 0, translateX: -50 }}
         whileInView={{ opacity: 1, translateX: 0 }}
