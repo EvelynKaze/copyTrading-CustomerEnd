@@ -1,5 +1,6 @@
 import { closeNav, selectMenu } from "@/store/navSlice";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 
 const DropDownNav = () => {
@@ -36,18 +37,20 @@ const DropDownNav = () => {
           >
             Resources
           </li>
-          <li
+          <Link
+            href={"/login"}
             onClick={() => dispatch(closeNav())}
             className="hover:bg-gray-300 dark:hover:bg-appDark sm:py-2 p-2 sm:px-4 cursor-pointer"
           >
             Log in
-          </li>
-          <li
+          </Link>
+          <Link
+            href={"/signup"}
             onClick={() => dispatch(closeNav())}
             className="hover:bg-gray-300 dark:hover:bg-appDark sm:py-2 p-2 sm:px-4 cursor-pointer"
           >
             Sign up
-          </li>
+          </Link>
         </ul>
       </motion.div>
     )

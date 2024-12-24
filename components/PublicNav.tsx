@@ -24,7 +24,7 @@ const PublicNav = () => {
           </Link>
           <Link
             className="px-4 py-1 text-sm rounded border border-appGold200"
-            href={"/signin"}
+            href={"/signup"}
           >
             Sign in
           </Link>
