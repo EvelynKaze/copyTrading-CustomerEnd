@@ -37,7 +37,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, translateY: -50 }}
             whileInView={{ opacity: 1, translateY: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, once: true }}
           >
             <h1 className="text-3xl md:text-7xl font-bold">
               Simplify Success, <br /> Trade Smarter
@@ -53,6 +53,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ once: true }}
           >
             <p className="max-w-prose text-sm">
               Copy-Trading Markets empowers you to achieve your financial goals
@@ -64,7 +65,7 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, translateY: 50 }}
           whileInView={{ opacity: 1, translateY: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, once: true }}
           className="max-w-3xl mx-4 w-full opacity-75 relative mt-6 rounded-lg overflow-hidden aspect-video"
         >
           <Image
@@ -85,7 +86,7 @@ export default function Home() {
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, once: true }}
             className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
           >
             Tailored for Every Investor
@@ -94,7 +95,7 @@ export default function Home() {
           <motion.h1
             initial={{ opacity: 0, translateY: -50 }}
             whileInView={{ opacity: 1, translateY: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, once: true }}
             className="text-2xl md:text-5xl mb-3 font-bold"
           >
             Effortless Trading, <br /> Real Results
@@ -118,6 +119,7 @@ export default function Home() {
                 stiffness: 400,
                 damping: 30,
                 delay: 0.5,
+                once: true,
               }}
               className="text-start border-opacity-45 max-w-2xl items-center rounded-3xl overflow-hidden backdrop-blur-md border border-appDarkCard dark:border-appGold200"
             >
@@ -153,6 +155,7 @@ export default function Home() {
                 stiffness: 400,
                 damping: 30,
                 delay: 0.5,
+                once: true,
               }}
               className="text-start border-opacity-45 max-w-2xl items-center rounded-3xl overflow-hidden backdrop-blur-md border border-appDarkCard dark:border-appGold200"
             >
@@ -228,7 +231,7 @@ export default function Home() {
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, once: true }}
             className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
           >
             Why Choose Us
@@ -251,6 +254,7 @@ export default function Home() {
                 stiffness: 400,
                 damping: 30,
                 delay: 0.5,
+                once: true,
               }}
               className="text-start border-opacity-45 sm:w-1/2 max-w-2xl p-4 md:p-8 items-center rounded-3xl overflow-hidden bg-appCardGold text-appDarkCard backdrop-blur-md border border-appDarkCard dark:border-appGold200"
             >
@@ -263,7 +267,7 @@ export default function Home() {
                     <motion.li
                       initial={{ opacity: 0, translateX: -50 }}
                       whileInView={{ opacity: 1, translateX: 0 }}
-                      transition={{ duration: 0.5, delay: 0.8 }}
+                      transition={{ duration: 0.5, delay: 0.5, once: true }}
                       className="border-b border-appDarkCard border-opacity-25 text-sm pb-2 flex gap-1 items-start"
                       key={index}
                     >
@@ -283,6 +287,7 @@ export default function Home() {
                 stiffness: 400,
                 damping: 30,
                 delay: 0.5,
+                once: true,
               }}
               className="text-start border-opacity-45 sm:w-1/2 max-w-2xl p-4 md:p-8 items-center rounded-3xl overflow-hidden backdrop-blur-md border border-appDarkCard dark:border-appGold200"
             >
@@ -295,7 +300,7 @@ export default function Home() {
                     <motion.li
                       initial={{ opacity: 0, translateX: -50 }}
                       whileInView={{ opacity: 1, translateX: 0 }}
-                      transition={{ duration: 0.5, delay: 0.8 }}
+                      transition={{ duration: 0.5, delay: 0.5, once: true }}
                       className="border-b border-appGold20 text-sm pb-2 flex gap-1 items-start"
                       key={index}
                     >
@@ -319,7 +324,7 @@ export default function Home() {
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, once: true }}
             className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
           >
             Testimonials
@@ -338,7 +343,7 @@ export default function Home() {
                 <motion.div
                   initial={{ opacity: 0, translateY: -50 }}
                   whileInView={{ opacity: 1, translateY: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
+                  transition={{ duration: 0.5, delay: 0.3, once: true }}
                   key={index}
                 >
                   <Testimonials
@@ -370,7 +375,7 @@ export default function Home() {
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, once: true }}
             className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
           >
             Get Started
@@ -378,7 +383,7 @@ export default function Home() {
           <motion.h2
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, once: true }}
             className="text-xl sm:text-3xl font-semibold mb-2 sm:mb-4"
           >
             Trade Smarter with Copy-Trading Markets
@@ -386,7 +391,7 @@ export default function Home() {
           <motion.p
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, once: true }}
             className="text-sm"
           >
             Your journey to financial success starts here. Ready to make your
@@ -395,7 +400,7 @@ export default function Home() {
           <motion.button
             initial={{ scale: 0.8, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, once: true }}
             className="mt-4 px-4 py-2 text-appDarkCard bg-appCardGold text-sm font-semibold rounded"
           >
             Get Started Today
