@@ -65,7 +65,10 @@ export default function Sidebar() {
       </nav>
       <nav className="mt-auto space-y-1 border-t px-3 py-4">
         <span
-          onClick={toggleTheme}
+          onClick={() => {
+            toggleTheme();
+            dispatch(closeSidebar());
+          }}
           className="group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium dark:text-white text-appDarkCard hover:bg-appGold20"
         >
           <Icon
@@ -83,6 +86,7 @@ export default function Sidebar() {
           <Link
             key={item.name}
             href={item.href}
+            onClick={() => dispatch(closeSidebar())}
             className={cn(
               "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium dark:text-white text-appDarkCard hover:bg-appGold20",
               pathname === item.href

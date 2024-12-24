@@ -160,7 +160,10 @@ const Withdrawal = () => {
                     )}
                   />
 
-                  <Button type="submit" className="w-full bg-appCardGold">
+                  <Button
+                    type="submit"
+                    className="w-full text-appDarkCard bg-appCardGold"
+                  >
                     Withdraw
                   </Button>
                 </form>

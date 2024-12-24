@@ -156,7 +156,7 @@ const TransactionHistory = () => {
             </CardTitle>
             <Button
               onClick={handleDownload}
-              className="w-full sm:w-auto bg-appCardGold"
+              className="w-full text-appDarkCard sm:w-auto bg-appCardGold"
             >
               <Download className="h-4 w-4 mr-2" />
               <span>Download CSV</span>
