@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,6 +26,9 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
+import { account } from "../../"
+
+
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   password: z
@@ -57,6 +59,10 @@ export default function LoginForm() {
       description: "You have been successfully logged in.",
     });
   };
+
+  const login = async (email, password) => {
+
+  }
 
   return (
     <div className="flex flex-col gap-4 md:flex-row justify-center relative items-center w-full h-screen">
