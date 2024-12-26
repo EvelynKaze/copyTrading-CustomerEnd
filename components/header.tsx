@@ -18,10 +18,11 @@ export function Header() {
         </p>
       </div>
       <div className="flex items-center gap-4">
-        <div className="relative hidden md:block">
+        {/* <div className="relative hidden md:block">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input type="search" placeholder="Search..." className="w-64 pl-8" />
-        </div>
+        </div> */}
+        
         <button className="relative h-8 w-8">
           <Image
             src={profilepic}

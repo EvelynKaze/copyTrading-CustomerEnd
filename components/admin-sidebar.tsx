@@ -81,7 +81,7 @@ export default function AdminSidebar() {
             toggleTheme();
             dispatch(closeSidebar());
           }}
-          className="group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium dark:text-white text-appDarkCard hover:bg-appGold20 cursor-pointer"
+          className="group cursor-pointer flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium dark:text-white text-appDarkCard hover:bg-appGold20 cursor-pointer"
         >
           <Icon
             icon={

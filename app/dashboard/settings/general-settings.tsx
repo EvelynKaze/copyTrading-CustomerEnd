@@ -52,7 +52,7 @@ const GeneralSettings = () => {
         </CardContent>
       </Card>
 
-      <Card className="mb-6">
+      {/* <Card className="mb-6">
         <CardHeader>
           <CardTitle>Appearance</CardTitle>
           <CardDescription>Customize your app experience</CardDescription>
@@ -83,7 +83,7 @@ const GeneralSettings = () => {
             </Select>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
 
       <Button className="w-full bg-appCardGold text-appDarkCard">
         Save General Settings

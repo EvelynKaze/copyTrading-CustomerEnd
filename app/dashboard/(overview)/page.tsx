@@ -133,9 +133,9 @@ export default function UserDashboard() {
             </div>
           </div>
         </Card>
-        <Card className="p-6">
+        {/* <Card className="p-6">
           <QuickTransfer users={quickTransferUsers} />
-        </Card>
+        </Card> */}
       </div>
     </div>
   );
