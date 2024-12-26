@@ -150,7 +150,7 @@ const Deposit = () => {
                               <SelectValue placeholder="Select a currency" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="bg-appDark grid gap-2 p-2 rounded text-sm">
+                          <SelectContent className="dark:bg-appDark grid gap-2 p-2 rounded text-sm">
                             {cryptocurrencies.map((crypto) => (
                               <SelectItem
                                 className="hover:bg-appGold20 outline-none hover:border-none p-1 rounded"

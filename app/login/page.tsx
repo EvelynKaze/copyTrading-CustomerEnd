@@ -68,13 +68,17 @@ export default function LoginForm() {
       </Link>
       <motion.div
         initial={{ opacity: 0, translateX: -50 }}
-        whileInView={{ opacity: 1, translateX: 0 }}
+        exit={{ opacity: 1, translateX: 0 }}
+        animate={{ opacity: 1, translateX: 0 }}
+        transition={{ delay: 0.3 }}
       >
         <Logo />
       </motion.div>
       <motion.div
         initial={{ opacity: 0, translateX: 50 }}
-        whileInView={{ opacity: 1, translateX: 0 }}
+        animate={{ opacity: 1, translateX: 0 }}
+        exit={{ opacity: 1, translateX: 0 }}
+        transition={{ delay: 0.3 }}
       >
         <Card className="w-[300px] mx-4 sm:w-[350px]">
           <CardHeader className="">
