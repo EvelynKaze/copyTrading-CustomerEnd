@@ -27,6 +27,9 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
+import { useRouter } from "next/router";
+import { account, ID } from "../../lib/appwrite";
+
 
 const signupSchema = z
   .object({
@@ -47,10 +50,18 @@ const signupSchema = z
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupForm() {
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
+    const [isLoading, setIsLoading] = useState(false);
+    const { toast } = useToast();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState(""); // Track confirm password
+    const [name, setName] = useState(""); // Only used for registration
+    const [error, setError] = useState(""); // Track error messages
+    const router = useRouter();
 
-  const form = useForm<SignupFormValues>({
+
+
+    const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
       name: "",
@@ -61,15 +72,36 @@ export default function SignupForm() {
   });
 
   const onSubmit = () => {
-    setIsLoading(true);
+      if (password !== confirmPassword) {
+          setError("Passwords do not match.");
+          return;
+      }
+      setIsLoading(true);
+      setError("");
     // Simulate API call
-    setIsLoading(false);
+      try {
+          await account.create(ID.unique(), email, password, name);
+          const session = await account.createEmailPasswordSession(email, password); // Automatically log in after registration
+          console.log('Session:', session);
+          // setLoggedInUser(await account.get()); // Set logged-in user data
+          // Set a session storage flag indicating the user is coming from /signup
+          // localStorage.setItem("fromSignup", "true")
+          console.log("loggedIn:", loggedInUser)
+          setIsLoading(false);
+
+          await router.push("/dashboard");
+      } catch (error) {
+          console.error("Registration error:", error.message);
+          setError(error.message);
+          setIsLoading(false);
+      }
 
     toast({
       title: "Account created",
       description: "You have successfully created an account.",
     });
   };
+
 
   return (
     <div className="flex flex-col md:flex-row-reverse justify-center gap-4 relative items-center w-full h-screen">
@@ -113,7 +145,12 @@ export default function SignupForm() {
                     <FormItem>
                       <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter your name" {...field} />
+                        <Input
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Enter your name" {...field}
+                            required
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -126,7 +163,12 @@ export default function SignupForm() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter your email" {...field} />
+                        <Input
+                            placeholder="Enter your email" {...field}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -143,6 +185,9 @@ export default function SignupForm() {
                           type="password"
                           placeholder="Create a password"
                           {...field}
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
                         />
                       </FormControl>
                       <FormMessage />
@@ -160,6 +205,9 @@ export default function SignupForm() {
                           type="password"
                           placeholder="Confirm your password"
                           {...field}
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          required
                         />
                       </FormControl>
                       <FormMessage />
