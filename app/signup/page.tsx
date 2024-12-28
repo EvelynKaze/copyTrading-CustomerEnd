@@ -27,7 +27,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/navigation'
 import { account, ID } from "../../lib/appwrite";
 
 
@@ -71,7 +71,7 @@ export default function SignupForm() {
     },
   });
 
-  const onSubmit = () => {
+  const onSubmit = async() => {
       if (password !== confirmPassword) {
           setError("Passwords do not match.");
           return;

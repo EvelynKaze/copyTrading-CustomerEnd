@@ -27,7 +27,8 @@ import Link from "next/link";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
 import { account } from "../../lib/appwrite";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/navigation'
+
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -54,7 +55,7 @@ export default function LoginForm() {
     },
   });
 
-  const onSubmit = () => {
+  const onSubmit = async() => {
     setIsLoading(true);
       setError("");
       try {
