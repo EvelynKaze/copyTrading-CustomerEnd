@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <MobileSidebar />
       <div className="w-full md:flex-grow h-full">
         <Header />
-        <div className="h-[calc(100dvh-6rem)] md:p-12">{children}</div>
+        <div className="h-[calc(100dvh-6rem)] p-4 md:p-12">{children}</div>
       </div>
     </div>
   );

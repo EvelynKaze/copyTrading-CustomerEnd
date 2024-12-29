@@ -4,6 +4,8 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { profilepic } from "@/constants/AppImages";
 import ToggleSidebar from "./toggle-sidebar";
+import { Button } from "./ui/button";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 export function Header() {
   return (
@@ -22,7 +24,10 @@ export function Header() {
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input type="search" placeholder="Search..." className="w-64 pl-8" />
         </div> */}
-        
+        <Button className="bg-appCardGold text-appDarkCard">
+          <Icon icon={"uil:wallet"} />
+          <span>Connect Wallet</span>
+        </Button>
         <button className="relative h-8 w-8">
           <Image
             src={profilepic}
