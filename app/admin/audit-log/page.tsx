@@ -25,13 +25,6 @@ import { Search, Download } from "lucide-react";
 // Mock data for audit log entries
 const mockAuditLog = [
   {
-    id: 1,
-    action: "User Login",
-    admin: "admin1@example.com",
-    timestamp: "2023-06-15T10:30:00Z",
-    details: "Successful login",
-  },
-  {
     id: 2,
     action: "User Suspended",
     admin: "admin2@example.com",
@@ -39,25 +32,11 @@ const mockAuditLog = [
     details: "User john_doe suspended for violation of terms",
   },
   {
-    id: 3,
-    action: "Settings Changed",
-    admin: "admin1@example.com",
-    timestamp: "2023-06-13T09:20:00Z",
-    details: "Updated system email settings",
-  },
-  {
     id: 4,
     action: "User Deleted",
     admin: "admin3@example.com",
     timestamp: "2023-06-12T14:10:00Z",
     details: "User jane_smith account deleted upon request",
-  },
-  {
-    id: 5,
-    action: "Report Generated",
-    admin: "admin2@example.com",
-    timestamp: "2023-06-11T11:05:00Z",
-    details: "Monthly transaction report generated",
   },
 ];
 

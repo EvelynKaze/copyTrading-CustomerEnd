@@ -10,14 +10,17 @@ import { closeSidebar } from "@/store/sideBar";
 import { useDispatch } from "react-redux";
 
 const navigation = [
-  { name: "Dashboard", href: "/admin", icon: "iconamoon:home-light" },
-  { name: "Users", href: "/admin/users", icon: "ph:users-three" },
+  { name: "Users", href: "/admin", icon: "ph:users-three" },
   {
     name: "Transactions",
-    href: "/admin/transactions",
-    icon: "uil:transaction",
+    href: "/admin/requests",
+    icon: "grommet-icons:transaction",
   },
-  { name: "Reports", href: "/admin/reports", icon: "mdi:report-outline" },
+  {
+    name: "Audit Log",
+    href: "/admin/audit-log",
+    icon: "mdi:clipboard-text-clock-outline",
+  },
 ];
 
 const secondaryNavigation = [
@@ -25,11 +28,6 @@ const secondaryNavigation = [
     name: "Settings",
     href: "/admin/settings",
     icon: "solar:settings-linear",
-  },
-  {
-    name: "Audit Log",
-    href: "/admin/audit-log",
-    icon: "mdi:clipboard-text-clock-outline",
   },
   { name: "Help", href: "/admin/help", icon: "tabler:help" },
   { name: "Log out", href: "/admin/logout", icon: "solar:logout-outline" },
@@ -50,7 +48,7 @@ export default function AdminSidebar() {
           </span>
         </Link>
       </div>
-      {/* <nav className="flex-1 space-y-1 px-3">
+      <nav className="flex-1 space-y-1 px-3">
         {navigation.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -74,7 +72,7 @@ export default function AdminSidebar() {
             </Link>
           );
         })}
-      </nav> */}
+      </nav>
       <nav className="mt-auto space-y-1 border-t px-3 py-4">
         <span
           onClick={() => {

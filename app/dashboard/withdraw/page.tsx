@@ -76,7 +76,8 @@ const Withdrawal = () => {
 
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3 }}
         >
           <Card className="w-[300px] sm:w-[350px]">
             <CardHeader>
@@ -107,7 +108,7 @@ const Withdrawal = () => {
                               <SelectValue placeholder="Select a currency" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="bg-appDark rounded text-xs">
+                          <SelectContent className="dark:bg-appDark rounded text-xs">
                             {cryptocurrencies.map((crypto) => (
                               <SelectItem
                                 className="hover:bg-appGold20 outline-none hover:border-none rounded"

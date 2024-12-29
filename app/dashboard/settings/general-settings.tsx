@@ -25,20 +25,10 @@ const GeneralSettings = () => {
         <CardHeader>
           <CardTitle>Notifications</CardTitle>
           <CardDescription>
-            Manage your notification preferences
+            Manage your notification preference
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <Bell className="h-5 w-5" />
-              <Label htmlFor="push-notifications">Push Notifications</Label>
-            </div>
-            <Switch
-              className="data-[state=checked]:bg-appCardGold"
-              id="push-notifications"
-            />
-          </div>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Bell className="h-5 w-5" />
@@ -86,7 +76,7 @@ const GeneralSettings = () => {
       </Card> */}
 
       <Button className="w-full bg-appCardGold text-appDarkCard">
-        Save General Settings
+        Save Settings
       </Button>
     </>
   );

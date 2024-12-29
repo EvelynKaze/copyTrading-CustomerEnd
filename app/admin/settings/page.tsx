@@ -107,7 +107,7 @@ const AdminSettings = () => {
                 <Label htmlFor="confirm-password">Confirm New Password</Label>
                 <Input id="confirm-password" type="password" />
               </div>
-              <div className="flex items-center space-x-2">
+              {/* <div className="flex items-center space-x-2">
                 <Switch
                   className="data-[state=checked]:bg-appCardGold"
                   id="two-factor"
@@ -115,7 +115,7 @@ const AdminSettings = () => {
                 <Label htmlFor="two-factor">
                   Enable Two-Factor Authentication
                 </Label>
-              </div>
+              </div> */}
               <Button className="bg-appCardGold text-appDarkCard">
                 Update Security Settings
               </Button>
@@ -127,9 +127,9 @@ const AdminSettings = () => {
           <Card>
             <CardHeader>
               <CardTitle>Notification Settings</CardTitle>
-              <CardDescription>
+              {/* <CardDescription>
                 Manage your notification preferences
-              </CardDescription>
+              </CardDescription> */}
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center space-x-2">
@@ -139,7 +139,7 @@ const AdminSettings = () => {
                 />
                 <Label htmlFor="email-notifications">Email Notifications</Label>
               </div>
-              <div className="flex items-center space-x-2">
+              {/* <div className="flex items-center space-x-2">
                 <Switch
                   className="data-[state=checked]:bg-appCardGold"
                   id="sms-notifications"
@@ -152,10 +152,8 @@ const AdminSettings = () => {
                   id="push-notifications"
                 />
                 <Label htmlFor="push-notifications">Push Notifications</Label>
-              </div>
-              <Button className="bg-appCardGold text-appDarkCard">
-                Save Notification Settings
-              </Button>
+              </div> */}
+              <Button className="bg-appCardGold text-appDarkCard">Save</Button>
             </CardContent>
           </Card>
         </TabsContent>

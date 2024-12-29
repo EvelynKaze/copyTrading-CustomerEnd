@@ -25,6 +25,10 @@
     appearance: none;
     outline: none;
   }
+  input::-webkit-inner-spin-button,
+  input::-webkit-outer-spin-button {
+    display: none;
+  }
 }
 
 @layer base {
