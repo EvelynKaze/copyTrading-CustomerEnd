@@ -1,10 +1,10 @@
-// import SideNav from '@/app/ui/dashboard/sidenav';
-
+"use client";
 import { Header } from "@/components/header";
 import { MobileSidebar } from "@/components/mobile-sidebar";
 import Sidebar from "@/components/sidebar";
+import withAuth from "@/app/hoc/with-auth";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+const Layout = ({ children }: { children?: React.ReactNode }) => {
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
       <div className="hidden md:block">
@@ -17,4 +17,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </div>
     </div>
   );
-}
+};
+
+export default Layout;

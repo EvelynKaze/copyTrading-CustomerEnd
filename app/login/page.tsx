@@ -23,12 +23,12 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
+import { Models } from "appwrite";
 import Link from "next/link";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
 import { account } from "../../lib/appwrite";
-import { useRouter } from 'next/navigation'
-
+import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -42,10 +42,13 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const router = useRouter()
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const [loggedInUser, setLoggedInUser] =
+    useState<Models.User<Models.Preferences> | null>(null);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -55,28 +58,26 @@ export default function LoginForm() {
     },
   });
 
-  const onSubmit = async() => {
+  const onSubmit = async () => {
     setIsLoading(true);
-      setError("");
-      try {
-          const session = await account.createEmailPasswordSession(email, password);
-          console.log('Session:', session);
-          const user = await account.get();
-          // setLoggedInUser(user); // Set logged-in user data globally
-          setIsLoading(false);
-          await router.push("/dashboard");
-      } catch (error:Error) {
-          console.error("Login error:", error.message);
-          setError(error.message);
-          setIsLoading(false);
-      }
+    try {
+      const session = await account.createEmailPasswordSession(email, password);
+      console.log("Session:", session);
+      const user = await account.get();
+      setLoggedInUser(user); // Set logged-in user data globally
+      setIsLoading(false);
+      router.push("/dashboard");
+    } catch (error: Error) {
+      console.error("Login error:", error.message);
+      setError(error.message);
+      setIsLoading(false);
+    }
 
     toast({
       title: "Login Successful",
       description: "You have been successfully logged in.",
     });
   };
-
 
   return (
     <div className="flex flex-col gap-4 md:flex-row justify-center relative items-center w-full h-screen">
@@ -121,13 +122,14 @@ export default function LoginForm() {
                       <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
+                          placeholder="Enter your email"
+                          disabled={isLoading}
+                          {...field}
                         />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage>
+                        {form.formState.errors.email?.message}
+                      </FormMessage>
                     </FormItem>
                   )}
                 />
@@ -141,12 +143,13 @@ export default function LoginForm() {
                         <Input
                           type="password"
                           placeholder="Enter your password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
+                          disabled={isLoading}
+                          {...field}
                         />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage>
+                        {form.formState.errors.password?.message}
+                      </FormMessage>
                     </FormItem>
                   )}
                 />

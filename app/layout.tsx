@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AnimatePresence } from "framer-motion";
 import { Providers } from "./providers";
+import { UserProvider } from "@/app/context/user-context";
 
 export const metadata: Metadata = {
   title: "Copy-Trades",
@@ -16,13 +17,15 @@ export default function RootLayout({
 }>) {
   return (
     <ThemeProvider>
-      <Providers>
-        <AnimatePresence>
-          <html lang="en">
-            <body className={`antialiased`}>{children}</body>
-          </html>
-        </AnimatePresence>
-      </Providers>
+      <UserProvider>
+        <Providers>
+          <AnimatePresence>
+            <html lang="en">
+              <body className={`antialiased`}>{children}</body>
+            </html>
+          </AnimatePresence>
+        </Providers>
+      </UserProvider>
     </ThemeProvider>
   );
 }
