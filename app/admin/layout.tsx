@@ -1,10 +1,10 @@
-// import SideNav from '@/app/ui/dashboard/sidenav';
-
+"use client";
 import { AdminMobileSidebar } from "@/components/admin-mobile-sidebar";
 import AdminSidebar from "@/components/admin-sidebar";
 import { Header } from "@/components/header";
+import withAuth from "../hoc/with-auth";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+const Layout = ({ children }: { children?: React.ReactNode }) => {
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
       <div className="hidden md:block">
@@ -17,4 +17,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </div>
     </div>
   );
-}
+};
+
+export default withAuth(Layout);

@@ -105,9 +105,9 @@ export default function Home() {
             whileInView={{ opacity: 1, scale: 1 }}
             className="max-w-prose text-base"
           >
-            Whether you're a beginner or an experienced investor, Copy-Trading
-            Markets adapts to your needs. Dive into a world where your success
-            is guided by expert insights and powerful tools.
+            Whether you&apos;re a beginner or an experienced investor,
+            Copy-Trading Markets adapts to your needs. Dive into a world where
+            your success is guided by expert insights and powerful tools.
           </motion.p>
           <div className="flex flex-col sm:flex-row justify-center max-w-4xl gap-8 mt-12">
             <motion.div

@@ -27,9 +27,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 import { account, ID } from "../../lib/appwrite";
-
 
 const signupSchema = z
   .object({
@@ -50,18 +49,11 @@ const signupSchema = z
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupForm() {
-    const [isLoading, setIsLoading] = useState(false);
-    const { toast } = useToast();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState(""); // Track confirm password
-    const [name, setName] = useState(""); // Only used for registration
-    const [error, setError] = useState(""); // Track error messages
-    const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const router = useRouter();
 
-
-
-    const form = useForm<SignupFormValues>({
+  const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
       name: "",
@@ -71,37 +63,28 @@ export default function SignupForm() {
     },
   });
 
-  const onSubmit = async() => {
-      if (password !== confirmPassword) {
-          setError("Passwords do not match.");
-          return;
-      }
-      setIsLoading(true);
-      setError("");
-    // Simulate API call
-      try {
-          await account.create(ID.unique(), email, password, name);
-          const session = await account.createEmailPasswordSession(email, password); // Automatically log in after registration
-          console.log('Session:', session);
-          // setLoggedInUser(await account.get()); // Set logged-in user data
-          // Set a session storage flag indicating the user is coming from /signup
-          // localStorage.setItem("fromSignup", "true")
-          console.log("loggedIn:", loggedInUser)
-          setIsLoading(false);
+  const onSubmit = async (data: SignupFormValues) => {
+    setIsLoading(true);
+    try {
+      await account.create(ID.unique(), data.email, data.password, data.name);
+      await account.createEmailPasswordSession(data.email, data.password);
 
-          await router.push("/dashboard");
-      } catch (error) {
-          console.error("Registration error:", error.message);
-          setError(error.message);
-          setIsLoading(false);
-      }
+      toast({
+        title: "Account created",
+        description: "Redirecting to your dashboard...",
+      });
 
-    toast({
-      title: "Account created",
-      description: "You have successfully created an account.",
-    });
+      router.push("/onboarding");
+    } catch (error: any) {
+      toast({
+        title: "Registration failed",
+        description: error.message || "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
-
 
   return (
     <div className="flex flex-col md:flex-row-reverse justify-center gap-4 relative items-center w-full h-screen">
@@ -125,7 +108,7 @@ export default function SignupForm() {
         exit={{ opacity: 1, translateX: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <Card className=" w-[300px] sm:w-[350px]">
+        <Card className="w-[300px] sm:w-[350px]">
           <CardHeader>
             <CardTitle>Sign Up</CardTitle>
             <CardDescription>
@@ -145,12 +128,7 @@ export default function SignupForm() {
                     <FormItem>
                       <FormLabel>Name</FormLabel>
                       <FormControl>
-                        <Input
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            placeholder="Enter your name" {...field}
-                            required
-                        />
+                        <Input placeholder="Enter your name" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -163,12 +141,7 @@ export default function SignupForm() {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input
-                            placeholder="Enter your email" {...field}
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
+                        <Input placeholder="Enter your email" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -185,9 +158,6 @@ export default function SignupForm() {
                           type="password"
                           placeholder="Create a password"
                           {...field}
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
                         />
                       </FormControl>
                       <FormMessage />
@@ -205,9 +175,6 @@ export default function SignupForm() {
                           type="password"
                           placeholder="Confirm your password"
                           {...field}
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                          required
                         />
                       </FormControl>
                       <FormMessage />
@@ -228,7 +195,7 @@ export default function SignupForm() {
             <p className="text-sm text-muted-foreground">
               Already have an account?{" "}
               <Link
-                href={"/login"}
+                href="/login"
                 className="p-0 text-appGold100 cursor-pointer"
               >
                 Log in
