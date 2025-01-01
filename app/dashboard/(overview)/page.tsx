@@ -24,7 +24,7 @@ export default function UserDashboard() {
         <StockOptions />
       </div>
       <div className="w-80 hidden lg:block space-y-6">
-        <CryptoExchange />
+        {/*<CryptoExchange />*/}
         {/* <Card className="p-6">
           <QuickTransfer users={quickTransferUsers} />
         </Card> */}
