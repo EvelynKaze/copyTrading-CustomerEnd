@@ -54,6 +54,8 @@ export default function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -67,8 +69,6 @@ export default function SignupForm() {
 
   const onSubmit = async (data: SignupFormValues) => {
     setIsLoading(true);
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-    const dispatch = useAppDispatch();
 
     try {
       await account.create(ID.unique(), data.email, data.password, data.name);
@@ -89,7 +89,7 @@ export default function SignupForm() {
 
       toast({
         title: "Account created",
-        description: "Redirecting to your dashboard...",
+        description: "Complete Profile Information...",
       });
 
       router.push("/onboarding");
@@ -240,7 +240,7 @@ export default function SignupForm() {
                         Log in
                     </Link>
                 </p>
-                <div className="cursor-pointer text-orange-600 px-3" onClick={() => logout()}>Log out</div>
+                {/*<div className="cursor-pointer text-orange-600 px-3" onClick={() => logout()}>Log out</div>*/}
             </CardFooter>
         </Card>
       </motion.div>

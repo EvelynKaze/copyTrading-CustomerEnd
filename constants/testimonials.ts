@@ -5,7 +5,7 @@ const testimonials: Testimonial[] = [
     name: "Sarah Thompson",
     role: "Investor",
     content:
-      "Copy-Trading Markets has completely transformed my trading experience. Following top traders has been both easy and rewarding.",
+      "CopyTrading Markets has completely transformed my trading experience. Following top traders has been both easy and rewarding.",
     avatar: "https://example.com/avatars/sarah-thompson.jpg",
   },
   {
@@ -19,7 +19,7 @@ const testimonials: Testimonial[] = [
     name: "Amina Khalid",
     role: "Beginner Trader",
     content:
-      "I was new to trading, but Copy-Trading Markets made it so simple to follow proven strategies and see real results.",
+      "I was new to trading, but CopyTrading Markets made it so simple to follow proven strategies and see real results.",
     avatar: "https://example.com/avatars/amina-khalid.jpg",
   },
   {
@@ -33,7 +33,7 @@ const testimonials: Testimonial[] = [
     name: "Priya Patel",
     role: "Crypto Enthusiast",
     content:
-      "The insights and support provided by Copy-Trading Markets have helped me navigate the complexities of the market with confidence.",
+      "The insights and support provided by CopyTrading Markets have helped me navigate the complexities of the market with confidence.",
     avatar: "https://example.com/avatars/priya-patel.jpg",
   },
   {
@@ -54,7 +54,7 @@ const testimonials: Testimonial[] = [
     name: "Daniel Kim",
     role: "Day Trader",
     content:
-      "Copy-Trading Markets has saved me countless hours. The automation is flawless, and the results speak for themselves.",
+      "CopyTrading Markets has saved me countless hours. The automation is flawless, and the results speak for themselves.",
     avatar: "https://example.com/avatars/daniel-kim.jpg",
   },
   {
@@ -82,14 +82,14 @@ const testimonials: Testimonial[] = [
     name: "Ahmed Hassan",
     role: "Trader",
     content:
-      "I’ve tried other platforms, but none compare to Copy-Trading Markets. The tools and insights are unmatched.",
+      "I’ve tried other platforms, but none compare to CopyTrading Markets. The tools and insights are unmatched.",
     avatar: "https://example.com/avatars/ahmed-hassan.jpg",
   },
   {
     name: "Olivia White",
     role: "Investor",
     content:
-      "Thanks to Copy-Trading Markets, I’ve achieved financial goals I thought were out of reach. Truly life-changing!",
+      "Thanks to CopyTrading Markets, I’ve achieved financial goals I thought were out of reach. Truly life-changing!",
     avatar: "https://example.com/avatars/olivia-white.jpg",
   },
   {
@@ -103,7 +103,7 @@ const testimonials: Testimonial[] = [
     name: "Mei Lin",
     role: "Stock Market Enthusiast",
     content:
-      "I feel so much more confident in my trading decisions. Copy-Trading Markets is an essential tool for success.",
+      "I feel so much more confident in my trading decisions. CopyTrading Markets is an essential tool for success.",
     avatar: "https://example.com/avatars/mei-lin.jpg",
   },
 ];

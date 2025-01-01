@@ -1,19 +1,30 @@
-import { Search } from "lucide-react";
+// import { Search } from "lucide-react";
 import Image from "next/image";
-
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import { profilepic } from "@/constants/AppImages";
 import ToggleSidebar from "./toggle-sidebar";
 import { Button } from "./ui/button";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
-export function Header({ user }) {
+
+interface HeaderProps {
+    user: {
+        id: string;
+        email: string;
+        name: string;
+        emailVerification: boolean;
+    } | null;
+    avatarUrl: string | null // Add optional avatarUrl
+}
+
+
+export function Header({ user, avatarUrl }: HeaderProps){
   return (
     <header className="flex items-center justify-between w-full border-b px-4 md:px-6 h-16 md:h-24 py-4">
       <ToggleSidebar />
       <div className="sm:flex hidden flex-col md:gap-1">
         <h1 className="text-base sm:text-lg md:text-2xl font-semibold">
-          Welcome {user?.name}!
+            Welcome {user?.name || "Guest"}!
         </h1>
         <p className="text-xs sm:text-xs md:text-sm text-muted-foreground">
           Hope you are healthy and happy today...
@@ -30,7 +41,7 @@ export function Header({ user }) {
         </Button>
         <button className="relative h-8 w-8">
           <Image
-            src={profilepic}
+            src={avatarUrl || profilepic}
             alt="Profile"
             width={32}
             height={32}

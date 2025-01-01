@@ -13,13 +13,13 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Redirect new users to onboarding
+  // Redirect new users to onboardingg
   if (
     isAuthenticated &&
     isNewUser &&
-    !request.nextUrl.pathname.startsWith("/onboarding")
+    !request.nextUrl.pathname.startsWith("/onboardingg")
   ) {
-    return NextResponse.redirect(new URL("/onboarding", request.url));
+    return NextResponse.redirect(new URL("/onboardingg", request.url));
   }
 
   // Redirect non-admin users trying to access admin dashboard
@@ -45,5 +45,5 @@ export function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ["/dashboard/:path*", "/onboarding"],
+  matcher: ["/dashboard/:path*", "/onboardingg"],
 };

@@ -1,203 +1,189 @@
-"use client";
+// Updates to onboarding/page.tsx
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { storage, databases, ID, Permission, Role } from "@/lib/appwrite";
 import { useToast } from "@/hooks/use-toast";
-import { StepIndicator } from "./step-indicator";
-import { ProfilePictureUpload } from "./profile-picture-upload";
-import { KYCForm } from "./kyc-form";
-
-const steps = ["Basic Info", "Profile Picture", "KYC (Optional)"];
-
-const basicInfoSchema = z.object({
-  fullName: z.string().min(2, {
-    message: "Full name must be at least 2 characters.",
-  }),
-  email: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  phoneNumber: z.string().regex(/^\+?[1-9]\d{1,14}$/, {
-    message: "Please enter a valid phone number.",
-  }),
-});
-
-const profilePictureSchema = z.object({
-  profilePicture: z.string().optional(),
-});
-
-const kycSchema = z.object({
-  idNumber: z.string().optional(),
-  dateOfBirth: z.string().optional(),
-});
-
-const formSchema = basicInfoSchema.merge(profilePictureSchema).merge(kycSchema);
-
-type FormData = z.infer<typeof formSchema>;
+import { setProfile } from "@/store/profileSlice";
 
 export default function OnboardingPage() {
-  const [step, setStep] = useState(0);
-  const router = useRouter();
   const { toast } = useToast();
-
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-      phoneNumber: "",
-      profilePicture: "",
-      idNumber: "",
-      dateOfBirth: "",
-    },
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const [formData, setFormData] = useState({
+    fullName: '',
+    phoneNumber: '',
+    username: '',
   });
+  const [avatar, setAvatar] = useState<string | null>(null);
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const user = useSelector((state: RootState) => state.user.user);
 
-  const onSubmit = async (data: FormData) => {
-    if (step < steps.length - 1) {
-      setStep(step + 1);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setProfilePicture(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatar(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    if (!profilePicture) {
+      toast({
+        description: "Please upload a profile picture",
+      });
+      setIsLoading(false);
       return;
     }
 
     try {
-      // Upload the profile picture to Appwrite Storage
-      // const avatarUpload = await storage.createFile(
-      //     process.env.NEXT_PUBLIC_PROFILE_BUCKET_ID,
-      //     ID.unique(),
-      //     profilePicture
-      // )
-      //
-      // const bucketId = process.env.NEXT_PUBLIC_PROFILE_BUCKET_ID
-      // const projectID = process.env.NEXT_PUBLIC_PROJECT_ID
-      // const imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${bucketId}/files/${avatarUpload.$id}/view?project=${projectID}`
+      const avatarUpload = await storage.createFile(
+          process.env.NEXT_PUBLIC_APPWRITE_PROFILE_BUCKET_ID!,
+          ID.unique(),
+          profilePicture
+      );
 
-      // Profile object to be saved in Appwrite Database
-      // const profileData = {
-      //   userId: loggedInUser?.$id,
-      //   full_name: fullName,
-      //   avatar_url: imageUrl, // Appwrite file URL
-      //   account_trader: null,
-      //   account_status: null,
-      //   btc_balance: null,
-      //   eth_balance: null,
-      //   usdt_balance: null,
-      //   total_investment: null,
-      //   current_value: null,
-      //   roi: null,
-      //   kyc_status: null
-      // }
-      //
-      // // Save profile to Appwrite Database
-      // const profile = await databases.createDocument(
-      //     process.env.NEXT_PUBLIC_DATABASE_ID,
-      //     process.env.NEXT_PUBLIC_PROFILE_COLLECTION_ID,
-      //     ID.unique(),
-      //     profileData,
-      //     [
-      //       Permission.read(Role.any()) // Allow public read
-      //     ]
-      // )
+      const bucketId = process.env.NEXT_PUBLIC_APPWRITE_PROFILE_BUCKET_ID!;
+      const projectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!;
+      const imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${bucketId}/files/${avatarUpload.$id}/view?project=${projectId}`;
 
-    } catch (error) {
+      const profileData = {
+        user_id: user?.id,
+        full_name: formData.fullName,
+        phone_number: formData.phoneNumber,
+        user_name: formData.username,
+        avatar_url: imageUrl,
+        copy_trader: null,
+        account_status: null,
+        total_investment: null,
+        current_value: null,
+        roi: null,
+        kyc_status: false,
+        isAdmin: false,
+      };
+
+      const profile = await databases.createDocument(
+          process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+          process.env.NEXT_PUBLIC_APPWRITE_PROFILE_COLLECTION_ID!,
+          ID.unique(),
+          profileData,
+          [Permission.read(Role.any())]
+      );
+
+      dispatch(setProfile({ ...profileData, id: profile.$id }));
+
       toast({
-        title: "Error",
-        description: "Failed to complete onboarding. Please try again.",
+        title: "Profile completed successfully!",
+        description: "Redirecting to your dashboard...",
+      });
+      router.push('/dashboard');
+    } catch (error: any) {
+      console.error("Error completing profile:", error);
+      toast({
+        title: "Profile Completion Failed",
+        description: error.message || "There was an error completing your profile. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const currentSchema = [basicInfoSchema, profilePictureSchema, kycSchema][
-    step
-  ];
-
   return (
-    <div className="flex items-center justify-center min-h-screen px-4">
-      <div className="max-w-xl w-full mx-auto mt-10 p-6 border rounded-lg shadow-md">
-        <StepIndicator steps={steps} currentStep={step} />
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            {step === 0 && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="fullName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Full Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="John Doe" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+      <div className="container mx-auto p-4">
+        <Card className="max-w-md mx-auto">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-center">Complete Your Profile</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="flex flex-col items-center space-y-2">
+                <Avatar className="w-32 h-32">
+                  <AvatarImage src={avatar || undefined} alt="Profile picture" />
+                  <AvatarFallback>
+                    {formData.fullName
+                        .split(' ')
+                        .map(n => n[0])
+                        .join('')
+                        .toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <Label htmlFor="avatar" className="cursor-pointer text-sm text-blue-600 hover:text-blue-800">
+                  Upload Profile Picture
+                </Label>
+                <Input
+                    id="avatar"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageUpload}
                 />
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="john@example.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="fullName">Full Name</Label>
+                <Input
+                    id="fullName"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    placeholder="John Doe"
+                    required
                 />
-                <FormField
-                  control={form.control}
-                  name="phoneNumber"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
-                      <FormControl>
-                        <Input placeholder="+1234567890" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phoneNumber">Phone Number</Label>
+                <Input
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleInputChange}
+                    placeholder="+1 (555) 123-4567"
+                    required
                 />
-              </>
-            )}
-            {step === 1 && <ProfilePictureUpload form={form} />}
-            {step === 2 && <KYCForm form={form} />}
-            <div className="flex justify-between">
-              {step > 0 && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setStep(step - 1)}
-                >
-                  Previous
-                </Button>
-              )}
-              <Button type="submit">
-                {step === steps.length - 1 ? "Complete" : "Next"}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                    id="username"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleInputChange}
+                    placeholder="johndoe123"
+                    required
+                />
+              </div>
+              <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isLoading}
+              >
+                {isLoading ? "Completing Profile..." : "Complete Profile"}
               </Button>
-            </div>
-            {step === 2 && (
-              <Button type="submit" variant="link" className="w-full">
-                Skip KYC (You can complete this later)
-              </Button>
-            )}
-          </form>
-        </Form>
+            </form>
+          </CardContent>
+          <CardFooter></CardFooter>
+        </Card>
       </div>
-    </div>
   );
 }
