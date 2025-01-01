@@ -29,6 +29,8 @@ import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
 import { useRouter } from "next/navigation";
 import { account, ID } from "../../lib/appwrite";
+import { useAppDispatch } from "@/store/hook";
+import { setUser } from "@/store/userSlice"
 
 const signupSchema = z
   .object({
@@ -65,9 +67,25 @@ export default function SignupForm() {
 
   const onSubmit = async (data: SignupFormValues) => {
     setIsLoading(true);
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+    const dispatch = useAppDispatch();
+
     try {
       await account.create(ID.unique(), data.email, data.password, data.name);
       await account.createEmailPasswordSession(data.email, data.password);
+
+        // Retrieve user data
+        const userData = await account.get();
+
+        // Dispatch user data to Redux store
+        dispatch(
+            setUser({
+                id: userData.$id,
+                email: userData.email,
+                name: userData.name,
+                emailVerification: userData.emailVerification,
+            })
+        );
 
       toast({
         title: "Account created",
@@ -86,7 +104,28 @@ export default function SignupForm() {
     }
   };
 
-  return (
+    // Appwrite logout function
+    const logout = async () => {
+        try {
+            await account.deleteSession("current");
+            toast({
+                description: "Logged out successfully",
+            })
+            // if (typeof window !== "undefined") {
+            //     localStorage.removeItem("userName")
+            //     localStorage.removeItem("userId")
+            //     localStorage.removeItem("fullName")
+            // }
+        } catch (error: any) {
+            console.error("Logout error:", error.message);
+            toast({
+                description: `${error.message}`,
+            })
+        }
+    };
+
+
+    return (
     <div className="flex flex-col md:flex-row-reverse justify-center gap-4 relative items-center w-full h-screen">
       <div className="absolute top-8 right-8">
         <ThemeToggle />
@@ -191,17 +230,18 @@ export default function SignupForm() {
               </form>
             </Form>
           </CardContent>
-          <CardFooter className="flex justify-center">
-            <p className="text-sm text-muted-foreground">
-              Already have an account?{" "}
-              <Link
-                href="/login"
-                className="p-0 text-appGold100 cursor-pointer"
-              >
-                Log in
-              </Link>
-            </p>
-          </CardFooter>
+            <CardFooter className="flex justify-center">
+                <p className="text-sm text-muted-foreground">
+                    Already have an account?{" "}
+                    <Link
+                        href="/login"
+                        className="p-0 text-appGold100 cursor-pointer"
+                    >
+                        Log in
+                    </Link>
+                </p>
+                <div className="cursor-pointer text-orange-600 px-3" onClick={() => logout()}>Log out</div>
+            </CardFooter>
         </Card>
       </motion.div>
     </div>

@@ -74,23 +74,44 @@ export default function OnboardingPage() {
     }
 
     try {
-      const response = await fetch("/api/complete-onboarding", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      // Upload the profile picture to Appwrite Storage
+      // const avatarUpload = await storage.createFile(
+      //     process.env.NEXT_PUBLIC_PROFILE_BUCKET_ID,
+      //     ID.unique(),
+      //     profilePicture
+      // )
+      //
+      // const bucketId = process.env.NEXT_PUBLIC_PROFILE_BUCKET_ID
+      // const projectID = process.env.NEXT_PUBLIC_PROJECT_ID
+      // const imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${bucketId}/files/${avatarUpload.$id}/view?project=${projectID}`
 
-      if (response.ok) {
-        toast({
-          title: "Onboarding Complete",
-          description: "Your profile has been successfully set up.",
-        });
-        router.push("/dashboard");
-      } else {
-        throw new Error("Failed to complete onboarding");
-      }
+      // Profile object to be saved in Appwrite Database
+      // const profileData = {
+      //   userId: loggedInUser?.$id,
+      //   full_name: fullName,
+      //   avatar_url: imageUrl, // Appwrite file URL
+      //   account_trader: null,
+      //   account_status: null,
+      //   btc_balance: null,
+      //   eth_balance: null,
+      //   usdt_balance: null,
+      //   total_investment: null,
+      //   current_value: null,
+      //   roi: null,
+      //   kyc_status: null
+      // }
+      //
+      // // Save profile to Appwrite Database
+      // const profile = await databases.createDocument(
+      //     process.env.NEXT_PUBLIC_DATABASE_ID,
+      //     process.env.NEXT_PUBLIC_PROFILE_COLLECTION_ID,
+      //     ID.unique(),
+      //     profileData,
+      //     [
+      //       Permission.read(Role.any()) // Allow public read
+      //     ]
+      // )
+
     } catch (error) {
       toast({
         title: "Error",

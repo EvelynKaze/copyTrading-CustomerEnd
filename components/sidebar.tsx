@@ -1,5 +1,5 @@
 "use client";
-
+import { useRouter } from 'next/navigation'
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -8,6 +8,8 @@ import DashLogo from "./dashlogo";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { closeSidebar } from "@/store/sideBar";
 import { useDispatch } from "react-redux";
+import { account } from "@/lib/appwrite";
+import { useToast } from "@/hooks/use-toast";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: "iconamoon:home-light" },
@@ -23,15 +25,40 @@ const secondaryNavigation = [
     icon: "solar:settings-linear",
   },
   { name: "Help", href: "/dashboard/help", icon: "tabler:help" },
-  { name: "Log out", href: "/dashboard/logout", icon: "solar:logout-outline" },
+  // { name: "Log out", href: "/dashboard/logout", icon: "solar:logout-outline" },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
+  const { toast } = useToast();
   const dispatch = useDispatch();
+  const router = useRouter()
 
-  return (
+    // Appwrite logout function
+    const logout = async () => {
+        try {
+            await account.deleteSession("current");
+            toast({
+                description: "Logged out successfully",
+            })
+            router.push("/login");
+            // if (typeof window !== "undefined") {
+            //     localStorage.removeItem("userName")
+            //     localStorage.removeItem("userId")
+            //     localStorage.removeItem("fullName")
+            // }
+        } catch (error: any) {
+            console.error("Logout error:", error.message);
+            toast({
+                description: `${error.message}`,
+            })
+        }
+    };
+
+
+
+    return (
     <div className="flex h-full w-56 flex-col border-r bg-white dark:bg-appDark">
       <div className="p-6">
         <Link href="/" className="flex items-center gap-2 font-semibold">
@@ -102,6 +129,9 @@ export default function Sidebar() {
             {item.name}
           </Link>
         ))}
+          <div className="bg-appGold200 cursor-pointer flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium dark:text-white text-appDarkCard hover:bg-appGold20" onClick={() => logout()}>
+              Log Out
+          </div>
       </nav>
     </div>
   );

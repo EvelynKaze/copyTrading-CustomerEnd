@@ -23,12 +23,14 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
-import { Models } from "appwrite";
 import Link from "next/link";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
 import { account } from "../../lib/appwrite";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/store/hook";
+import { setUser } from "@/store/userSlice"
+import { ToastAction } from "@/components/ui/toast"
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -43,12 +45,8 @@ export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const dispatch = useAppDispatch(); // Moved to the top of the component
 
-  const [loggedInUser, setLoggedInUser] =
-    useState<Models.User<Models.Preferences> | null>(null);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -58,25 +56,44 @@ export default function LoginForm() {
     },
   });
 
-  const onSubmit = async () => {
+  const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
+
     try {
-      const session = await account.createEmailPasswordSession(email, password);
+      const session = await account.createEmailPasswordSession(data.email, data.password);
       console.log("Session:", session);
-      const user = await account.get();
-      setLoggedInUser(user); // Set logged-in user data globally
+        // Retrieve user data
+        const userData = await account.get();
+
+        // Dispatch user data to Redux store
+        dispatch(
+            setUser({
+                id: userData.$id,
+                email: userData.email,
+                name: userData.name,
+                emailVerification: userData.emailVerification,
+            })
+        );
+
+        toast({
+            title: "Logged In Successfully",
+            description: "Redirecting to your dashboard...",
+        });
+
       setIsLoading(false);
       router.push("/dashboard");
-    } catch (error: Error) {
+    } catch (error: any) {
       console.error("Login error:", error.message);
-      setError(error.message);
+        toast({
+            title: "Sign In Error",
+            description: `${error.message}`,
+            variant: "destructive",
+            action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
       setIsLoading(false);
     }
 
-    toast({
-      title: "Login Successful",
-      description: "You have been successfully logged in.",
-    });
+
   };
 
   return (
