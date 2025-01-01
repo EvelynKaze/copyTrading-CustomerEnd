@@ -8,7 +8,7 @@ const FooterLogo = () => {
         icon={"mingcute:currency-baht-line"}
       />
       <p className="text-white font-semibold text-base sm:text-xl">
-        Copy-Trades Markert
+        CopyTradeMarkets
       </p>
     </div>
   );

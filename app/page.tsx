@@ -56,7 +56,7 @@ export default function Home() {
             transition={{ once: true }}
           >
             <p className="max-w-prose text-sm">
-              Copy-Trading Markets empowers you to achieve your financial goals
+              CopyTrading Markets empowers you to achieve your financial goals
               by following strategies that work. Harness the expertise of
               seasoned traders and make informed decisions with confidence.
             </p>
@@ -106,7 +106,7 @@ export default function Home() {
             className="max-w-prose text-base"
           >
             Whether you&apos;re a beginner or an experienced investor,
-            Copy-Trading Markets adapts to your needs. Dive into a world where
+            CopyTrading Markets adapts to your needs. Dive into a world where
             your success is guided by expert insights and powerful tools.
           </motion.p>
           <div className="flex flex-col sm:flex-row justify-center max-w-4xl gap-8 mt-12">
@@ -237,10 +237,10 @@ export default function Home() {
             Why Choose Us
           </motion.span>
           <h2 className="text-xl sm:text-3xl font-semibold mb-2">
-            Why Copy-Trading Markets is the Clear Choice
+            Why CopyTrading Markets is the Clear Choice
           </h2>
           <p className="text-sm sm:text-base max-w-prose dark:text-appGold100">
-            Copy-Trading Markets stands out as the ultimate platform, delivering
+            CopyTrading Markets stands out as the ultimate platform, delivering
             unmatched value and solutions that redefine the trading experience.
           </p>
 
@@ -386,7 +386,7 @@ export default function Home() {
             transition={{ duration: 0.5, once: true }}
             className="text-xl sm:text-3xl font-semibold mb-2 sm:mb-4"
           >
-            Trade Smarter with Copy-Trading Markets
+            Trade Smarter with CopyTrading Markets
           </motion.h2>
           <motion.p
             initial={{ scale: 0.8, opacity: 0 }}

@@ -10,6 +10,7 @@ import { closeSidebar } from "@/store/sideBar";
 import { useDispatch } from "react-redux";
 import { account } from "@/lib/appwrite";
 import { useToast } from "@/hooks/use-toast";
+import { clearUser } from "@/store/userSlice"
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: "iconamoon:home-light" },
@@ -39,6 +40,7 @@ export default function Sidebar() {
     const logout = async () => {
         try {
             await account.deleteSession("current");
+            dispatch(clearUser());
             toast({
                 description: "Logged out successfully",
             })

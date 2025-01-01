@@ -3,6 +3,7 @@ import navReducer from "./navSlice";
 import modalReduer from "./modalSlice";
 import sidebarReducer from "./sideBar";
 import userReducer from "./userSlice";
+import profileReducer from "./profileSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     sidebar: sidebarReducer,
     modal: modalReduer,
     user: userReducer,
+    profile: profileReducer,
   },
 });
 

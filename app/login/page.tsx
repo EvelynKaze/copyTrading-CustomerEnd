@@ -26,10 +26,11 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
-import { account } from "../../lib/appwrite";
+import { account, databases, Query } from "../../lib/appwrite";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/store/hook";
 import { setUser } from "@/store/userSlice"
+import { setProfile } from "@/store/profileSlice";
 import { ToastAction } from "@/components/ui/toast"
 
 const loginSchema = z.object({
@@ -64,6 +65,13 @@ export default function LoginForm() {
       console.log("Session:", session);
         // Retrieve user data
         const userData = await account.get();
+        const profile = await databases.listDocuments(
+            process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+            process.env.NEXT_PUBLIC_APPWRITE_PROFILE_COLLECTION_ID!,
+            [
+                Query.equal("user_id", userData?.$id)
+            ]
+        )
 
         // Dispatch user data to Redux store
         dispatch(
@@ -74,6 +82,8 @@ export default function LoginForm() {
                 emailVerification: userData.emailVerification,
             })
         );
+        // Dispatch user profile to Redux store
+        dispatch(setProfile({ ...profile }));
 
         toast({
             title: "Logged In Successfully",
