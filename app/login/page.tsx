@@ -72,6 +72,7 @@ export default function LoginForm() {
                 Query.equal("user_id", userData?.$id)
             ]
         )
+        console.log("profileee", profile.documents[0])
 
         // Dispatch user data to Redux store
         dispatch(
@@ -83,7 +84,7 @@ export default function LoginForm() {
             })
         );
         // Dispatch user profile to Redux store
-        dispatch(setProfile({ ...profile }));
+        dispatch(setProfile({ ...profile.documents[0], id: profile.documents[0].$id }));
 
         toast({
             title: "Logged In Successfully",
@@ -91,7 +92,11 @@ export default function LoginForm() {
         });
 
       setIsLoading(false);
-      router.push("/dashboard");
+      if(profile.documents[0].isAdmin) {
+          router.push("/admin");
+      } else{
+          router.push("/dashboard");
+      }
     } catch (error: any) {
       console.error("Login error:", error.message);
         toast({
