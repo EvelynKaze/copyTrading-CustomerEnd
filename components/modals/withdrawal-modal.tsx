@@ -10,11 +10,12 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { RootState } from "@/store/store"
 
 const WithdrawalModal = () => {
   const dispatch = useDispatch();
   const { isOpen, modalType, modalProps } = useSelector(
-    (state: any) => state.modal
+    (state: RootState) => state.modal
   );
 
   if (!isOpen || modalType !== "withdrawal") return null;

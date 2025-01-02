@@ -162,7 +162,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({ user, onBack }) => {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This will temporarily suspend the user's account. They will not
+                This will temporarily suspend the user&#39;s account. They will not
                 be able to log in or access any services until the suspension is
                 lifted.
               </AlertDialogDescription>
@@ -187,7 +187,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({ user, onBack }) => {
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
                 This action cannot be undone. This will permanently delete the
-                user's account and remove their data from our servers.
+                user&#39;s account and remove their data from our servers.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

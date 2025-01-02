@@ -93,7 +93,8 @@ export default function SignupForm() {
       });
 
       router.push("/onboarding");
-    } catch (error: any) {
+    } catch (err) {
+        const error = err as Error
       toast({
         title: "Registration failed",
         description: error.message || "Something went wrong. Please try again.",
@@ -105,24 +106,25 @@ export default function SignupForm() {
   };
 
     // Appwrite logout function
-    const logout = async () => {
-        try {
-            await account.deleteSession("current");
-            toast({
-                description: "Logged out successfully",
-            })
-            // if (typeof window !== "undefined") {
-            //     localStorage.removeItem("userName")
-            //     localStorage.removeItem("userId")
-            //     localStorage.removeItem("fullName")
-            // }
-        } catch (error: any) {
-            console.error("Logout error:", error.message);
-            toast({
-                description: `${error.message}`,
-            })
-        }
-    };
+    // const logout = async () => {
+    //     try {
+    //         await account.deleteSession("current");
+    //         toast({
+    //             description: "Logged out successfully",
+    //         })
+    //         // if (typeof window !== "undefined") {
+    //         //     localStorage.removeItem("userName")
+    //         //     localStorage.removeItem("userId")
+    //         //     localStorage.removeItem("fullName")
+    //         // }
+    //     } catch (err) {
+    //         const error = err as Error
+    //         console.error("Logout error:", error.message);
+    //         toast({
+    //             description: `${error.message}`,
+    //         })
+    //     }
+    // };
 
 
     return (
