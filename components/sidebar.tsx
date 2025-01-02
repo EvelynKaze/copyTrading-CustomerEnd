@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { account } from "@/lib/appwrite";
 import { useToast } from "@/hooks/use-toast";
 import { clearUser } from "@/store/userSlice"
+import { clearProfile } from "@/store/profileSlice";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: "iconamoon:home-light" },
@@ -41,6 +42,7 @@ export default function Sidebar() {
         try {
             await account.deleteSession("current");
             dispatch(clearUser());
+            dispatch(clearProfile());
             toast({
                 description: "Logged out successfully",
             })
