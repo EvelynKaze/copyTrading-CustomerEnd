@@ -92,7 +92,8 @@ export default function SignupForm() {
       });
 
       router.push("/onboarding");
-    } catch (error: any) {
+    } catch (err) {
+        const error = err as Error
       toast({
         title: "Registration failed",
         description: error.message || "Something went wrong. Please try again.",

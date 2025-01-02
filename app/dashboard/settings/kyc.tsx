@@ -37,7 +37,7 @@ const KYC = () => {
               <SelectContent>
                 <SelectItem value="passport">Passport</SelectItem>
                 <SelectItem value="drivers-license">
-                  Driver's License
+                  Driver&#39;s License
                 </SelectItem>
                 <SelectItem value="national-id">National ID</SelectItem>
               </SelectContent>

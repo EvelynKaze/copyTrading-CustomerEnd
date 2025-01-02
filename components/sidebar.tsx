@@ -52,7 +52,8 @@ export default function Sidebar() {
             //     localStorage.removeItem("userId")
             //     localStorage.removeItem("fullName")
             // }
-        } catch (error: any) {
+        } catch (err) {
+            const error = err as Error;
             console.error("Logout error:", error.message);
             toast({
                 description: `${error.message}`,

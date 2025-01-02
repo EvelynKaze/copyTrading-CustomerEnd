@@ -9,10 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Copy } from "lucide-react";
 import { closeModal } from "@/store/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store"
 
 const DepositModal: React.FC = () => {
   const dispatch = useDispatch();
-  const { isOpen, modalProps } = useSelector((state: any) => state.modal);
+  const { isOpen, modalProps } = useSelector((state: RootState) => state.modal);
   const { address, currency, amount } = modalProps;
 
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes in seconds

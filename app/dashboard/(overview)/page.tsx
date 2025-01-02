@@ -3,7 +3,7 @@
 import { StatsCards } from "../../../components/stats-cards";
 import { StatisticsChart } from "@/components/statistics-chart";
 import { StockOptions } from "@/components/stock-options";
-import { CryptoExchange } from "@/components/exchange";
+// import { CryptoExchange } from "@/components/exchange";
 
 // Sample data
 const stats = {

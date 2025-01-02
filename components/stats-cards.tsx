@@ -1,4 +1,4 @@
-import { ArrowDownRight, ArrowUpRight, Wallet } from "lucide-react";
+import { ArrowUpRight, Wallet } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CryptoStats } from "@/types/dashboard";

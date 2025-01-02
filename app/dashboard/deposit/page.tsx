@@ -103,14 +103,17 @@ const Deposit = () => {
         setCopied(true);
         setTimeout(() => setCopied(false), 3000);
       } catch (err) {
+        // Cast err as an instance of Error
+        const error = err as Error;
         toast({
           title: "Copy failed",
-          description: "Failed to copy wallet address. Please try again.",
+          description: `${error.message}`,
           variant: "destructive",
         });
       }
     }
   };
+
 
   return (
     <div className="flex h-full justify-center items-center w-full gap-6">
