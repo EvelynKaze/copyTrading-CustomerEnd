@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -28,9 +28,10 @@ import Link from "next/link";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
 import { useRouter } from "next/navigation";
-import { account, ID } from "../../lib/appwrite";
+import { account, ID, databases, Query } from "../../lib/appwrite";
 import { useAppDispatch } from "@/store/hook";
-import { setUser } from "@/store/userSlice";
+import { clearUser, setUser } from "@/store/userSlice";
+import { setProfile } from "@/store/profileSlice";
 
 const signupSchema = z
   .object({
@@ -56,6 +57,7 @@ export default function SignupForm() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
+
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -76,6 +78,37 @@ export default function SignupForm() {
       // Retrieve user data
       const userData = await account.get();
 
+      // Fetch profile data
+      const profile = await databases.listDocuments(
+        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+        process.env.NEXT_PUBLIC_APPWRITE_PROFILE_COLLECTION_ID!,
+        [Query.equal("user_id", userData.$id)]
+      );
+
+      if (!profile.documents.length) {
+        // throw new Error("Profile not found for this user.");
+        toast({
+          title: "Please complete your profile",
+          description: "Redirecting to onboarding page...",
+        });
+        router.push("/onboarding");
+      }
+      const profileData = profile.documents[0];
+      console.log("Profile:", profileData);
+
+      // Dispatch user data to Redux store
+      dispatch(
+        setUser({
+          id: userData.$id,
+          email: userData.email,
+          name: userData.name,
+          emailVerification: userData.emailVerification,
+        })
+      );
+
+      // Dispatch user profile to Redux store
+      dispatch(setProfile({ ...profileData, id: profileData.$id }));
+
       // Dispatch user data to Redux store
       dispatch(
         setUser({
@@ -92,8 +125,7 @@ export default function SignupForm() {
       });
 
       router.push("/onboarding");
-    } catch (err) {
-        const error = err as Error
+    } catch (error: any) {
       toast({
         title: "Registration failed",
         description: error.message || "Something went wrong. Please try again.",

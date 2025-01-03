@@ -13,12 +13,13 @@ const withAuth = (
     const router = useRouter();
 
     useEffect(() => {
-      if (!isLoggedIn) {
+      if (isLoggedIn == false) {
+        console.log(isLoggedIn);
         router.push("/login");
       }
     }, [isLoggedIn, router]);
 
-    if (!isLoggedIn) {
+    if (isLoggedIn == false) {
       return null; // Or display a loading spinner
     }
 

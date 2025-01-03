@@ -1,8 +1,11 @@
 "use client";
 
+import { CopyTradingOptions } from "@/components/copytrading-options";
 import { StatsCards } from "../../../components/stats-cards";
 import { StatisticsChart } from "@/components/statistics-chart";
 import { StockOptions } from "@/components/stock-options";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 // import { CryptoExchange } from "@/components/exchange";
 
 // Sample data
@@ -16,14 +19,17 @@ const stats = {
 };
 
 export default function UserDashboard() {
+  const userState = useSelector((state: RootState) => state.user.isLoggedIn);
+  console.log(userState);
   return (
-    <div className="flex h-full flex-1 gap-6">
+    <div className="flex flex-col lg:flex-row h-full flex-1 gap-6">
       <div className="flex-1 h-full overflow-y-scroll space-y-6">
         <StatsCards stats={stats} />
         <StatisticsChart />
         <StockOptions />
       </div>
-      <div className="w-80 hidden lg:block space-y-6">
+      <div className="w-full lg:w-80 space-y-6">
+        <CopyTradingOptions />
         {/*<CryptoExchange />*/}
         {/* <Card className="p-6">
           <QuickTransfer users={quickTransferUsers} />

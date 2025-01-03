@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -29,9 +29,9 @@ import ThemeToggle from "@/components/toggleTheme";
 import { account, databases, Query } from "../../lib/appwrite";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/store/hook";
-import { setUser } from "@/store/userSlice"
+import { clearUser, setUser } from "@/store/userSlice";
 import { setProfile } from "@/store/profileSlice";
-import { ToastAction } from "@/components/ui/toast"
+import { ToastAction } from "@/components/ui/toast";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -48,7 +48,6 @@ export default function LoginForm() {
   const router = useRouter();
   const dispatch = useAppDispatch(); // Moved to the top of the component
 
-
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -56,59 +55,78 @@ export default function LoginForm() {
       password: "",
     },
   });
-
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
 
     try {
-      const session = await account.createEmailPasswordSession(data.email, data.password);
+      setIsLoading(true);
+
+      // Authenticate user
+      const session = await account.createEmailPasswordSession(
+        data.email,
+        data.password
+      );
       console.log("Session:", session);
-        // Retrieve user data
-        const userData = await account.get();
-        const profile = await databases.listDocuments(
-            process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
-            process.env.NEXT_PUBLIC_APPWRITE_PROFILE_COLLECTION_ID!,
-            [
-                Query.equal("user_id", userData?.$id)
-            ]
-        )
-        console.log("profileee", profile.documents[0])
 
-        // Dispatch user data to Redux store
-        dispatch(
-            setUser({
-                id: userData.$id,
-                email: userData.email,
-                name: userData.name,
-                emailVerification: userData.emailVerification,
-            })
-        );
-        // Dispatch user profile to Redux store
-        dispatch(setProfile({ ...profile.documents[0], id: profile.documents[0].$id }));
-
-        toast({
-            title: "Logged In Successfully",
-            description: "Redirecting to your dashboard...",
-        });
-
-      setIsLoading(false);
-      if(profile.documents[0].isAdmin) {
-          router.push("/admin");
-      } else{
-          router.push("/dashboard");
+      // Retrieve user data
+      const userData = await account.get();
+      if (!userData) {
+        throw new Error("User data not found.");
       }
+      console.log("User Data:", userData);
+
+      // Fetch profile data
+      const profile = await databases.listDocuments(
+        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+        process.env.NEXT_PUBLIC_APPWRITE_PROFILE_COLLECTION_ID!,
+        [Query.equal("user_id", userData.$id)]
+      );
+
+      if (!profile.documents.length) {
+        // throw new Error("Profile not found for this user.");
+        toast({
+          title: "Please complete your profile",
+          description: "Redirecting to onboarding page...",
+        });
+        router.push("/onboarding");
+      }
+      const profileData = profile.documents[0];
+      console.log("Profile:", profileData);
+
+      // Dispatch user data to Redux store
+      dispatch(
+        setUser({
+          id: userData.$id,
+          email: userData.email,
+          name: userData.name,
+          emailVerification: userData.emailVerification,
+        })
+      );
+
+      // Dispatch user profile to Redux store
+      dispatch(setProfile({ ...profileData, id: profileData.$id }));
+
+      // Show success toast
+      toast({
+        title: "Logged In Successfully",
+        description: "Redirecting to your dashboard...",
+      });
+
+      // Redirect based on admin status
+      setIsLoading(false);
+      router.push(profileData.isAdmin ? "/admin" : "/dashboard");
     } catch (error: any) {
       console.error("Login error:", error.message);
-        toast({
-            title: "Sign In Error",
-            description: `${error.message}`,
-            variant: "destructive",
-            action: <ToastAction altText="Try again">Try again</ToastAction>,
-        });
+
+      toast({
+        title: "Sign In Error",
+        description: error.message || "An unexpected error occurred.",
+        variant: "destructive",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+
       setIsLoading(false);
     }
-
-
   };
 
   return (

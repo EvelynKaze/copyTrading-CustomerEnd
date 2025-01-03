@@ -25,6 +25,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     fetchUser();
   }, []);
 
+  
+
   const logout = async () => {
     try {
       await account.deleteSession("current");

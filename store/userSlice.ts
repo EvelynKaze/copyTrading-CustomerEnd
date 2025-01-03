@@ -22,10 +22,15 @@ const userSlice = createSlice({
     setUser(state, action: PayloadAction<UserState["user"]>) {
       state.user = action.payload;
       state.isLoggedIn = true;
+      console.log("user", state.user);
+      console.log("isLoggedIn", state.isLoggedIn);
     },
     clearUser(state) {
       state.user = null;
       state.isLoggedIn = false;
+
+      console.log("user", state.user);
+      console.log("isLoggedIn", state.isLoggedIn);
     },
   },
 });

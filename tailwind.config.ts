@@ -18,7 +18,7 @@ export default {
         appGold20: "hsla(40, 98%, 81%, 0.1)",
         appGold100: "hsla(40, 98%, 81%, 1)",
         appGold200: "hsla(40, 80%, 76%, 1)",
-        appGold600: "EAB855",
+        appGold600: "#EAB855",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

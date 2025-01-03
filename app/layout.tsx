@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AnimatePresence } from "framer-motion";
-import { Providers } from "./providers";
-import { UserProvider } from "@/app/context/user-context";
+import { PersistProviders, Providers } from "./providers";
 import { Toaster } from "@/components/ui/toaster";
+import AppInitializer from "./app-initializer";
 
 export const metadata: Metadata = {
   title: "CopyTradeMarkets",
@@ -17,19 +17,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ThemeProvider>
-      <UserProvider>
+    <PersistProviders>
+      <ThemeProvider>
         <Providers>
-          <AnimatePresence>
-            <html lang="en">
-              <body className={`antialiased`}>
-              <main>{children}</main>
-              <Toaster />
-              </body>
-            </html>
-          </AnimatePresence>
+          <AppInitializer>
+            <AnimatePresence>
+              <html lang="en">
+                <body className={`antialiased`}>
+                  <main>{children}</main>
+                  <Toaster />
+                </body>
+              </html>
+            </AnimatePresence>
+          </AppInitializer>
         </Providers>
-      </UserProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </PersistProviders>
   );
 }
