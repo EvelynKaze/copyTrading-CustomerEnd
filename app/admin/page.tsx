@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import AdminDashboard from "./admin-dashboard";
 import UserDetails from "./user-details";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 interface User {
   id: number;
@@ -21,7 +23,10 @@ interface User {
 }
 
 const AdminPanel: React.FC = () => {
+  const userState = useSelector((state: RootState) => state.user.isLoggedIn);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+  console.log("user", userState);
 
   const handleSelectUser = (user: User) => {
     // In a real application, you would fetch the full user details here

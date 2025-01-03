@@ -9,7 +9,7 @@ export default function ToggleSidebar() {
   return (
     <button
       onClick={() => dispatch(toggleSidebar())}
-      className="md:hidden p-2 rounded-md text-appDarkCard dark:text-white hover:dark:text-appDarkCard hover:bg-appCardGold "
+      className="lg:hidden p-2 rounded-md text-appDarkCard dark:text-white hover:dark:text-appDarkCard hover:bg-appCardGold "
     >
       <Icon icon={"ic:round-menu"} className="text-xl" />
     </button>

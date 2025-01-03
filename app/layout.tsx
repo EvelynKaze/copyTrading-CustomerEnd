@@ -3,8 +3,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AnimatePresence } from "framer-motion";
 import { Providers } from "./providers";
-import { UserProvider } from "@/app/context/user-context";
 import { Toaster } from "@/components/ui/toaster";
+import AppInitializer from "./app-initializer";
 
 export const metadata: Metadata = {
   title: "CopyTradeMarkets",
@@ -18,18 +18,16 @@ export default function RootLayout({
 }>) {
   return (
     <ThemeProvider>
-      <UserProvider>
-        <Providers>
-          <AnimatePresence>
-            <html lang="en">
-              <body className={`antialiased`}>
+      <Providers>
+        <AnimatePresence>
+          <html lang="en">
+            <body className={`antialiased`}>
               <main>{children}</main>
               <Toaster />
-              </body>
-            </html>
-          </AnimatePresence>
-        </Providers>
-      </UserProvider>
+            </body>
+          </html>
+        </AnimatePresence>
+      </Providers>
     </ThemeProvider>
   );
 }

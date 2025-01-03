@@ -26,7 +26,7 @@ export const MobileSidebar: React.FC = () => {
       initial={{ x: "-100%" }}
       animate={{ x: isOpen ? 0 : "-100%" }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="fixed inset-y-0 left-0 z-50 shadow-lg md:hidden"
+      className="fixed inset-y-0 left-0 z-50 shadow-lg lg:hidden"
     >
       <div className="h-full overflow-y-auto">
         <Sidebar />

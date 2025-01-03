@@ -18,6 +18,7 @@ import DropDownNav from "@/components/landing/DropDownNav";
 export default function Home() {
   const [showAll, setShowAll] = useState<boolean>(false);
 
+
   // Number of rows to show initially
   const visibleRows = 2;
   const itemsPerRow = 3;

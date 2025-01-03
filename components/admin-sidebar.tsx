@@ -17,6 +17,11 @@ const navigation = [
     icon: "grommet-icons:transaction",
   },
   {
+    name: "Cryptocurrency",
+    href: "/admin/set-crypto",
+    icon: "bx:bxs-coin-stack",
+  },
+  {
     name: "Audit Log",
     href: "/admin/audit-log",
     icon: "mdi:clipboard-text-clock-outline",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -28,9 +28,10 @@ import Link from "next/link";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
 import { useRouter } from "next/navigation";
-import { account, ID } from "../../lib/appwrite";
+import { account, ID, databases, Query } from "../../lib/appwrite";
 import { useAppDispatch } from "@/store/hook";
-import { setUser } from "@/store/userSlice"
+import { clearUser, setUser } from "@/store/userSlice";
+import { setProfile } from "@/store/profileSlice";
 
 const signupSchema = z
   .object({
@@ -74,18 +75,49 @@ export default function SignupForm() {
       await account.create(ID.unique(), data.email, data.password, data.name);
       await account.createEmailPasswordSession(data.email, data.password);
 
-        // Retrieve user data
-        const userData = await account.get();
+      // Retrieve user data
+      const userData = await account.get();
 
-        // Dispatch user data to Redux store
-        dispatch(
-            setUser({
-                id: userData.$id,
-                email: userData.email,
-                name: userData.name,
-                emailVerification: userData.emailVerification,
-            })
-        );
+      // Fetch profile data
+      const profile = await databases.listDocuments(
+        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+        process.env.NEXT_PUBLIC_APPWRITE_PROFILE_COLLECTION_ID!,
+        [Query.equal("user_id", userData.$id)]
+      );
+
+      if (!profile.documents.length) {
+        // throw new Error("Profile not found for this user.");
+        toast({
+          title: "Please complete your profile",
+          description: "Redirecting to onboarding page...",
+        });
+        router.push("/onboarding");
+      }
+      const profileData = profile.documents[0];
+      console.log("Profile:", profileData);
+
+      // Dispatch user data to Redux store
+      dispatch(
+        setUser({
+          id: userData.$id,
+          email: userData.email,
+          name: userData.name,
+          emailVerification: userData.emailVerification,
+        })
+      );
+
+      // Dispatch user profile to Redux store
+      dispatch(setProfile({ ...profileData, id: profileData.$id }));
+
+      // Dispatch user data to Redux store
+      dispatch(
+        setUser({
+          id: userData.$id,
+          email: userData.email,
+          name: userData.name,
+          emailVerification: userData.emailVerification,
+        })
+      );
 
       toast({
         title: "Account created",
@@ -93,8 +125,7 @@ export default function SignupForm() {
       });
 
       router.push("/onboarding");
-    } catch (err) {
-        const error = err as Error
+    } catch (error: any) {
       toast({
         title: "Registration failed",
         description: error.message || "Something went wrong. Please try again.",
@@ -105,29 +136,27 @@ export default function SignupForm() {
     }
   };
 
-    // Appwrite logout function
-    // const logout = async () => {
-    //     try {
-    //         await account.deleteSession("current");
-    //         toast({
-    //             description: "Logged out successfully",
-    //         })
-    //         // if (typeof window !== "undefined") {
-    //         //     localStorage.removeItem("userName")
-    //         //     localStorage.removeItem("userId")
-    //         //     localStorage.removeItem("fullName")
-    //         // }
-    //     } catch (err) {
-    //         const error = err as Error
-    //         console.error("Logout error:", error.message);
-    //         toast({
-    //             description: `${error.message}`,
-    //         })
-    //     }
-    // };
+  // Appwrite logout function
+  const logout = async () => {
+    try {
+      await account.deleteSession("current");
+      toast({
+        description: "Logged out successfully",
+      });
+      // if (typeof window !== "undefined") {
+      //     localStorage.removeItem("userName")
+      //     localStorage.removeItem("userId")
+      //     localStorage.removeItem("fullName")
+      // }
+    } catch (error: any) {
+      console.error("Logout error:", error.message);
+      toast({
+        description: `${error.message}`,
+      });
+    }
+  };
 
-
-    return (
+  return (
     <div className="flex flex-col md:flex-row-reverse justify-center gap-4 relative items-center w-full h-screen">
       <div className="absolute top-8 right-8">
         <ThemeToggle />
@@ -232,18 +261,23 @@ export default function SignupForm() {
               </form>
             </Form>
           </CardContent>
-            <CardFooter className="flex justify-center">
-                <p className="text-sm text-muted-foreground">
-                    Already have an account?{" "}
-                    <Link
-                        href="/login"
-                        className="p-0 text-appGold100 cursor-pointer"
-                    >
-                        Log in
-                    </Link>
-                </p>
-                {/*<div className="cursor-pointer text-orange-600 px-3" onClick={() => logout()}>Log out</div>*/}
-            </CardFooter>
+          <CardFooter className="flex justify-center">
+            <p className="text-sm text-muted-foreground">
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="p-0 text-appGold100 cursor-pointer"
+              >
+                Log in
+              </Link>
+            </p>
+            <div
+              className="cursor-pointer text-orange-600 px-3"
+              onClick={() => logout()}
+            >
+              Log out
+            </div>
+          </CardFooter>
         </Card>
       </motion.div>
     </div>
