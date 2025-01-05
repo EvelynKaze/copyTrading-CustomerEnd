@@ -34,7 +34,7 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
       <MobileSidebar />
       <div className="w-full md:flex-grow h-full">
         <Header user={user} avatarUrl={avatarUrl} /> {/* Pass avatarUrl */}
-        <div className="h-[calc(100dvh-6rem)] p-4 md:p-12">{children}</div>
+        <div className="lg:h-[calc(100dvh-6rem)] p-4 md:p-12">{children}</div>
       </div>
     </div>
   );
