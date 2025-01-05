@@ -7,11 +7,13 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { ProfileProvider } from "@/app/context/ProfileContext";
 
 const Layout = ({ children }: { children?: React.ReactNode }) => {
   const user = useSelector((state: RootState) => state.user.user);
   const profile = useSelector((state: RootState) => state.profile.profile); // Access profile data
   const avatarUrl = profile?.avatar_url || null; // Get avatar_url or set null
+  const userName = profile?.user_name || null;
   const router = useRouter();
 
   // Redirect to login page if user is not authenticated
@@ -27,17 +29,19 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
   }
 
   return (
+   <ProfileProvider profile={profile}>
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
       <div className="hidden md:block">
         <AdminSidebar />
       </div>
       <AdminMobileSidebar />
       <div className="w-full md:flex-grow h-full">
-        <Header user={user} avatarUrl={avatarUrl} /> {/* Pass avatarUrl */}
+        <Header userName={userName} avatarUrl={avatarUrl} /> {/* Pass avatarUrl */}
         <div className="h-[calc(100dvh-6rem)] md:p-12">{children}</div>
       </div>
     </div>
+  </ProfileProvider>
   );
 };
 
-export default Layout;
+export default withAuth(Layout);
