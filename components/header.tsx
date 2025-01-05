@@ -8,26 +8,22 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 
 
 interface HeaderProps {
-    user: {
-        id: string;
-        email: string;
-        name: string;
-        emailVerification: boolean;
-    } | null;
+    userName: string | null;
     avatarUrl: string | null // Add optional avatarUrl
+    accountTrader?: string | null
 }
 
 
-export function Header({ user, avatarUrl }: HeaderProps){
+export function Header({ userName, avatarUrl, accountTrader }: HeaderProps){
   return (
     <header className="flex items-center justify-between w-full border-b px-4 md:px-6 h-16 md:h-24 py-4">
       <ToggleSidebar />
       <div className="sm:flex hidden flex-col md:gap-1">
         <h1 className="text-base sm:text-lg md:text-2xl font-semibold">
-            Welcome {user?.name || "Guest"}!
+            Welcome {userName || "Guest"}!
         </h1>
         <p className="text-xs sm:text-xs md:text-sm text-muted-foreground">
-          Hope you are healthy and happy today...
+          Account Copy Trader: {accountTrader || "Unassigned"}
         </p>
       </div>
       <div className="flex items-center gap-4">

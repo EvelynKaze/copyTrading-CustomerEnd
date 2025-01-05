@@ -1,10 +1,10 @@
 export interface CryptoStats {
-  balance: number;
-  spending: number;
-  saved: number;
-  balanceChange: number;
-  spendingChange: number;
-  savedChange: number;
+  total_investment: number;
+  current_value: number;
+  roi: number;
+  // investmentChange: number;
+  // valueChange: number;
+  // roiChange: number;
 }
 
 export interface MarketTrend {
