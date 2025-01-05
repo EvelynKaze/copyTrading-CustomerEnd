@@ -117,7 +117,8 @@ const OnboardingPage = () => {
         description: "Redirecting to your dashboard...",
       });
       router.push("/dashboard");
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as Error;
       console.error("Error completing profile:", error);
       toast({
         title: "Profile Completion Failed",
