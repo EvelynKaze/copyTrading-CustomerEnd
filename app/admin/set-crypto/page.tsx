@@ -193,7 +193,12 @@ export default function CryptocurrenciesAdminPage() {
                 />
               </div>
             </div>
-            <Button onClick={handleAddCrypto}>Add Cryptocurrency</Button>
+            <Button
+              className="bg-appCardGold text-appDarkCard"
+              onClick={handleAddCrypto}
+            >
+              Add Cryptocurrency
+            </Button>
           </DialogContent>
         </Dialog>
       </div>
@@ -221,6 +226,7 @@ export default function CryptocurrenciesAdminPage() {
                   onCheckedChange={() =>
                     handleToggle(crypto.id, "showForDeposit")
                   }
+                  className="data-[state=checked]:bg-appCardGold"
                 />
               </TableCell>
               <TableCell>
@@ -297,7 +303,12 @@ export default function CryptocurrenciesAdminPage() {
                           </div>
                         </div>
                       )}
-                      <Button onClick={handleEditCrypto}>Save Changes</Button>
+                      <Button
+                        className="bg-appCardGold text-appDarkCard"
+                        onClick={handleEditCrypto}
+                      >
+                        Save Changes
+                      </Button>
                     </DialogContent>
                   </Dialog>
                   <AlertDialog>
