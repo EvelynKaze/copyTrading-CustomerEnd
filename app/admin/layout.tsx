@@ -2,11 +2,11 @@
 import { AdminMobileSidebar } from "@/components/admin-mobile-sidebar";
 import AdminSidebar from "@/components/admin-sidebar";
 import { Header } from "@/components/header";
-import withAuth from "../hoc/with-auth";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import withAdmin from "../hoc/with-admin";
 
 const Layout = ({ children }: { children?: React.ReactNode }) => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -16,6 +16,7 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
 
   // Redirect to login page if user is not authenticated
   useEffect(() => {
+    console.log(user);
     if (user === null) {
       router.push("/login");
     }
@@ -40,4 +41,4 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
   );
 };
 
-export default Layout;
+export default withAdmin(Layout);
