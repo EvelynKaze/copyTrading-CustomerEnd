@@ -34,10 +34,10 @@ export default function AdminDashboard() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="stocks" className="mt-6">
-          <AdminStocks />
+          <CryptocurrenciesAdmin />
         </TabsContent>
         <TabsContent value="component1" className="mt-6">
-          <CryptocurrenciesAdmin />
+          <AdminStocks />
         </TabsContent>
         <TabsContent value="component2" className="mt-6">
           <AdminCopyTrading />
