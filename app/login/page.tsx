@@ -56,7 +56,7 @@ const LoginForm = () => {
     if (userSession) {
       router.push("/dashboard");
     }
-  }, []);
+  }, [userSession, router]);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
