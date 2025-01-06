@@ -32,6 +32,9 @@ import { useAppDispatch } from "@/store/hook";
 import { clearUser, setUser } from "@/store/userSlice";
 import { setProfile } from "@/store/profileSlice";
 import { ToastAction } from "@/components/ui/toast";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import withLoggedIn from "../hoc/with-loggedIn";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -42,13 +45,18 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-export default function LoginForm() {
+const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const userSession = useSelector((state: RootState) => state.user.isLoggedIn);
 
-  
+  useEffect(() => {
+    if (userSession) {
+      router.push("/dashboard");
+    }
+  }, []);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -230,4 +238,6 @@ export default function LoginForm() {
       </motion.div>
     </div>
   );
-}
+};
+
+export default withLoggedIn(LoginForm);

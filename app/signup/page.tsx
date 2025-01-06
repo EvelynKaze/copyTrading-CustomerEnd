@@ -32,6 +32,8 @@ import { account, ID, databases, Query } from "../../lib/appwrite";
 import { useAppDispatch } from "@/store/hook";
 import { clearUser, setUser } from "@/store/userSlice";
 import { setProfile } from "@/store/profileSlice";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 const signupSchema = z
   .object({
@@ -56,7 +58,13 @@ export default function SignupForm() {
   const { toast } = useToast();
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const userSession = useSelector((state: RootState) => state.user.isLoggedIn);
 
+  useEffect(() => {
+    if (userSession) {
+      router.push("/dashboard");
+    }
+  }, []);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
