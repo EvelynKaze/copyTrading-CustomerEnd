@@ -7,6 +7,7 @@ import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import withAdmin from "../hoc/with-admin";
+import { ProfileProvider } from "../context/ProfileContext";
 
 const Layout = ({ children }: { children?: React.ReactNode }) => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -29,17 +30,21 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
   }
 
   return (
+    <ProfileProvider profile={profile}>
+
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
       <div className="hidden md:block">
         <AdminSidebar />
       </div>
       <AdminMobileSidebar />
       <div className="w-full md:flex-grow h-full">
-        <Header userName={userName} avatarUrl={avatarUrl} /> {/* Pass avatarUrl */}
+        <Header userName={userName} avatarUrl={avatarUrl} />{" "}
+        {/* Pass avatarUrl */}
         <div className="h-[calc(100dvh-6rem)] md:p-12">{children}</div>
       </div>
     </div>
+    </ProfileProvider>
   );
 };
 
-export default withAdmin(Layout);
+export default Layout;
