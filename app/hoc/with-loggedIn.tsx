@@ -19,10 +19,6 @@ const withLoggedIn = (
       }
     }, [isLoggedIn, router]);
 
-    if (isLoggedIn == false) {
-      return null; // Or display a loading spinner
-    }
-
     return <WrappedComponent {...props} />;
   };
 
