@@ -117,6 +117,7 @@ const LoginForm = () => {
       dispatch(setProfile({ ...profileData, id: profileData.$id }));
 
       // Show success toast
+      console.log("Logged In Successfully", profileData.isAdmin);
       toast({
         title: "Logged In Successfully",
         description: "Redirecting to your dashboard...",
@@ -124,7 +125,7 @@ const LoginForm = () => {
 
       // Redirect based on admin status
       setIsLoading(false);
-      router.push(profileData.isAdmin ? "/admin" : "/dashboard");
+      router.push(profileData.isAdmin == true ? "/admin" : "/dashboard");
     } catch (error: any) {
       console.error("Login error:", error.message);
 

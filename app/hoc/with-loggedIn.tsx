@@ -9,13 +9,14 @@ const withLoggedIn = (
   WrappedComponent: React.ComponentType<{ children?: React.ReactNode }>
 ) => {
   const WithLoggedIn = (props: { children?: React.ReactNode }) => {
+    const { profile } = useSelector((state: RootState) => state.profile);
     const { isLoggedIn } = useSelector((state: RootState) => state.user);
     const router = useRouter();
 
     useEffect(() => {
       if (isLoggedIn == true) {
         console.log(isLoggedIn);
-        router.push("/dashboard");
+        router.push(profile.isAdmin ? "/admin" : "/dashboard");
       }
     }, [isLoggedIn, router]);
 
