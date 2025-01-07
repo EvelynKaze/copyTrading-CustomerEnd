@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import {
   Card,
@@ -38,6 +38,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useProfile } from "@/app/context/ProfileContext";
+import { useToast } from "@/hooks/use-toast";
+import ENV from "@/constants/env";
+import {databases, ID} from "@/lib/appwrite";
 
 interface Stock {
   id: number;
@@ -45,50 +49,83 @@ interface Stock {
   name: string;
   price: number;
   change: number;
+  isMinus: boolean;
 }
 
-const initialStocks: Stock[] = [
-  { id: 1, symbol: "AAPL", name: "Apple Inc.", price: 150.25, change: 2.5 },
-  {
-    id: 2,
-    symbol: "GOOGL",
-    name: "Alphabet Inc.",
-    price: 2750.8,
-    change: -0.8,
-  },
-  {
-    id: 3,
-    symbol: "MSFT",
-    name: "Microsoft Corporation",
-    price: 305.5,
-    change: 1.2,
-  },
-  {
-    id: 4,
-    symbol: "AMZN",
-    name: "Amazon.com Inc.",
-    price: 3380.75,
-    change: -1.5,
-  },
-  { id: 5, symbol: "TSLA", name: "Tesla Inc.", price: 725.6, change: 3.7 },
-];
 
 export default function AdminStocks() {
-  const [stocks, setStocks] = useState<Stock[]>(initialStocks);
-  const [editingStock, setEditingStock] = useState<Stock | null>(null);
+  const [stocks, setStocks] = useState<any>();
+  const [editingStock, setEditingStock] = useState<any>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [deletingStockId, setDeletingStockId] = useState<number | null>(null);
+  const [ isLoading, setIsLoading ] = useState(false);
+  const { profile } = useProfile();
+  const { toast } = useToast();
 
-  const handleAddStock = (newStock: Omit<Stock, "id">) => {
-    const id = Math.max(...stocks.map((s) => s.id), 0) + 1;
-    setStocks([...stocks, { ...newStock, id }]);
-    setIsAddDialogOpen(false);
+  const databaseId = ENV.databaseId;
+  const collectionId = ENV.collections.stockOptions;
+
+  // Fetch traders from Appwrite on component mount
+  useEffect(() => {
+    const fetchStocks = async () => {
+      setIsLoading(true);
+      try {
+        const response = await databases.listDocuments(
+            databaseId,
+            collectionId
+        );
+        setStocks(
+            response.documents.map((doc) => ({ id: doc.$id, ...doc }))
+        );
+      } catch (error) {
+        console.error("Failed to fetch traders:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStocks();
+  }, [collectionId, databaseId]);
+
+  const handleAddStock = async (newStock: Omit<Stock, "id">) => {
+    setIsLoading(true);
+    try {
+      const response = await databases.createDocument(
+          databaseId,
+          collectionId,
+          ID.unique(),
+          {
+            name: newStock?.name,
+            price: newStock?.price,
+            symbol: newStock?.symbol,
+            change: newStock?.change,
+            isMinus: false,
+            user_id: profile?.user_id,
+            user_name: profile?.user_name,
+          }
+      );
+      setStocks([...stocks, { ...newStock, id: response.$id }]);
+      toast({
+        title: "New Stock Added",
+        description: `Added ${newStock?.name}`,
+      });
+      setIsAddDialogOpen(false);
+    } catch (err) {
+      const error = err as Error;
+      toast({
+        title: "Error Adding New Stock",
+        description: `Error: ${error.message}`,
+        variant: "destructive"
+      })
+      console.error("Failed to add stock:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleEditStock = (updatedStock: Stock) => {
     setStocks(
-      stocks.map((stock) =>
+      stocks?.map((stock) =>
         stock.id === updatedStock.id ? updatedStock : stock
       )
     );
@@ -96,9 +133,29 @@ export default function AdminStocks() {
     setEditingStock(null);
   };
 
-  const handleDeleteStock = (id: number) => {
-    setStocks(stocks.filter((stock) => stock.id !== id));
-    setDeletingStockId(null);
+  const handleDeleteStock = async (id: string) => {
+    setIsLoading(true);
+    try {
+      await databases.deleteDocument(
+          databaseId,
+          collectionId,
+          id
+      );
+      setStocks(stocks.filter((stock) => stock.id !== id));
+      toast({
+        title: "Delete Stock",
+        description: "Deleted Stock Successfully!",
+      })
+    } catch (err) {
+      const error = err as Error;
+      toast({
+        title: "Error deleting Stock",
+        description: `Error: ${error.message}`,
+      })
+      console.error("Failed to delete stock:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -121,7 +178,7 @@ export default function AdminStocks() {
               <DialogHeader>
                 <DialogTitle>Add New Stock</DialogTitle>
               </DialogHeader>
-              <StockForm onSubmit={handleAddStock} />
+              <StockForm isLoading={isLoading} onSubmit={handleAddStock} />
             </DialogContent>
           </Dialog>
         </div>
@@ -136,14 +193,14 @@ export default function AdminStocks() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {stocks.map((stock) => (
+            {stocks?.map((stock) => (
               <TableRow key={stock.id}>
                 <TableCell className="font-medium">{stock.symbol}</TableCell>
                 <TableCell>{stock.name}</TableCell>
                 <TableCell>${stock.price.toFixed(2)}</TableCell>
                 <TableCell
                   className={
-                    stock.change >= 0 ? "text-green-600" : "text-red-600"
+                    stock.isMinus ? "text-green-600" : "text-red-600"
                   }
                 >
                   {stock.change.toFixed(2)}%
@@ -169,6 +226,7 @@ export default function AdminStocks() {
                         </DialogHeader>
                         {editingStock && (
                           <StockForm
+                            isLoading={isLoading}
                             initialData={editingStock}
                             onSubmit={() => handleEditStock(editingStock)}
                           />
@@ -212,16 +270,18 @@ export default function AdminStocks() {
 
 interface StockFormProps {
   initialData?: Stock;
+  isLoading: boolean;
   onSubmit: (stock: Omit<Stock, "id">) => void;
 }
 
-function StockForm({ initialData, onSubmit }: StockFormProps) {
-  const [formData, setFormData] = useState<Omit<Stock, "id">>(
+function StockForm({ initialData, onSubmit, isLoading }: StockFormProps) {
+  const [formData, setFormData] = useState<any>(
     initialData || {
       symbol: "",
       name: "",
       price: 0,
       change: 0,
+      isMinus: false,
     }
   );
 
@@ -286,7 +346,7 @@ function StockForm({ initialData, onSubmit }: StockFormProps) {
           required
         />
       </div>
-      <Button type="submit" className="bg-appCardGold text-appDarkCard">
+      <Button disabled={isLoading} type="submit" className="bg-appCardGold text-appDarkCard">
         {initialData ? "Update Stock" : "Add Stock"}
       </Button>
     </form>

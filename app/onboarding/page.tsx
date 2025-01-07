@@ -1,7 +1,7 @@
 // Updates to onboarding/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Card,
@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import {
   storage,
@@ -22,13 +22,13 @@ import {
   ID,
   Permission,
   Role,
-  account,
 } from "@/lib/appwrite";
 import { useToast } from "@/hooks/use-toast";
 import { setProfile } from "@/store/profileSlice";
 import withOnboarding from "../hoc/with-onboarding";
-import { setUser, clearUser } from "@/store/userSlice";
 import { useAppDispatch } from "@/store/hook";
+import ENV from "@/constants/env"
+
 
 const OnboardingPage = () => {
   const { toast } = useToast();
@@ -78,13 +78,13 @@ const OnboardingPage = () => {
 
     try {
       const avatarUpload = await storage.createFile(
-        process.env.NEXT_PUBLIC_APPWRITE_PROFILE_BUCKET_ID!,
+        ENV.buckets.profile,
         ID.unique(),
         profilePicture
       );
 
-      const bucketId = process.env.NEXT_PUBLIC_APPWRITE_PROFILE_BUCKET_ID!;
-      const projectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID!;
+      const bucketId = ENV.buckets.profile;
+      const projectId = ENV.projectId;
       const imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${bucketId}/files/${avatarUpload.$id}/view?project=${projectId}`;
 
       const profileData = {
@@ -103,8 +103,8 @@ const OnboardingPage = () => {
       };
 
       const profile = await databases.createDocument(
-        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
-        process.env.NEXT_PUBLIC_APPWRITE_PROFILE_COLLECTION_ID!,
+        ENV.databaseId,
+        ENV.collections.profile,
         ID.unique(),
         profileData,
         [Permission.read(Role.any())]

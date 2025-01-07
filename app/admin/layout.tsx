@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import withAdmin from "../hoc/with-admin";
+// import withAdmin from "../hoc/with-admin";
 import { ProfileProvider } from "../context/ProfileContext";
 
 const Layout = ({ children }: { children?: React.ReactNode }) => {

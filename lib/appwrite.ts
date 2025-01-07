@@ -1,4 +1,5 @@
 import { Client, Account, Databases, Storage } from 'appwrite';
+import ENV from "@/constants/env"
 
 export const client = new Client();
 
@@ -6,11 +7,10 @@ export const databases = new Databases(client);
 
 export const storage = new Storage(client);
 
-const projectId = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID || '';
 
 client
     .setEndpoint('https://cloud.appwrite.io/v1')
-    .setProject(projectId);
+    .setProject(ENV.projectId);
 
 export const account = new Account(client);
 
