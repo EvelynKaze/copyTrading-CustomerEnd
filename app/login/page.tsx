@@ -29,12 +29,13 @@ import ThemeToggle from "@/components/toggleTheme";
 import { account, databases, Query } from "../../lib/appwrite";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/store/hook";
-import { clearUser, setUser } from "@/store/userSlice";
+import { setUser } from "@/store/userSlice";
 import { setProfile } from "@/store/profileSlice";
 import { ToastAction } from "@/components/ui/toast";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import withLoggedIn from "../hoc/with-loggedIn";
+import ENV from "@/constants/env"
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -87,8 +88,8 @@ const LoginForm = () => {
 
       // Fetch profile data
       const profile = await databases.listDocuments(
-        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
-        process.env.NEXT_PUBLIC_APPWRITE_PROFILE_COLLECTION_ID!,
+        ENV.databaseId,
+        ENV.collections.profile,
         [Query.equal("user_id", userData.$id)]
       );
 
