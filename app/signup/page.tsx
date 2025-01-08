@@ -34,6 +34,7 @@ import { setUser } from "@/store/userSlice";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 
+
 const signupSchema = z
   .object({
     name: z
@@ -58,12 +59,16 @@ export default function SignupForm() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const userSession = useSelector((state: RootState) => state.user.isLoggedIn);
+  const profileSession = useSelector((state: RootState) => state.profile);
+
+  console.log("Profile Session", profileSession);
+  console.log("User Session", userSession);
 
   useEffect(() => {
-    if (userSession) {
+    if (userSession && profileSession?.profile?.account_status) {
       router.push("/dashboard");
     }
-  }, []);
+  }, [profileSession, router, userSession]);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
