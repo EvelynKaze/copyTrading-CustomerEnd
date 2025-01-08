@@ -14,15 +14,15 @@ const withAdmin = (
     const router = useRouter();
 
     useEffect(() => {
-      if (isLoggedIn == false || profile?.isAdmin !== true) {
-        console.log(isLoggedIn, profile?.isAdmin);
-        router.push("/login");
+      if (!profile?.isAdmin) {
+        console.log(profile?.isAdmin);
+        router.push("/dashboard");
       }
     }, [isLoggedIn, router, profile]);
 
-    if (isLoggedIn == false) {
-      return null; // Or display a loading spinner
-    }
+    // if (isLoggedIn == false) {
+    //   return null; // Or display a loading spinner
+    // }
 
     return <WrappedComponent {...props} />;
   };

@@ -1,7 +1,7 @@
 "use client";
 
-import {useEffect, useState} from "react";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Plus, Pencil, Trash2, TrendingDown, TrendingUp } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -41,7 +41,14 @@ import {
 import { useProfile } from "@/app/context/ProfileContext";
 import { useToast } from "@/hooks/use-toast";
 import ENV from "@/constants/env";
-import {databases, ID} from "@/lib/appwrite";
+import { databases, ID } from "@/lib/appwrite";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 interface Stock {
   id: number;
@@ -52,13 +59,12 @@ interface Stock {
   isMinus: boolean;
 }
 
-
 export default function AdminStocks() {
   const [stocks, setStocks] = useState<any>();
   const [editingStock, setEditingStock] = useState<any>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [ isLoading, setIsLoading ] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { profile } = useProfile();
   const { toast } = useToast();
 
@@ -71,12 +77,10 @@ export default function AdminStocks() {
       setIsLoading(true);
       try {
         const response = await databases.listDocuments(
-            databaseId,
-            collectionId
+          databaseId,
+          collectionId
         );
-        setStocks(
-            response.documents.map((doc) => ({ id: doc.$id, ...doc }))
-        );
+        setStocks(response.documents.map((doc) => ({ id: doc.$id, ...doc })));
       } catch (error) {
         console.error("Failed to fetch traders:", error);
       } finally {
@@ -91,18 +95,18 @@ export default function AdminStocks() {
     setIsLoading(true);
     try {
       const response = await databases.createDocument(
-          databaseId,
-          collectionId,
-          ID.unique(),
-          {
-            name: newStock?.name,
-            price: newStock?.price,
-            symbol: newStock?.symbol,
-            change: newStock?.change,
-            isMinus: false,
-            user_id: profile?.user_id,
-            user_name: profile?.user_name,
-          }
+        databaseId,
+        collectionId,
+        ID.unique(),
+        {
+          name: newStock?.name,
+          price: newStock?.price,
+          symbol: newStock?.symbol,
+          change: newStock?.change,
+          isMinus: false,
+          user_id: profile?.user_id,
+          user_name: profile?.user_name,
+        }
       );
       setStocks([...stocks, { ...newStock, id: response.$id }]);
       toast({
@@ -115,8 +119,8 @@ export default function AdminStocks() {
       toast({
         title: "Error Adding New Stock",
         description: `Error: ${error.message}`,
-        variant: "destructive"
-      })
+        variant: "destructive",
+      });
       console.error("Failed to add stock:", error);
     } finally {
       setIsLoading(false);
@@ -136,22 +140,18 @@ export default function AdminStocks() {
   const handleDeleteStock = async (id: string) => {
     setIsLoading(true);
     try {
-      await databases.deleteDocument(
-          databaseId,
-          collectionId,
-          id
-      );
+      await databases.deleteDocument(databaseId, collectionId, id);
       setStocks(stocks.filter((stock) => stock.id !== id));
       toast({
         title: "Delete Stock",
         description: "Deleted Stock Successfully!",
-      })
+      });
     } catch (err) {
       const error = err as Error;
       toast({
         title: "Error deleting Stock",
         description: `Error: ${error.message}`,
-      })
+      });
       console.error("Failed to delete stock:", error);
     } finally {
       setIsLoading(false);
@@ -199,9 +199,7 @@ export default function AdminStocks() {
                 <TableCell>{stock.name}</TableCell>
                 <TableCell>${stock.price.toFixed(2)}</TableCell>
                 <TableCell
-                  className={
-                    stock.isMinus ? "text-green-600" : "text-red-600"
-                  }
+                  className={stock.isMinus ? "text-green-600" : "text-red-600"}
                 >
                   {stock.change.toFixed(2)}%
                 </TableCell>
@@ -293,6 +291,13 @@ function StockForm({ initialData, onSubmit, isLoading }: StockFormProps) {
     }));
   };
 
+  const handleSelectChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      isMinus: value === "bearish",
+    }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
@@ -346,7 +351,36 @@ function StockForm({ initialData, onSubmit, isLoading }: StockFormProps) {
           required
         />
       </div>
-      <Button disabled={isLoading} type="submit" className="bg-appCardGold text-appDarkCard">
+      <div className="grid w-full items-center gap-1.5">
+        <Label htmlFor="trend">Trend</Label>
+        <Select
+          onValueChange={handleSelectChange}
+          defaultValue={formData.isMinus ? "bearish" : "bullish"}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select trend" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="bullish">
+              <div className="flex items-center">
+                <TrendingUp className="mr-2 h-4 w-4 text-green-500" />
+                Bullish
+              </div>
+            </SelectItem>
+            <SelectItem value="bearish">
+              <div className="flex items-center">
+                <TrendingDown className="mr-2 h-4 w-4 text-red-500" />
+                Bearish
+              </div>
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <Button
+        disabled={isLoading}
+        type="submit"
+        className="bg-appCardGold text-appDarkCard"
+      >
         {initialData ? "Update Stock" : "Add Stock"}
       </Button>
     </form>

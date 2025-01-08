@@ -31,7 +31,7 @@ import { useRouter } from "next/navigation";
 import { account, ID, databases, Query } from "../../lib/appwrite";
 import { useAppDispatch } from "@/store/hook";
 import { clearUser, setUser } from "@/store/userSlice";
-import { setProfile } from "@/store/profileSlice";
+import { clearProfile, setProfile } from "@/store/profileSlice";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 
@@ -60,11 +60,10 @@ export default function SignupForm() {
   const dispatch = useAppDispatch();
   const userSession = useSelector((state: RootState) => state.user.isLoggedIn);
 
-  useEffect(() => {
-    if (userSession) {
-      router.push("/dashboard");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (userSession) {
+  //   }
+  // }, []);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -104,6 +103,8 @@ export default function SignupForm() {
       const profileData = profile.documents[0];
       console.log("Profile:", profileData);
 
+      console.log("User Data:", userData);
+
       // Dispatch user data to Redux store
       dispatch(
         setUser({
@@ -117,22 +118,7 @@ export default function SignupForm() {
       // Dispatch user profile to Redux store
       dispatch(setProfile({ ...profileData, id: profileData.$id }));
 
-      // Dispatch user data to Redux store
-      dispatch(
-        setUser({
-          id: userData.$id,
-          email: userData.email,
-          name: userData.name,
-          emailVerification: userData.emailVerification,
-        })
-      );
-
-      toast({
-        title: "Account created",
-        description: "Complete Profile Information...",
-      });
-
-      router.push("/onboarding");
+      // router.push("/onboarding");
     } catch (error: any) {
       toast({
         title: "Registration failed",
@@ -148,6 +134,8 @@ export default function SignupForm() {
   const logout = async () => {
     try {
       await account.deleteSession("current");
+      dispatch(clearUser());
+      dispatch(clearProfile());
       toast({
         description: "Logged out successfully",
       });
@@ -279,12 +267,12 @@ export default function SignupForm() {
                 Log in
               </Link>
             </p>
-            {/*<div*/}
-            {/*  className="cursor-pointer text-orange-600 px-3"*/}
-            {/*  onClick={() => logout()}*/}
-            {/*>*/}
-            {/*  Log out*/}
-            {/*</div>*/}
+            <div
+              className="cursor-pointer text-orange-600 px-3"
+              onClick={() => logout()}
+            >
+              Log out
+            </div>
           </CardFooter>
         </Card>
       </motion.div>
