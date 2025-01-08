@@ -31,7 +31,7 @@ import { useRouter } from "next/navigation";
 import { account, ID, databases, Query } from "../../lib/appwrite";
 import { useAppDispatch } from "@/store/hook";
 import { clearUser, setUser } from "@/store/userSlice";
-import { setProfile } from "@/store/profileSlice";
+import { clearProfile, setProfile } from "@/store/profileSlice";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 
@@ -117,21 +117,6 @@ export default function SignupForm() {
 
       // Dispatch user profile to Redux store
       dispatch(setProfile({ ...profileData, id: profileData.$id }));
-
-      // Dispatch user data to Redux store
-      dispatch(
-        setUser({
-          id: userData.$id,
-          email: userData.email,
-          name: userData.name,
-          emailVerification: userData.emailVerification,
-        })
-      );
-
-      toast({
-        title: "Account created",
-        description: "Complete Profile Information...",
-      });
 
       // router.push("/onboarding");
     } catch (error: any) {
