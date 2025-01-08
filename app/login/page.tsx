@@ -118,7 +118,7 @@ const LoginForm = () => {
       dispatch(setProfile({ ...profileData, id: profileData.$id }));
 
       // Check account status
-      if (profileData.account_status === true) {
+      if (profileData.account_status && profileData.isAdmin === true) {
         // Show success toast
         console.log("Logged In Successfully", profileData.isAdmin);
         toast({
@@ -127,9 +127,15 @@ const LoginForm = () => {
         });
 
         // Redirect based on admin status
-        router.push(profileData.isAdmin === true ? "/admin" : "/dashboard");
-      } else {
+        router.push( "/admin");
+      } else if (profileData.account_status === true && profileData.isAdmin === false){
         // Handle suspended account case
+        toast({
+          title: "Logged In Successfully",
+          description: "Redirecting to your dashboard...",
+        });
+        router.push( "/dashboard");
+      } else{
         toast({
           title: "Account Suspended!!!",
           description:

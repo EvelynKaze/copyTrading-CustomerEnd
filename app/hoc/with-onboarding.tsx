@@ -21,7 +21,7 @@ const withOnboarding = (
         router.push("/login"); // Redirect to login if not logged in
       } else if (isLoggedIn && profile?.id) {
         console.log("Redirecting to dashboard", profile);
-        // router.push("/dashboard"); // Redirect to dashboard if profile exists
+        router.push("/dashboard"); // Redirect to dashboard if profile exists
       }
     }, [isLoggedIn, profile, router]);
 
