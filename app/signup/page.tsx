@@ -62,7 +62,7 @@ export default function SignupForm() {
 
   useEffect(() => {
     if (userSession) {
-      router.push("/dashboard");
+      
     }
   }, []);
 
@@ -104,6 +104,8 @@ export default function SignupForm() {
       const profileData = profile.documents[0];
       console.log("Profile:", profileData);
 
+      console.log("User Data:", userData);
+
       // Dispatch user data to Redux store
       dispatch(
         setUser({
@@ -132,7 +134,7 @@ export default function SignupForm() {
         description: "Complete Profile Information...",
       });
 
-      router.push("/onboarding");
+      // router.push("/onboarding");
     } catch (error: any) {
       toast({
         title: "Registration failed",
