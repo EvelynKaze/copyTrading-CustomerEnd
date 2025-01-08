@@ -3,18 +3,21 @@
 import React, { useState } from "react";
 import AdminDashboard from "./admin-dashboard";
 import UserDetails from "./user-details";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { databases, Query } from "@/lib/appwrite";
+import ENV from "@/constants/env";
+import { useToast } from "@/hooks/use-toast";
 
 interface User {
-  id: number;
-  username: string;
-  email: string;
-  status: "online" | "offline";
+  id: string;
+  user_name: string;
+  user_id: string;
+  isAdmin: boolean;
+  full_name: string;
+  status: boolean;
   lastSeen: string;
   registeredDate: string;
-  transactions: {
-    id: number;
+  transactions?: {
+    id: string;
     type: string;
     amount: number;
     currency: string;
@@ -23,51 +26,121 @@ interface User {
 }
 
 const AdminPanel: React.FC = () => {
-  const userState = useSelector((state: RootState) => state.user.isLoggedIn);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const { toast } = useToast();
+  console.log("user", selectedUser);
 
-  console.log("user", userState);
+  const handleSelectUser = async (user: User) => {
+    const userID = user?.user_id;
 
-  const handleSelectUser = (user: User) => {
-    // In a real application, you would fetch the full user details here
-    // For this example, we'll just add some mock transactions and a registration date
-    setSelectedUser({
-      ...user,
-      registeredDate: "2023-01-01T09:00:00Z",
-      transactions: [
-        {
-          id: 1,
-          type: "Deposit",
-          amount: 1000,
-          currency: "USD",
-          date: "2023-06-10T14:30:00Z",
-        },
-        {
-          id: 2,
-          type: "Withdrawal",
-          amount: 500,
-          currency: "USD",
-          date: "2023-06-12T11:45:00Z",
-        },
-        {
-          id: 3,
-          type: "Deposit",
-          amount: 2000,
-          currency: "USD",
-          date: "2023-06-14T09:15:00Z",
-        },
-      ],
-    });
+    try {
+      const transactionsResult = await databases.listDocuments(
+          ENV.databaseId,
+          ENV.collections.transactions,
+          [Query.equal("user_id", userID)]
+      );
+
+      const transactions = transactionsResult.documents.map((doc) => ({
+        id: doc.id,
+        type: doc.isDeposit ? "Deposit" : "Withdraw",
+        amount: doc.amount,
+        currency: doc.token_name,
+        date: doc.$createdAt,
+      }));
+
+      setSelectedUser({
+        ...user,
+        transactions,
+      });
+    } catch (err) {
+      const error = err as Error;
+      console.error(error);
+    }
+  };
+
+  const handleSuspendAccount = async (userID: string) => {
+    try {
+      await databases.updateDocument(
+          ENV.databaseId,
+          ENV.collections.profile,
+          userID,
+          { account_status: false } // Assume `status: false` represents a suspended account
+      );
+      console.log(`User with ID ${userID} has been suspended.`);
+      toast({
+        title: "Account Suspended",
+        description: "Account suspended successfully.",
+      })
+    } catch (err) {
+      const error = err as Error;
+      console.error("Error suspending account:", error);
+      toast({
+        title: "Error suspending account",
+        description: `Error: ${error.message}`,
+      })
+    }
+  };
+
+  const handleUnSuspendAccount = async (userID: string) => {
+    try {
+      await databases.updateDocument(
+          ENV.databaseId,
+          ENV.collections.profile,
+          userID,
+          { account_status: true } // Assume `status: false` represents a suspended account
+      );
+      console.log(`User with ID ${userID} has been suspended.`);
+      toast({
+        title: "Account Suspended",
+        description: "Account suspended successfully.",
+      })
+    } catch (err) {
+      const error = err as Error;
+      console.error("Error suspending account:", error);
+      toast({
+        title: "Error suspending account",
+        description: `Error: ${error.message}`,
+      })
+    }
+  };
+
+  const handleDeleteAccount = async (userID: string) => {
+    try {
+      await databases.deleteDocument(
+          ENV.databaseId,
+          ENV.collections.profile,
+          userID
+      );
+      console.log(`User with ID ${userID} has been deleted.`);
+      setSelectedUser(null); // Reset selected user after deletion
+      toast({
+        title: "Account deleted",
+        description: "Account suspended successfully.",
+      })
+    } catch (err) {
+      const error = err as Error;
+      console.error("Error deleting account:", error);
+      toast({
+        title: "Error deleting account",
+        description: `Error: ${error.message}`,
+      })
+    }
   };
 
   return (
-    <div className="h-full overflow-y-scroll">
-      {selectedUser ? (
-        <UserDetails user={selectedUser} onBack={() => setSelectedUser(null)} />
-      ) : (
-        <AdminDashboard onSelectUser={handleSelectUser} />
-      )}
-    </div>
+      <div className="h-full overflow-y-scroll">
+        {selectedUser ? (
+            <UserDetails
+                user={selectedUser}
+                onBack={() => setSelectedUser(null)}
+                onSuspendAccount={handleSuspendAccount}
+                onUnSuspendAccount={handleUnSuspendAccount}
+                onDeleteAccount={handleDeleteAccount}
+            />
+        ) : (
+            <AdminDashboard onSelectUser={handleSelectUser} />
+        )}
+      </div>
   );
 };
 
