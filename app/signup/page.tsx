@@ -28,12 +28,12 @@ import Link from "next/link";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
 import { useRouter } from "next/navigation";
-import { account, ID, databases, Query } from "../../lib/appwrite";
+import { account, ID } from "../../lib/appwrite";
 import { useAppDispatch } from "@/store/hook";
-import { clearUser, setUser } from "@/store/userSlice";
-import { clearProfile, setProfile } from "@/store/profileSlice";
+import { setUser } from "@/store/userSlice";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+
 
 const signupSchema = z
   .object({
@@ -59,11 +59,16 @@ export default function SignupForm() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const userSession = useSelector((state: RootState) => state.user.isLoggedIn);
+  const profileSession = useSelector((state: RootState) => state.profile);
 
-  // useEffect(() => {
-  //   if (userSession) {
-  //   }
-  // }, []);
+  console.log("Profile Session", profileSession);
+  console.log("User Session", userSession);
+
+  useEffect(() => {
+    if (userSession && profileSession?.profile?.account_status) {
+      router.push("/dashboard");
+    }
+  }, [profileSession, router, userSession]);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -85,25 +90,6 @@ export default function SignupForm() {
       // Retrieve user data
       const userData = await account.get();
 
-      // Fetch profile data
-      const profile = await databases.listDocuments(
-        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
-        process.env.NEXT_PUBLIC_APPWRITE_PROFILE_COLLECTION_ID!,
-        [Query.equal("user_id", userData.$id)]
-      );
-
-      if (!profile.documents.length) {
-        // throw new Error("Profile not found for this user.");
-        toast({
-          title: "Please complete your profile",
-          description: "Redirecting to onboarding page...",
-        });
-        router.push("/onboarding");
-      }
-      const profileData = profile.documents[0];
-      console.log("Profile:", profileData);
-
-      console.log("User Data:", userData);
 
       // Dispatch user data to Redux store
       dispatch(
@@ -115,11 +101,14 @@ export default function SignupForm() {
         })
       );
 
-      // Dispatch user profile to Redux store
-      dispatch(setProfile({ ...profileData, id: profileData.$id }));
+      toast({
+        title: "Account created",
+        description: "Complete Profile Information...",
+      });
 
-      // router.push("/onboarding");
-    } catch (error: any) {
+      router.push("/onboarding");
+    } catch (err) {
+        const error = err as Error
       toast({
         title: "Registration failed",
         description: error.message || "Something went wrong. Please try again.",
@@ -127,28 +116,6 @@ export default function SignupForm() {
       });
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // Appwrite logout function
-  const logout = async () => {
-    try {
-      await account.deleteSession("current");
-      dispatch(clearUser());
-      dispatch(clearProfile());
-      toast({
-        description: "Logged out successfully",
-      });
-      // if (typeof window !== "undefined") {
-      //     localStorage.removeItem("userName")
-      //     localStorage.removeItem("userId")
-      //     localStorage.removeItem("fullName")
-      // }
-    } catch (error: any) {
-      console.error("Logout error:", error.message);
-      toast({
-        description: `${error.message}`,
-      });
     }
   };
 
@@ -267,12 +234,12 @@ export default function SignupForm() {
                 Log in
               </Link>
             </p>
-            <div
-              className="cursor-pointer text-orange-600 px-3"
-              onClick={() => logout()}
-            >
-              Log out
-            </div>
+            {/*<div*/}
+            {/*  className="cursor-pointer text-orange-600 px-3"*/}
+            {/*  onClick={() => logout()}*/}
+            {/*>*/}
+            {/*  Log out*/}
+            {/*</div>*/}
           </CardFooter>
         </Card>
       </motion.div>

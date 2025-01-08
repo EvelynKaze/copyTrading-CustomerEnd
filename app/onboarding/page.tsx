@@ -94,7 +94,7 @@ const OnboardingPage = () => {
         user_name: formData.username,
         avatar_url: imageUrl,
         copy_trader: null,
-        account_status: null,
+        account_status: true,
         total_investment: null,
         current_value: null,
         roi: null,
