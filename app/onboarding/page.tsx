@@ -16,23 +16,17 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import {
-  storage,
-  databases,
-  ID,
-  Permission,
-  Role,
-} from "@/lib/appwrite";
+import { storage, databases, ID, Permission, Role } from "@/lib/appwrite";
 import { useToast } from "@/hooks/use-toast";
 import { setProfile } from "@/store/profileSlice";
 import withOnboarding from "../hoc/with-onboarding";
 import { useAppDispatch } from "@/store/hook";
-import ENV from "@/constants/env"
-
+import { startLoading, stopLoading } from "@/store/loadingSlice";
+import ENV from "@/constants/env";
 
 const OnboardingPage = () => {
   const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+  const { loading } = useSelector((state: RootState) => state.loading);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
@@ -66,13 +60,13 @@ const OnboardingPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    dispatch(startLoading());
 
     if (!profilePicture) {
       toast({
         description: "Please upload a profile picture",
       });
-      setIsLoading(false);
+      dispatch(stopLoading());
       return;
     }
 
@@ -128,7 +122,7 @@ const OnboardingPage = () => {
         variant: "destructive",
       });
     } finally {
-      setIsLoading(false);
+      dispatch(stopLoading());
     }
   };
 
@@ -200,8 +194,8 @@ const OnboardingPage = () => {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Completing Profile..." : "Complete Profile"}
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Completing Profile..." : "Complete Profile"}
             </Button>
           </form>
         </CardContent>

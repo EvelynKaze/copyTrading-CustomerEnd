@@ -34,6 +34,7 @@ import { clearUser, setUser } from "@/store/userSlice";
 import { clearProfile, setProfile } from "@/store/profileSlice";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import { startLoading, stopLoading } from "@/store/loadingSlice";
 
 const signupSchema = z
   .object({
@@ -54,7 +55,7 @@ const signupSchema = z
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupForm() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { loading } = useSelector((state: RootState) => state.loading);
   const { toast } = useToast();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -76,7 +77,7 @@ export default function SignupForm() {
   });
 
   const onSubmit = async (data: SignupFormValues) => {
-    setIsLoading(true);
+    dispatch(startLoading());
 
     try {
       await account.create(ID.unique(), data.email, data.password, data.name);
@@ -117,6 +118,7 @@ export default function SignupForm() {
 
       // Dispatch user profile to Redux store
       dispatch(setProfile({ ...profileData, id: profileData.$id }));
+      dispatch(stopLoading());
 
       // router.push("/onboarding");
     } catch (error: any) {
@@ -126,7 +128,7 @@ export default function SignupForm() {
         variant: "destructive",
       });
     } finally {
-      setIsLoading(false);
+      dispatch(stopLoading());
     }
   };
 
@@ -250,9 +252,9 @@ export default function SignupForm() {
                 <Button
                   type="submit"
                   className="w-full bg-appCardGold text-appDark"
-                  disabled={isLoading}
+                  disabled={loading}
                 >
-                  {isLoading ? "Creating account..." : "Sign up"}
+                  {loading ? "Creating account..." : "Sign up"}
                 </Button>
               </form>
             </Form>

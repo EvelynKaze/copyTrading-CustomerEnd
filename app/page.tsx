@@ -14,10 +14,12 @@ import { advantages, disadvantages } from "@/constants/prosCons";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Footer from "@/components/landing/Footer";
 import DropDownNav from "@/components/landing/DropDownNav";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
+import LoadingScreen from "@/components/loading-screen";
 
 export default function Home() {
   const [showAll, setShowAll] = useState<boolean>(false);
-
 
   // Number of rows to show initially
   const visibleRows = 2;
@@ -25,6 +27,12 @@ export default function Home() {
 
   // Calculate items to show based on the number of visible rows
   const visibleItems = visibleRows * itemsPerRow;
+
+  const { loading } = useSelector((state: RootState) => state.loading);
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="bg-white relative dark:bg-appDarkGradient w-full">
