@@ -60,11 +60,10 @@ export default function SignupForm() {
   const dispatch = useAppDispatch();
   const userSession = useSelector((state: RootState) => state.user.isLoggedIn);
 
-  useEffect(() => {
-    if (userSession) {
-      
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (userSession) {
+  //   }
+  // }, []);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -150,6 +149,8 @@ export default function SignupForm() {
   const logout = async () => {
     try {
       await account.deleteSession("current");
+      dispatch(clearUser());
+      dispatch(clearProfile());
       toast({
         description: "Logged out successfully",
       });
@@ -281,12 +282,12 @@ export default function SignupForm() {
                 Log in
               </Link>
             </p>
-            {/*<div*/}
-            {/*  className="cursor-pointer text-orange-600 px-3"*/}
-            {/*  onClick={() => logout()}*/}
-            {/*>*/}
-            {/*  Log out*/}
-            {/*</div>*/}
+            <div
+              className="cursor-pointer text-orange-600 px-3"
+              onClick={() => logout()}
+            >
+              Log out
+            </div>
           </CardFooter>
         </Card>
       </motion.div>
