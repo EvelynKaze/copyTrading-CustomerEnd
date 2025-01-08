@@ -24,6 +24,7 @@ interface User {
   user_id: string;
   full_name: string;
   status: boolean;
+  isAdmin: boolean;
   lastSeen: string;
   registeredDate: string;
   transactions?: Transaction[];
@@ -50,6 +51,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectUser }) => {
           user_name: doc.user_name,
           user_id: doc.user_id,
           full_name: doc.full_name,
+          isAdmin: doc.isAdmin,
           status: doc.account_status,
           lastSeen: doc.$updatedAt,
           registeredDate: doc.$createdAt,

@@ -39,18 +39,28 @@ interface User {
   user_name: string;
   user_id: string;
   full_name: string;
+  isAdmin: boolean;
   status: boolean;
   lastSeen: string;
   registeredDate: string;
-  transactions: Transaction[];
+  transactions?: Transaction[];
 }
 
 interface UserDetailsProps {
   user: User;
   onBack: () => void;
+  onSuspendAccount: (userID: string) => void;
+  onUnSuspendAccount: (userID: string) => void;
+  onDeleteAccount: (userID: string) => void;
 }
 
-const UserDetails: React.FC<UserDetailsProps> = ({ user, onBack }) => {
+const UserDetails: React.FC<UserDetailsProps> = ({
+  user,
+  onBack,
+  onSuspendAccount,
+  onDeleteAccount,
+  onUnSuspendAccount
+}) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString("en-US", {
@@ -64,15 +74,6 @@ const UserDetails: React.FC<UserDetailsProps> = ({ user, onBack }) => {
 
   console.log("real users:", user)
 
-  const handleSuspendAccount = () => {
-    console.log("Account suspended");
-    // Implement account suspension logic here
-  };
-
-  const handleDeleteAccount = () => {
-    console.log("Account deleted");
-    // Implement account deletion logic here
-  };
 
   return (
     <motion.div
@@ -104,12 +105,12 @@ const UserDetails: React.FC<UserDetailsProps> = ({ user, onBack }) => {
             <div>
               <p className="font-semibold">Status:</p>
               <Badge
-                variant={user?.status ? "secondary" : "default"}
-                className={
-                  user.status
-                    ? "bg-green-400 hover:bg-green-600"
-                    : "bg-red-400 hover:text-red-600"
-                }
+                  variant={user?.status ? "secondary" : "default"}
+                  className={
+                    user.status
+                        ? "bg-green-400 hover:bg-green-600"
+                        : "bg-red-400 hover:text-red-600"
+                  }
               >
                 {user.status ? "Active" : "Suspended"}
               </Badge>
@@ -121,6 +122,10 @@ const UserDetails: React.FC<UserDetailsProps> = ({ user, onBack }) => {
             <div>
               <p className="font-semibold">Registered Date:</p>
               <p>{formatDate(user.registeredDate)}</p>
+            </div>
+            <div>
+              <p className="font-semibold">Designation:</p>
+              <p>{user.isAdmin ? "Admin" : "User"}</p>
             </div>
           </div>
         </CardContent>
@@ -159,7 +164,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({ user, onBack }) => {
       <div className="flex space-x-4">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive">Suspend Account</Button>
+            <Button variant="destructive">{user.status ? "Suspend Account" : "Unsuspend Account"}</Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
@@ -174,7 +179,13 @@ const UserDetails: React.FC<UserDetailsProps> = ({ user, onBack }) => {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-appCardGold text-appDarkCard"
-                onClick={handleSuspendAccount}
+                onClick={() => {
+                  if(user?.status) {
+                    onSuspendAccount(user.id)
+                  } else {
+                    onUnSuspendAccount(user.id)
+                  }
+                }}
               >
                 Suspend Account
               </AlertDialogAction>
@@ -197,7 +208,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({ user, onBack }) => {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-appCardGold text-appDarkCard"
-                onClick={handleDeleteAccount}
+                onClick={() => onDeleteAccount(user.id)}
               >
                 Delete Account
               </AlertDialogAction>

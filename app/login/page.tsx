@@ -70,12 +70,10 @@ const LoginForm = () => {
     setIsLoading(true);
 
     try {
-      setIsLoading(true);
-
       // Authenticate user
       const session = await account.createEmailPasswordSession(
-        data.email,
-        data.password
+          data.email,
+          data.password
       );
       console.log("Session:", session);
 
@@ -88,58 +86,72 @@ const LoginForm = () => {
 
       // Fetch profile data
       const profile = await databases.listDocuments(
-        ENV.databaseId,
-        ENV.collections.profile,
-        [Query.equal("user_id", userData.$id)]
+          ENV.databaseId,
+          ENV.collections.profile,
+          [Query.equal("user_id", userData.$id)]
       );
 
       if (!profile.documents.length) {
-        // throw new Error("Profile not found for this user.");
+        // Redirect to onboarding if profile is incomplete
         toast({
           title: "Please complete your profile",
           description: "Redirecting to onboarding page...",
         });
         router.push("/onboarding");
+        return;
       }
+
       const profileData = profile.documents[0];
       console.log("Profile:", profileData);
 
       // Dispatch user data to Redux store
       dispatch(
-        setUser({
-          id: userData.$id,
-          email: userData.email,
-          name: userData.name,
-          emailVerification: userData.emailVerification,
-        })
+          setUser({
+            id: userData.$id,
+            email: userData.email,
+            name: userData.name,
+            emailVerification: userData.emailVerification,
+          })
       );
 
       // Dispatch user profile to Redux store
       dispatch(setProfile({ ...profileData, id: profileData.$id }));
 
-      // Show success toast
-      console.log("Logged In Successfully", profileData.isAdmin);
-      toast({
-        title: "Logged In Successfully",
-        description: "Redirecting to your dashboard...",
-      });
+      // Check account status
+      if (profileData.account_status === true) {
+        // Show success toast
+        console.log("Logged In Successfully", profileData.isAdmin);
+        toast({
+          title: "Logged In Successfully",
+          description: "Redirecting to your dashboard...",
+        });
 
-      // Redirect based on admin status
-      setIsLoading(false);
-      router.push(profileData.isAdmin == true ? "/admin" : "/dashboard");
+        // Redirect based on admin status
+        router.push(profileData.isAdmin === true ? "/admin" : "/dashboard");
+      } else {
+        // Handle suspended account case
+        toast({
+          title: "Account Suspended!!!",
+          description:
+              "Please try again at a later date or contact support at support@copytrademarkets.com.",
+        });
+      }
     } catch (error: any) {
       console.error("Login error:", error.message);
 
+      // Show error toast
       toast({
         title: "Sign In Error",
         description: error.message || "An unexpected error occurred.",
         variant: "destructive",
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
-
+    } finally {
+      // Ensure loading state is reset
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="flex flex-col gap-4 md:flex-row justify-center relative items-center w-full h-screen">
