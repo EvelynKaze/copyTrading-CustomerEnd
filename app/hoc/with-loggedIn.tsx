@@ -18,7 +18,7 @@ const withLoggedIn = (
         console.log(isLoggedIn);
         router.push(profile.isAdmin ? "/admin" : "/dashboard");
       }
-    }, [isLoggedIn, router]);
+    }, [isLoggedIn, router, profile]);
 
     return <WrappedComponent {...props} />;
   };

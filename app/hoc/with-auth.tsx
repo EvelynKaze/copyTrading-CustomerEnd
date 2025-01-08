@@ -10,6 +10,7 @@ const withAuth = (
 ) => {
   const WithAuth = (props: { children?: React.ReactNode }) => {
     const { isLoggedIn } = useSelector((state: RootState) => state.user);
+    const { profile } = useSelector((state: RootState) => state.profile);
     const router = useRouter();
 
     useEffect(() => {
@@ -18,6 +19,10 @@ const withAuth = (
         router.push("/login");
       }
     }, [isLoggedIn, router]);
+
+    if (profile?.isAdmin) {
+      router.push("/admin");
+    }
 
     if (isLoggedIn == false) {
       return null; // Or display a loading spinner
