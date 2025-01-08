@@ -187,7 +187,7 @@ const TransactionHistory = () => {
                     <SelectItem value="all">All Currencies</SelectItem>
                     {tokens?.map((token) => (
                         <SelectItem key={token.$id} value={token.token_symbol}>
-                          {token.token_name} ({token.token_symbol})
+                          {token.token_name}
                         </SelectItem>
                     ))}
                   </SelectContent>
@@ -201,8 +201,9 @@ const TransactionHistory = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Statuses</SelectItem>
-                    <SelectItem value="Completed">Completed</SelectItem>
-                    <SelectItem value="Pending">Pending</SelectItem>
+                    <SelectItem value="approved">Completed</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="rejected">Rejected/Failed</SelectItem>
                   </SelectContent>
                 </Select>
                 <Input
@@ -276,12 +277,13 @@ const TransactionHistory = () => {
                           <TableCell>
                         <span
                             className={`px-2 py-1 rounded-full text-xs ${
-                                transaction.status 
+                                transaction.status === "approved"
                                     ? "bg-green-200 text-green-800"
-                                    : "bg-yellow-200 text-yellow-800"
+                                    : transaction.status === "pending" ? "bg-yellow-200 text-yellow-800"
+                                    : "bg-red-300 text-red-600"
                             }`}
                         >
-                          {transaction.status ? "Completed" : "Pending"}
+                          {transaction.status}
                         </span>
                           </TableCell>
                           <TableCell className="whitespace-nowrap">

@@ -61,10 +61,10 @@ export default function TransactionsPage() {
           ENV.databaseId,
           ENV.collections.transactions,
           id,
-          { status: true }
+          { status: "approved" }
       );
       setTransactions((prev) =>
-          prev.map((t) => (t.$id === id ? { ...t, status: true } : t))
+          prev.map((t) => (t.$id === id ? { ...t, status: "approved" } : t))
       );
       toast({
         title: "Success",
@@ -86,10 +86,10 @@ export default function TransactionsPage() {
           ENV.databaseId,
           ENV.collections.transactions,
           id,
-          { status: null }
+          { status: "rejected" }
       );
       setTransactions((prev) =>
-          prev.map((t) => (t.$id === id ? { ...t, status: null } : t))
+          prev.map((t) => (t.$id === id ? { ...t, status: "rejected" } : t))
       );
       toast({
         title: "Success",
@@ -156,19 +156,18 @@ export default function TransactionsPage() {
                     <TableCell>
                       <Badge
                           className={
-                            transaction.status === false
+                            transaction.status === "pending"
                                 ? "bg-yellow-400"
-                                : transaction.status === true
+                                : transaction.status === "approved"
                                     ? "bg-green-500"
                                     : "bg-red-600"
                           }
                       >
-                        {transaction.status === false ? "Pending" :
-                        transaction.status === true ? "Completed" : "Rejected"}
+                        {transaction.status}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      {transaction.status === false && (
+                      {transaction.status === "pending" && (
                           <div className="flex space-x-2">
                             <Button
                                 size="sm"
