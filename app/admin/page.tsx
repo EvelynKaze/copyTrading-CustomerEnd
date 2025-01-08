@@ -3,18 +3,19 @@
 import React, { useState } from "react";
 import AdminDashboard from "./admin-dashboard";
 import UserDetails from "./user-details";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { databases, Query } from "@/lib/appwrite";
+import ENV from "@/constants/env"
 
 interface User {
-  id: number;
-  username: string;
-  email: string;
-  status: "online" | "offline";
+  id: string;
+  user_name: string;
+  user_id: string;
+  full_name: string;
+  status: boolean;
   lastSeen: string;
   registeredDate: string;
   transactions: {
-    id: number;
+    id: string;
     type: string;
     amount: number;
     currency: string;
@@ -23,41 +24,43 @@ interface User {
 }
 
 const AdminPanel: React.FC = () => {
-  const userState = useSelector((state: RootState) => state.user.isLoggedIn);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
-  console.log("user", userState);
+  console.log("user", selectedUser);
 
-  const handleSelectUser = (user: User) => {
+
+
+  const handleSelectUser = async (user: User) => {
+    const userID = user?.user_id
+
+    try{
+      const transactionsResult = await databases.listDocuments(
+          ENV.databaseId,
+          ENV.collections.transactions,
+          [Query.equal("user_id", userID)]
+      )
+
+      const transactions = transactionsResult.documents.map((doc) => ({
+        id: doc.$id,
+        type: doc.isDeposit ? "Deposit" : "Withdraw",
+        amount: doc.amount,
+        currency: doc.token_name,
+        date: doc.$createdAt,
+      }));
+
+
+      setSelectedUser({
+        ...user,
+        transactions,
+      });
+    } catch (err){
+      const error = err as Error;
+      console.error(error);
+
+    }
     // In a real application, you would fetch the full user details here
     // For this example, we'll just add some mock transactions and a registration date
-    setSelectedUser({
-      ...user,
-      registeredDate: "2023-01-01T09:00:00Z",
-      transactions: [
-        {
-          id: 1,
-          type: "Deposit",
-          amount: 1000,
-          currency: "USD",
-          date: "2023-06-10T14:30:00Z",
-        },
-        {
-          id: 2,
-          type: "Withdrawal",
-          amount: 500,
-          currency: "USD",
-          date: "2023-06-12T11:45:00Z",
-        },
-        {
-          id: 3,
-          type: "Deposit",
-          amount: 2000,
-          currency: "USD",
-          date: "2023-06-14T09:15:00Z",
-        },
-      ],
-    });
+
   };
 
   return (

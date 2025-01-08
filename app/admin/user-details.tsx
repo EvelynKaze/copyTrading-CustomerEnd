@@ -26,8 +26,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
-interface Transaction {
-  id: number;
+export interface Transaction {
+  id: string;
   type: string;
   amount: number;
   currency: string;
@@ -35,10 +35,11 @@ interface Transaction {
 }
 
 interface User {
-  id: number;
-  username: string;
-  email: string;
-  status: "online" | "offline";
+  id: string;
+  user_name: string;
+  user_id: string;
+  full_name: string;
+  status: boolean;
   lastSeen: string;
   registeredDate: string;
   transactions: Transaction[];
@@ -60,6 +61,8 @@ const UserDetails: React.FC<UserDetailsProps> = ({ user, onBack }) => {
       minute: "2-digit",
     });
   };
+
+  console.log("real users:", user)
 
   const handleSuspendAccount = () => {
     console.log("Account suspended");
@@ -92,23 +95,23 @@ const UserDetails: React.FC<UserDetailsProps> = ({ user, onBack }) => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="font-semibold">Username:</p>
-              <p>{user.username}</p>
+              <p>{user?.user_name}</p>
             </div>
             <div>
-              <p className="font-semibold">Email:</p>
-              <p>{user.email}</p>
+              <p className="font-semibold">Full Name:</p>
+              <p>{user?.full_name}</p>
             </div>
             <div>
               <p className="font-semibold">Status:</p>
               <Badge
-                variant={user.status === "online" ? "secondary" : "default"}
+                variant={user?.status ? "secondary" : "default"}
                 className={
-                  user.status === "online"
-                    ? "bg-green-500 hover:bg-green-600"
-                    : ""
+                  user.status
+                    ? "bg-green-400 hover:bg-green-600"
+                    : "bg-red-400 hover:text-red-600"
                 }
               >
-                {user.status}
+                {user.status ? "Active" : "Suspended"}
               </Badge>
             </div>
             <div>
@@ -139,7 +142,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({ user, onBack }) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {user.transactions.map((transaction) => (
+                {user?.transactions?.map((transaction) => (
                   <TableRow key={transaction.id}>
                     <TableCell>{transaction.type}</TableCell>
                     <TableCell>{transaction.amount}</TableCell>
