@@ -95,7 +95,7 @@ const Withdrawal = () => {
             token_name: data.currency,
             isWithdraw: true,
             isDeposit: false,
-            status: false,
+            status: "pending",
             amount: data.amount,
             token_withdraw_address: data.address,
             token_deposit_address: null,
