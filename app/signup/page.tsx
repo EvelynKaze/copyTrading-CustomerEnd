@@ -281,12 +281,12 @@ export default function SignupForm() {
                 Log in
               </Link>
             </p>
-            <div
-              className="cursor-pointer text-orange-600 px-3"
-              onClick={() => logout()}
-            >
-              Log out
-            </div>
+            {/*<div*/}
+            {/*  className="cursor-pointer text-orange-600 px-3"*/}
+            {/*  onClick={() => logout()}*/}
+            {/*>*/}
+            {/*  Log out*/}
+            {/*</div>*/}
           </CardFooter>
         </Card>
       </motion.div>
