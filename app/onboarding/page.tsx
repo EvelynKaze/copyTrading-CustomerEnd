@@ -1,7 +1,6 @@
 // Updates to onboarding/page.tsx
 "use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Card,
@@ -16,17 +15,23 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { storage, databases, ID, Permission, Role } from "@/lib/appwrite";
+import {
+  storage,
+  databases,
+  ID,
+  Permission,
+  Role,
+} from "@/lib/appwrite";
 import { useToast } from "@/hooks/use-toast";
 import { setProfile } from "@/store/profileSlice";
-import withOnboarding from "../hoc/with-onboarding";
+// import withOnboarding from "../hoc/with-onboarding";
 import { useAppDispatch } from "@/store/hook";
-import { startLoading, stopLoading } from "@/store/loadingSlice";
-import ENV from "@/constants/env";
+import ENV from "@/constants/env"
 
-const OnboardingPage = () => {
+
+export default function OnboardingPage(){
   const { toast } = useToast();
-  const { loading } = useSelector((state: RootState) => state.loading);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
@@ -37,7 +42,20 @@ const OnboardingPage = () => {
   const [avatar, setAvatar] = useState<string | null>(null);
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const user = useSelector((state: RootState) => state.user.user);
-  const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+    //const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+  const { isLoggedIn } = useSelector((state: RootState) => state.user);
+  const { profile } = useSelector((state: RootState) => state.profile);
+  
+      useEffect(() => {
+        console.log("isLoggedIn", isLoggedIn);
+        console.log("profile", profile);
+        if (!isLoggedIn) {
+          router.push("/login"); // Redirect to login if not logged in
+        } else if (isLoggedIn && profile?.id) {
+          console.log("Redirecting to dashboard", profile);
+          router.push("/dashboard"); // Redirect to dashboard if profile exists
+        }
+      }, [isLoggedIn, profile, router]);
 
   console.log("user", isLoggedIn);
 
@@ -60,13 +78,13 @@ const OnboardingPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(startLoading());
+    setIsLoading(true);
 
     if (!profilePicture) {
       toast({
         description: "Please upload a profile picture",
       });
-      dispatch(stopLoading());
+      setIsLoading(false);
       return;
     }
 
@@ -122,7 +140,7 @@ const OnboardingPage = () => {
         variant: "destructive",
       });
     } finally {
-      dispatch(stopLoading());
+      setIsLoading(false);
     }
   };
 
@@ -194,8 +212,8 @@ const OnboardingPage = () => {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Completing Profile..." : "Complete Profile"}
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Completing Profile..." : "Complete Profile"}
             </Button>
           </form>
         </CardContent>
@@ -204,5 +222,3 @@ const OnboardingPage = () => {
     </div>
   );
 };
-
-export default withOnboarding(OnboardingPage);

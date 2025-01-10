@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -34,8 +34,8 @@ import { setProfile } from "@/store/profileSlice";
 import { ToastAction } from "@/components/ui/toast";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import withLoggedIn from "../hoc/with-loggedIn";
-import ENV from "@/constants/env";
+// import withLoggedIn from "../hoc/with-loggedIn";
+// import ENV from "@/constants/env"
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -46,18 +46,25 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-const LoginForm = () => {
+
+export default function LoginForm (){
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const userSession = useSelector((state: RootState) => state.user.isLoggedIn);
+  // const userSession = useSelector((state: RootState) => state.user.isLoggedIn);
+  // const profileSession = useSelector((state: RootState) => state.profile);
+  const { profile } = useSelector((state: RootState) => state.profile);
+  const { isLoggedIn } = useSelector((state: RootState) => state.user);
 
-  useEffect(() => {
-    if (userSession) {
-      router.push("/dashboard");
-    }
-  }, [userSession, router]);
+    useEffect(() => {
+      if (isLoggedIn == true) {
+        console.log(isLoggedIn);
+        router.push(profile.isAdmin ? "/admin" : "/dashboard");
+      }
+    }, [isLoggedIn, router, profile]);
+
+  
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -72,8 +79,8 @@ const LoginForm = () => {
     try {
       // Authenticate user
       const session = await account.createEmailPasswordSession(
-        data.email,
-        data.password
+          data.email,
+          data.password
       );
       console.log("Session:", session);
 
@@ -86,9 +93,9 @@ const LoginForm = () => {
 
       // Fetch profile data
       const profile = await databases.listDocuments(
-        ENV.databaseId,
-        ENV.collections.profile,
-        [Query.equal("user_id", userData.$id)]
+          process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+          process.env.NEXT_PUBLIC_APPWRITE_PROFILE_COLLECTION_ID!,
+          [Query.equal("user_id", userData.$id)]
       );
 
       if (!profile.documents.length) {
@@ -106,12 +113,12 @@ const LoginForm = () => {
 
       // Dispatch user data to Redux store
       dispatch(
-        setUser({
-          id: userData.$id,
-          email: userData.email,
-          name: userData.name,
-          emailVerification: userData.emailVerification,
-        })
+          setUser({
+            id: userData.$id,
+            email: userData.email,
+            name: userData.name,
+            emailVerification: userData.emailVerification,
+          })
       );
 
       // Dispatch user profile to Redux store
@@ -127,26 +134,23 @@ const LoginForm = () => {
         });
 
         // Redirect based on admin status
-        router.push("/admin");
-      } else if (
-        profileData.account_status === true &&
-        profileData.isAdmin === false
-      ) {
+        router.push( "/admin");
+      } else if (profileData.account_status === true && profileData.isAdmin === false){
         // Handle suspended account case
         toast({
           title: "Logged In Successfully",
           description: "Redirecting to your dashboard...",
         });
-        router.push("/dashboard");
-      } else {
+        router.push( "/dashboard");
+      } else{
         toast({
           title: "Account Suspended!!!",
           description:
-            "Please try again at a later date or contact support at support@copytrademarkets.com.",
+              "Please try again at a later date or contact support at support@copytrademarkets.com.",
         });
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as Error;
       console.error("Login error:", error.message);
 
       // Show error toast
@@ -161,6 +165,7 @@ const LoginForm = () => {
       setIsLoading(false);
     }
   };
+
 
   return (
     <div className="flex flex-col gap-4 md:flex-row justify-center relative items-center w-full h-screen">
@@ -262,5 +267,3 @@ const LoginForm = () => {
     </div>
   );
 };
-
-export default withLoggedIn(LoginForm);
