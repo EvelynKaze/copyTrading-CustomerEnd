@@ -145,6 +145,7 @@ const LoginForm = () => {
             "Please try again at a later date or contact support at support@copytrademarkets.com.",
         });
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Login error:", error.message);
 

@@ -50,9 +50,12 @@ export default function CryptocurrenciesAdmin() {
   const { profile } = useProfile();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);
+  const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>(
+    []
+  );
   const [newCrypto, setNewCrypto] = useState<Partial<Cryptocurrency>>({});
-  const [editingCrypto, setEditingCrypto] = useState<Partial<Cryptocurrency> | null>(null);
+  const [editingCrypto, setEditingCrypto] =
+    useState<Partial<Cryptocurrency> | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
@@ -100,7 +103,11 @@ export default function CryptocurrenciesAdmin() {
 
   const handleAddCrypto = async () => {
     setIsLoading(true);
-    if (newCrypto.token_name && newCrypto.token_symbol && newCrypto.token_address) {
+    if (
+      newCrypto.token_name &&
+      newCrypto.token_symbol &&
+      newCrypto.token_address
+    ) {
       try {
         const response = await databases.createDocument(
           process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
@@ -122,7 +129,10 @@ export default function CryptocurrenciesAdmin() {
           user_id: response.user_id,
           user_name: response.user_name,
         };
-        setCryptocurrencies((prev: Cryptocurrency[]) => [...prev, newestCrypto]);
+        setCryptocurrencies((prev: Cryptocurrency[]) => [
+          ...prev,
+          newestCrypto,
+        ]);
         setNewCrypto({});
         setIsAddDialogOpen(false);
         await refreshTokens();
@@ -161,7 +171,9 @@ export default function CryptocurrenciesAdmin() {
         );
         setCryptocurrencies((prev: Cryptocurrency[]) =>
           prev.map((crypto: Cryptocurrency) =>
-            crypto.$id === editingCrypto.$id ? { ...crypto, ...response } : crypto
+            crypto.$id === editingCrypto.$id
+              ? { ...crypto, ...response }
+              : crypto
           )
         );
         setEditingCrypto(null);
