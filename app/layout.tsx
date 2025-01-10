@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { AnimatePresence } from "framer-motion";
 import { Providers } from "./providers";
 import { Toaster } from "@/components/ui/toaster";
-import AppInitializer from "./app-initializer";
+// import AppInitializer from "./app-initializer";
 
 export const metadata: Metadata = {
   title: "CopyTradeMarkets",

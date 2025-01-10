@@ -9,7 +9,7 @@ const withOnboarding = (
   WrappedComponent: React.ComponentType<{ children?: React.ReactNode }>
 ) => {
   const WithOnboarding = (props: { children?: React.ReactNode }) => {
-    const { user, isLoggedIn } = useSelector((state: RootState) => state.user);
+    const { isLoggedIn } = useSelector((state: RootState) => state.user);
     const { profile } = useSelector((state: RootState) => state.profile);
 
     const router = useRouter();

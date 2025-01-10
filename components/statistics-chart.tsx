@@ -50,7 +50,8 @@ const chartData = {
 };
 
 export function StatisticsChart() {
-  const [chartType, setChartType] = useState("spending");
+  type ChartType = "spending" | "earnings";
+  const [chartType, setChartType] = useState<ChartType>("spending");
 
   return (
     <Card className="p-6">
@@ -59,7 +60,7 @@ export function StatisticsChart() {
         <div className="flex flex-col items-end md:flex-row md:items-center gap-2">
           <Select
             defaultValue="spending"
-            onValueChange={(value) => setChartType(value)}
+            onValueChange={(value) => setChartType(value as ChartType)}
           >
             <SelectTrigger className="w-32">
               <SelectValue />

@@ -50,9 +50,9 @@ export default function CryptocurrenciesAdmin() {
   const { profile } = useProfile();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [cryptocurrencies, setCryptocurrencies] = useState<any>([]);
-  const [newCrypto, setNewCrypto] = useState<Partial<any>>({});
-  const [editingCrypto, setEditingCrypto] = useState<any>(null);
+  const [cryptocurrencies, setCryptocurrencies] = useState<Cryptocurrency[]>([]);
+  const [newCrypto, setNewCrypto] = useState<Partial<Cryptocurrency>>({});
+  const [editingCrypto, setEditingCrypto] = useState<Partial<Cryptocurrency> | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
@@ -63,10 +63,22 @@ export default function CryptocurrenciesAdmin() {
         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
         process.env.NEXT_PUBLIC_APPWRITE_CRYPTO_OPTIONS_COLLECTION_ID!
       );
-      setCryptocurrencies(response.documents);
-      return response.documents; // Return the fetched documents
+      const fetchedCryptocurrencies = response.documents.map((doc) => ({
+        $id: doc.$id,
+        token_name: doc.token_name,
+        token_symbol: doc.token_symbol,
+        token_address: doc.token_address,
+        user_id: doc.user_id,
+        user_name: doc.user_name,
+      }));
+      setCryptocurrencies(fetchedCryptocurrencies);
+      return fetchedCryptocurrencies;
     } catch (error) {
       console.error("Error fetching cryptocurrencies:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch cryptocurrencies.",
+      });
       throw error;
     } finally {
       setIsLoading(false);
@@ -88,7 +100,7 @@ export default function CryptocurrenciesAdmin() {
 
   const handleAddCrypto = async () => {
     setIsLoading(true);
-    if (newCrypto.name && newCrypto.symbol && newCrypto.walletAddress) {
+    if (newCrypto.token_name && newCrypto.token_symbol && newCrypto.token_address) {
       try {
         const response = await databases.createDocument(
           process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
@@ -96,13 +108,21 @@ export default function CryptocurrenciesAdmin() {
           ID.unique(),
           {
             user_id: profile?.user_id, // Replace with actual user ID logic
-            token_name: newCrypto.name,
-            token_address: newCrypto.walletAddress,
-            token_symbol: newCrypto.symbol,
+            token_name: newCrypto.token_name,
+            token_address: newCrypto.token_address,
+            token_symbol: newCrypto.token_symbol,
             user_name: profile?.user_name, // Replace with actual username logic
           }
         );
-        setCryptocurrencies((prev: any) => [...prev, response]);
+        const newestCrypto: Cryptocurrency = {
+          $id: response.$id,
+          token_name: response.token_name,
+          token_symbol: response.token_symbol,
+          token_address: response.token_address,
+          user_id: response.user_id,
+          user_name: response.user_name,
+        };
+        setCryptocurrencies((prev: Cryptocurrency[]) => [...prev, newestCrypto]);
         setNewCrypto({});
         setIsAddDialogOpen(false);
         await refreshTokens();
@@ -130,18 +150,18 @@ export default function CryptocurrenciesAdmin() {
         const response = await databases.updateDocument(
           process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
           process.env.NEXT_PUBLIC_APPWRITE_CRYPTO_OPTIONS_COLLECTION_ID!,
-          editingCrypto.$id,
+          editingCrypto.$id!,
           {
-            token_name: editingCrypto.name,
-            token_address: editingCrypto.walletAddress,
-            token_symbol: editingCrypto.symbol,
+            token_name: editingCrypto.token_name,
+            token_address: editingCrypto.token_address,
+            token_symbol: editingCrypto.token_symbol,
             user_id: profile?.user_id,
             user_name: profile?.user_name,
           }
         );
-        setCryptocurrencies((prev: any) =>
-          prev.map((crypto: any) =>
-            crypto.id === editingCrypto.id ? { ...crypto, ...response } : crypto
+        setCryptocurrencies((prev: Cryptocurrency[]) =>
+          prev.map((crypto: Cryptocurrency) =>
+            crypto.$id === editingCrypto.$id ? { ...crypto, ...response } : crypto
           )
         );
         setEditingCrypto(null);
@@ -175,7 +195,7 @@ export default function CryptocurrenciesAdmin() {
 
       // Optimistically update the UI
       setCryptocurrencies((prev) =>
-        prev.filter((crypto: any) => crypto.$id !== id)
+        prev.filter((crypto: Cryptocurrency) => crypto.$id !== id)
       );
 
       toast({
@@ -219,11 +239,11 @@ export default function CryptocurrenciesAdmin() {
                 </Label>
                 <Input
                   id="name"
-                  value={newCrypto.name || ""}
+                  value={newCrypto.token_name || ""}
                   onChange={(e) =>
                     setNewCrypto({
                       ...newCrypto,
-                      name: e.target.value as string,
+                      token_name: e.target.value as string,
                     })
                   }
                   className="col-span-3"
@@ -235,11 +255,11 @@ export default function CryptocurrenciesAdmin() {
                 </Label>
                 <Input
                   id="symbol"
-                  value={newCrypto.symbol || ""}
+                  value={newCrypto.token_symbol || ""}
                   onChange={(e) =>
                     setNewCrypto({
                       ...newCrypto,
-                      symbol: e.target.value as string,
+                      token_symbol: e.target.value as string,
                     })
                   }
                   className="col-span-3"
@@ -251,11 +271,11 @@ export default function CryptocurrenciesAdmin() {
                 </Label>
                 <Input
                   id="walletAddress"
-                  value={newCrypto.walletAddress || ""}
+                  value={newCrypto.token_address || ""}
                   onChange={(e) =>
                     setNewCrypto({
                       ...newCrypto,
-                      walletAddress: e.target.value as string,
+                      token_address: e.target.value as string,
                     })
                   }
                   className="col-span-3"
@@ -278,7 +298,7 @@ export default function CryptocurrenciesAdmin() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {cryptocurrencies?.map((crypto: any) => (
+          {cryptocurrencies?.map((crypto: Cryptocurrency) => (
             <TableRow key={crypto?.$id}>
               <TableCell>{crypto?.token_name}</TableCell>
               <TableCell>{crypto?.token_symbol}</TableCell>
@@ -332,7 +352,7 @@ export default function CryptocurrenciesAdmin() {
                               onChange={(e) =>
                                 setEditingCrypto({
                                   ...editingCrypto,
-                                  symbol: e.target.value,
+                                  token_symbol: e.target.value,
                                 })
                               }
                               className="col-span-3"
@@ -351,7 +371,7 @@ export default function CryptocurrenciesAdmin() {
                               onChange={(e) =>
                                 setEditingCrypto({
                                   ...editingCrypto,
-                                  walletAddress: e.target.value,
+                                  token_address: e.target.value,
                                 })
                               }
                               className="col-span-3"

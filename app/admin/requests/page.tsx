@@ -25,7 +25,18 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function TransactionsPage() {
   const { toast } = useToast();
-  const [transactions, setTransactions] = useState<any>([]);
+  interface Transaction {
+    $id: string;
+    isWithdraw: boolean;
+    token_name: string;
+    amount: number;
+    token_withdraw_address?: string;
+    full_name: string;
+    $createdAt: string;
+    status: string;
+  }
+
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   // Fetch transactions from Appwrite database
   useEffect(() => {
@@ -41,7 +52,17 @@ export default function TransactionsPage() {
             new Date(b.date).getTime() - new Date(a.date).getTime()
         );
 
-        setTransactions(sortedTransactions);
+        const transactions = sortedTransactions.map((doc) => ({
+          $id: doc.$id,
+          isWithdraw: doc.isWithdraw,
+          token_name: doc.token_name,
+          amount: doc.amount,
+          token_withdraw_address: doc.token_withdraw_address,
+          full_name: doc.full_name,
+          $createdAt: doc.$createdAt,
+          status: doc.status,
+        }));
+        setTransactions(transactions);
       } catch (error) {
         console.error("Error fetching transactions:", error);
         toast({
