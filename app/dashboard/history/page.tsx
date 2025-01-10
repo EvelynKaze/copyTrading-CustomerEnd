@@ -34,21 +34,50 @@ import { databases, Query } from "@/lib/appwrite";
 import ENV from "@/constants/env"
 import { useProfile } from "@/app/context/ProfileContext"
 
+interface Transaction {
+  $id: string;
+  $createdAt: string;
+  type: string;
+  amount: number;
+  token_name: string;
+  currency: string;
+  status: string;
+  isDeposit?: boolean;
+  date: string;
+}
+
+interface Token {
+  $id: string;
+  token_name: string;
+  token_symbol: string;
+}
+
+interface SortConfig {
+  key: string;
+  direction: "asc" | "desc";
+}
+
+interface FilterConfig {
+  type: string;
+  currency: string;
+  status: string;
+}
+
 const TransactionHistory = () => {
   const { toast } = useToast();
   const { profile } = useProfile()
-  const [transactions, setTransactions] = useState<any>([]);
-  const [tokens, setTokens] = useState<any>([]);
-  const [sortConfig, setSortConfig] = useState({
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [tokens, setTokens] = useState<Token[]>([]);
+  const [sortConfig, setSortConfig] = useState<SortConfig>({
     key: "date",
     direction: "desc",
   });
-  const [filter, setFilter] = useState({
+  const [filter, setFilter] = useState<FilterConfig>({
     type: "all",
     currency: "all",
     status: "all",
   });
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
 
 
@@ -63,7 +92,7 @@ const TransactionHistory = () => {
             ENV.collections.transactions,
             [Query.equal("user_id", user_id)]
         );
-        const sortedTransactions = response.documents.map((transaction) => ({
+        const sortedTransactions = (response.documents as unknown as Transaction[]).map((transaction) => ({
           ...transaction,
           type: transaction.isDeposit ? "Deposit" : "Withdrawal",
         }));
@@ -81,7 +110,7 @@ const TransactionHistory = () => {
             ENV.databaseId,
             ENV.collections.cryptoOptions
         );
-        setTokens(response.documents);
+        setTokens(response.documents as unknown as Token[]);
       } catch (error) {
         console.error("Error fetching tokens:", error);
       }
@@ -91,23 +120,24 @@ const TransactionHistory = () => {
     fetchTokens();
   }, []);
 
-  const handleSort = (key) => {
-    let direction = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
+  const handleSort = (key: keyof Transaction) => {
+    if (!sortConfig || !transactions) {
+      return;
     }
+
+    const direction = sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
     setSortConfig({ key, direction });
 
-    setTransactions(
-        [...transactions].sort((a, b) => {
-          if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
-          if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
-          return 0;
-        })
-    );
+    const sortedTransactions = [...transactions].sort((a, b) => {
+      if (a[key]! < b[key]!) return direction === "asc" ? -1 : 1;
+      if (a[key]! > b[key]!) return direction === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    setTransactions(sortedTransactions);
   };
 
-  const handleFilter = (key, value) => {
+  const handleFilter = (key: keyof FilterConfig, value: string) => {
     setFilter({ ...filter, [key]: value });
     setCurrentPage(1);
   };
@@ -133,7 +163,7 @@ const TransactionHistory = () => {
     });
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString("en-US", {
       year: "numeric",
       month: "short",

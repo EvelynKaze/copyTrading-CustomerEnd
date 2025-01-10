@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
-import Logo from "./logo";
+// import Logo from "./logo";
 import { ClipLoader } from "react-spinners";
 
 export default function LoadingScreen() {

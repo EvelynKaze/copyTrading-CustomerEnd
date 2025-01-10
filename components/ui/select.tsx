@@ -6,7 +6,14 @@ import { Check, ChevronDown, ChevronUp } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-const Select = SelectPrimitive.Root
+const Select = ({ children, onValueChange, className, ...props }: SelectPrimitive.SelectProps & { className?: string }) => (
+  <div className={className}>
+    <SelectPrimitive.Root onValueChange={onValueChange} {...props}>
+      {children}
+    </SelectPrimitive.Root>
+  </div>
+);
+
 
 const SelectGroup = SelectPrimitive.Group
 

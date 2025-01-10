@@ -34,6 +34,6 @@ export interface Trader {
   monthly_return: number;
   trader_followers: number;
   successful_trades: number;
-  user_id: string;
-  user_name: string;
+  user_id?: string;
+  user_name?: string;
 }

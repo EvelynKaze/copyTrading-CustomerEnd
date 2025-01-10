@@ -25,9 +25,17 @@ import {databases} from "@/lib/appwrite";
 
 
 export function StockOptions() {
-  const [stocks, setStocks] = useState<any>();
-  const [isLoading, setIsLoading] = useState(false);
-  const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
+  interface Stock {
+    id: string;
+    symbol: string;
+    name: string;
+    price: number;
+    change: number;
+    isMinus: boolean;
+  }
+
+  const [stocks, setStocks] = useState<Stock[]>();
+  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
 
   const databaseId = ENV.databaseId;
   const collectionId = ENV.collections.stockOptions;
@@ -35,19 +43,23 @@ export function StockOptions() {
   // Fetch traders from Appwrite on component mount
   useEffect(() => {
     const fetchStocks = async () => {
-      setIsLoading(true);
       try {
         const response = await databases.listDocuments(
             databaseId,
             collectionId
         );
         setStocks(
-            response.documents.map((doc) => ({ id: doc.$id, ...doc }))
+            response.documents.map((doc) => ({
+              id: doc.$id,
+              symbol: doc.symbol,
+              name: doc.name,
+              price: doc.price,
+              change: doc.change,
+              isMinus: doc.isMinus,
+            }))
         );
       } catch (error) {
         console.error("Failed to fetch traders:", error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -55,11 +67,11 @@ export function StockOptions() {
   }, [collectionId, databaseId]);
 
 
-  const handleQuantityChange = (id: number, quantity: string) => {
+  const handleQuantityChange = (id: string, quantity: string) => {
     setQuantities({ ...quantities, [id]: parseInt(quantity) || 0 });
   };
 
-  const handlePurchase = (id: number) => {
+  const handlePurchase = (id: string) => {
     // Here you would typically send a request to your backend to process the purchase
     console.log(`Purchasing ${quantities[id]} shares of stock ${id}`);
     // Reset the quantity after purchase

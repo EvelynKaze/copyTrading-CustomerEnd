@@ -51,7 +51,7 @@ import {
 } from "@/components/ui/select";
 
 interface Stock {
-  id: number;
+  id: string;
   symbol: string;
   name: string;
   price: number;
@@ -60,8 +60,8 @@ interface Stock {
 }
 
 export default function AdminStocks() {
-  const [stocks, setStocks] = useState<any>();
-  const [editingStock, setEditingStock] = useState<any>(null);
+  const [stocks, setStocks] = useState<Stock[]>([]);
+  const [editingStock, setEditingStock] = useState<Stock | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +80,14 @@ export default function AdminStocks() {
           databaseId,
           collectionId
         );
-        setStocks(response.documents.map((doc) => ({ id: doc.$id, ...doc })));
+        setStocks(response.documents.map((doc) => ({
+          id: doc.$id,
+          symbol: doc.symbol,
+          name: doc.name,
+          price: doc.price,
+          change: doc.change,
+          isMinus: doc.isMinus,
+        })));
       } catch (error) {
         console.error("Failed to fetch traders:", error);
       } finally {
@@ -273,7 +280,13 @@ interface StockFormProps {
 }
 
 function StockForm({ initialData, onSubmit, isLoading }: StockFormProps) {
-  const [formData, setFormData] = useState<any>(
+  const [formData, setFormData] = useState<{
+    symbol: string;
+    name: string;
+    price: number;
+    change: number;
+    isMinus: boolean;
+  }>(
     initialData || {
       symbol: "",
       name: "",

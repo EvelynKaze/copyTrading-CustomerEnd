@@ -10,25 +10,28 @@ import { databases } from "@/lib/appwrite";
 import ENV from "@/constants/env"
 
 export function CopyTradingOptions() {
-  const [traders, setTraders] = useState<any>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [traders, setTraders] = useState<Trader[]>([]);
 
   // Fetch traders from Appwrite on component mount
   useEffect(() => {
     const fetchTraders = async () => {
-      setIsLoading(true);
       try {
         const response = await databases.listDocuments(
             ENV.databaseId,
             ENV.collections.copyTrading
         );
         setTraders(
-            response.documents.map((doc) => ({ id: doc.$id, ...doc }))
+            response.documents.map((doc) => ({
+              id: doc.$id,
+              trader_name: doc.trader_name,
+              success_rate: doc.success_rate,
+              monthly_return: doc.monthly_return,
+              trader_followers: doc.trader_followers,
+              successful_trades: doc.successful_trades,
+            }))
         );
       } catch (error) {
         console.error("Failed to fetch traders:", error);
-      } finally {
-        setIsLoading(false);
       }
     };
 

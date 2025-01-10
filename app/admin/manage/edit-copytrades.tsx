@@ -39,7 +39,7 @@ import { Trader } from "@/types/dashboard"
 import ENV from "@/constants/env"
 
 export default function AdminCopyTrading() {
-  const [traders, setTraders] = useState<any>([]);
+  const [traders, setTraders] = useState<Trader[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const { profile } = useProfile();
@@ -58,7 +58,16 @@ export default function AdminCopyTrading() {
             collectionId
         );
         setTraders(
-            response.documents.map((doc) => ({ id: doc.$id, ...doc }))
+            response.documents.map((doc) => ({
+              id: doc.$id,
+              trader_name: doc.trader_name,
+              success_rate: doc.success_rate,
+              monthly_return: doc.monthly_return,
+              trader_followers: doc.trader_followers,
+              successful_trades: doc.successful_trades,
+              user_id: doc.user_id,
+              user_name: doc.user_name,
+            }))
         );
       } catch (error) {
         console.error("Failed to fetch traders:", error);
@@ -168,7 +177,7 @@ export default function AdminCopyTrading() {
             </TableHeader>
             <TableBody>
               {traders?.map((trader) => (
-                  <TableRow key={trader?.$id}>
+                  <TableRow key={trader?.id}>
                     <TableCell className="font-medium">
                       <div className="flex items-center gap-2">
                         {trader?.trader_name}
