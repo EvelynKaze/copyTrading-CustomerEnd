@@ -2,21 +2,33 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { account } from "@/lib/appwrite";
 
+interface User {
+  // Define the properties of the User object based on the structure returned by account.get()
+  id: string;
+  email: string;
+  name: string;
+}
+
 interface UserContextType {
-  user: any;
-  setUser: React.Dispatch<React.SetStateAction<any>>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   logout: () => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const user = await account.get();
+        const fetchedUser = await account.get();
+        const user: User = {
+          id: fetchedUser.$id,
+          email: fetchedUser.email,
+          name: fetchedUser.name,
+        };
         setUser(user);
       } catch {
         setUser(null);

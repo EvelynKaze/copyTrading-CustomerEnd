@@ -27,8 +27,8 @@ import { motion } from "framer-motion";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import WithdrawalModal from "@/components/modals/withdrawal-modal";
-import { openModal } from "@/store/modalSlice";
-import { useDispatch } from "react-redux";
+// import { openModal } from "@/store/modalSlice";
+// import { useDispatch } from "react-redux";
 import ENV from "@/constants/env";
 import { useProfile } from "@/app/context/ProfileContext";
 import { databases, ID } from "@/lib/appwrite";
@@ -48,7 +48,7 @@ type WithdrawalFormValues = z.infer<typeof withdrawalSchema>;
 const Withdrawal = () => {
     const { profile } = useProfile();
     const { toast } = useToast();
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const [cryptocurrencies, setCryptocurrencies] = useState<
         { name: string; value: string; address: string }[]
     >([]);
