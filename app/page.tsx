@@ -16,9 +16,9 @@ import DropDownNav from "@/components/landing/DropDownNav";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import LoadingScreen from "@/components/loading-screen";
-import { StatisticsChart } from "@/components/landing/statistics-chart";
-import { StockOptions } from "@/components/stock-options";
-import { DashboardLayout } from "@/components/landing/dashboard-preview";
+// import { StatisticsChart } from "@/components/landing/statistics-chart";
+// import { StockOptions } from "@/components/stock-options";
+// import { DashboardLayout } from "@/components/landing/dashboard-preview";
 
 export default function Home() {
   const [showAll, setShowAll] = useState<boolean>(false);
@@ -68,7 +68,7 @@ export default function Home() {
           >
             <p className="max-w-prose text-sm">
               CopyTrading Markets brings innovation and accessibility to crypto
-              investing. Whether you're a seasoned trader or just starting, our
+              investing. Whether you&#39;re a seasoned trader or just starting, our
               platform empowers you to <b>Buy Stocks with Crypto,</b> seamlessly
               purchase stocks and diversify your portfolio using your favorite
               cryptocurrencies. <br /> <b>Invest in Copy Trading Options,</b>{" "}
