@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -33,7 +33,8 @@ import { useAppDispatch } from "@/store/hook";
 import { setUser } from "@/store/userSlice";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
-
+import { startLoading, stopLoading } from "@/store/loadingSlice";
+import { LoginAdsSlider } from "@/components/login-ads";
 
 const signupSchema = z
   .object({
@@ -54,7 +55,7 @@ const signupSchema = z
 type SignupFormValues = z.infer<typeof signupSchema>;
 
 export default function SignupForm() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { loading } = useSelector((state: RootState) => state.loading);
   const { toast } = useToast();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -81,7 +82,7 @@ export default function SignupForm() {
   });
 
   const onSubmit = async (data: SignupFormValues) => {
-    setIsLoading(true);
+    dispatch(startLoading());
 
     try {
       await account.create(ID.unique(), data.email, data.password, data.name);
@@ -89,7 +90,6 @@ export default function SignupForm() {
 
       // Retrieve user data
       const userData = await account.get();
-
 
       // Dispatch user data to Redux store
       dispatch(
@@ -108,141 +108,150 @@ export default function SignupForm() {
 
       router.push("/onboarding");
     } catch (err) {
-        const error = err as Error
+      const error = err as Error;
       toast({
         title: "Registration failed",
         description: error.message || "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {
-      setIsLoading(false);
+      dispatch(stopLoading());
     }
   };
 
   return (
-    <div className="flex flex-col md:flex-row-reverse justify-center gap-4 relative items-center w-full h-screen">
+    <div className="flex justify-center relative w-full h-screen">
       <div className="absolute top-8 right-8">
         <ThemeToggle />
       </div>
       <Link href="/" className="absolute top-8 left-8 text-sm">
         Return
       </Link>
-      <motion.div
-        initial={{ opacity: 0, translateX: -50 }}
-        exit={{ opacity: 1, translateX: 0 }}
-        animate={{ opacity: 1, translateX: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        <Logo />
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, translateX: 50 }}
-        animate={{ opacity: 1, translateX: 0 }}
-        exit={{ opacity: 1, translateX: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        <Card className="w-[300px] sm:w-[350px]">
-          <CardHeader>
-            <CardTitle>Sign Up</CardTitle>
-            <CardDescription>
-              Create a new account to get started.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-2"
-              >
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Name</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter your name" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter your email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="Create a password"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="Confirm your password"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  type="submit"
-                  className="w-full bg-appCardGold text-appDark"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Creating account..." : "Sign up"}
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-          <CardFooter className="flex justify-center">
-            <p className="text-sm text-muted-foreground">
-              Already have an account?{" "}
-              <Link
-                href="/login"
-                className="p-0 text-appGold100 cursor-pointer"
-              >
-                Log in
-              </Link>
-            </p>
-            {/*<div*/}
-            {/*  className="cursor-pointer text-orange-600 px-3"*/}
-            {/*  onClick={() => logout()}*/}
-            {/*>*/}
-            {/*  Log out*/}
-            {/*</div>*/}
-          </CardFooter>
-        </Card>
-      </motion.div>
+      <div className="flex flex-col w-full md:w-1/2 justify-center items-center md:items-end">
+        <div className="grid justify-items-center gap-4">
+          <motion.div
+            initial={{ opacity: 0, translateX: -50 }}
+            exit={{ opacity: 1, translateX: 0 }}
+            animate={{ opacity: 1, translateX: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Logo />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, translateX: 50 }}
+            animate={{ opacity: 1, translateX: 0 }}
+            exit={{ opacity: 1, translateX: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Card className="w-[300px] sm:w-[350px]">
+              <CardHeader>
+                <CardTitle>Sign Up</CardTitle>
+                <CardDescription>
+                  Create a new account to get started.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-2"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter your name" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Enter your email" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="password"
+                              placeholder="Create a password"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="confirmPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Confirm Password</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="password"
+                              placeholder="Confirm your password"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="submit"
+                      className="w-full bg-appCardGold text-appDark"
+                      disabled={loading}
+                    >
+                      {loading ? "Creating account..." : "Sign up"}
+                    </Button>
+                  </form>
+                </Form>
+              </CardContent>
+              <CardFooter className="flex justify-center">
+                <p className="text-sm text-muted-foreground">
+                  Already have an account?{" "}
+                  <Link
+                    href="/login"
+                    className="p-0 text-appGold100 cursor-pointer"
+                  >
+                    Log in
+                  </Link>
+                </p>
+                {/*<div*/}
+                {/*  className="cursor-pointer text-orange-600 px-3"*/}
+                {/*  onClick={() => logout()}*/}
+                {/*>*/}
+                {/*  Log out*/}
+                {/*</div>*/}
+              </CardFooter>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+      <div className="w-1/2 hidden md:flex justify-start items-center">
+        <div className="w-full grid justify-items-start">
+          <LoginAdsSlider />
+        </div>
+      </div>
     </div>
   );
 }

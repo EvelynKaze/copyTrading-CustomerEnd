@@ -34,6 +34,7 @@ import { setProfile } from "@/store/profileSlice";
 import { ToastAction } from "@/components/ui/toast";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { LoginAdsSlider } from "@/components/login-ads";
 // import withLoggedIn from "../hoc/with-loggedIn";
 // import ENV from "@/constants/env"
 
@@ -46,8 +47,7 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
-
-export default function LoginForm (){
+export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
@@ -57,14 +57,12 @@ export default function LoginForm (){
   const { profile } = useSelector((state: RootState) => state.profile);
   const { isLoggedIn } = useSelector((state: RootState) => state.user);
 
-    useEffect(() => {
-      if (isLoggedIn == true) {
-        console.log(isLoggedIn);
-        router.push(profile.isAdmin ? "/admin" : "/dashboard");
-      }
-    }, [isLoggedIn, router, profile]);
-
-  
+  useEffect(() => {
+    if (isLoggedIn == true) {
+      console.log(isLoggedIn);
+      router.push(profile.isAdmin ? "/admin" : "/dashboard");
+    }
+  }, [isLoggedIn, router, profile]);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -79,8 +77,8 @@ export default function LoginForm (){
     try {
       // Authenticate user
       const session = await account.createEmailPasswordSession(
-          data.email,
-          data.password
+        data.email,
+        data.password
       );
       console.log("Session:", session);
 
@@ -93,9 +91,9 @@ export default function LoginForm (){
 
       // Fetch profile data
       const profile = await databases.listDocuments(
-          process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
-          process.env.NEXT_PUBLIC_APPWRITE_PROFILE_COLLECTION_ID!,
-          [Query.equal("user_id", userData.$id)]
+        process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+        process.env.NEXT_PUBLIC_APPWRITE_PROFILE_COLLECTION_ID!,
+        [Query.equal("user_id", userData.$id)]
       );
 
       if (!profile.documents.length) {
@@ -113,12 +111,12 @@ export default function LoginForm (){
 
       // Dispatch user data to Redux store
       dispatch(
-          setUser({
-            id: userData.$id,
-            email: userData.email,
-            name: userData.name,
-            emailVerification: userData.emailVerification,
-          })
+        setUser({
+          id: userData.$id,
+          email: userData.email,
+          name: userData.name,
+          emailVerification: userData.emailVerification,
+        })
       );
 
       // Dispatch user profile to Redux store
@@ -134,19 +132,22 @@ export default function LoginForm (){
         });
 
         // Redirect based on admin status
-        router.push( "/admin");
-      } else if (profileData.account_status === true && profileData.isAdmin === false){
+        router.push("/admin");
+      } else if (
+        profileData.account_status === true &&
+        profileData.isAdmin === false
+      ) {
         // Handle suspended account case
         toast({
           title: "Logged In Successfully",
           description: "Redirecting to your dashboard...",
         });
-        router.push( "/dashboard");
-      } else{
+        router.push("/dashboard");
+      } else {
         toast({
           title: "Account Suspended!!!",
           description:
-              "Please try again at a later date or contact support at support@copytrademarkets.com.",
+            "Please try again at a later date or contact support at support@copytrademarkets.com.",
         });
       }
     } catch (err) {
@@ -166,104 +167,112 @@ export default function LoginForm (){
     }
   };
 
-
   return (
-    <div className="flex flex-col gap-4 md:flex-row justify-center relative items-center w-full h-screen">
+    <div className="flex justify-center relative">
       <div className="absolute top-8 right-8">
         <ThemeToggle />
       </div>
       <Link href={"/"} className="absolute top-8 left-8 text-sm">
         Return
       </Link>
-      <motion.div
-        initial={{ opacity: 0, translateX: -50 }}
-        exit={{ opacity: 1, translateX: 0 }}
-        animate={{ opacity: 1, translateX: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        <Logo />
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, translateX: 50 }}
-        animate={{ opacity: 1, translateX: 0 }}
-        exit={{ opacity: 1, translateX: 0 }}
-        transition={{ delay: 0.3 }}
-      >
-        <Card className="w-[300px] mx-4 sm:w-[350px]">
-          <CardHeader className="">
-            <CardTitle>Login</CardTitle>
-            <CardDescription>
-              Enter your email and password to log in.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-4"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter your email"
-                          disabled={isLoading}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage>
-                        {form.formState.errors.email?.message}
-                      </FormMessage>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="Enter your password"
-                          disabled={isLoading}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage>
-                        {form.formState.errors.password?.message}
-                      </FormMessage>
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  type="submit"
-                  className="w-full bg-appCardGold text-appDark"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Logging in..." : "Log in"}
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-          <CardFooter className="flex justify-center">
-            <p className="text-sm text-muted-foreground">
-              Don&apos;t have an account?{" "}
-              <Link
-                href={"/signup"}
-                className="text-appGold100 cursor-pointer hover:underline"
-              >
-                Sign up
-              </Link>
-            </p>
-          </CardFooter>
-        </Card>
-      </motion.div>
+      <div className="flex flex-col justify-center items-center md:items-end w-full md:w-1/2 h-screen">
+        <div className="grid gap-4 justify-items-center">
+          <motion.div
+            initial={{ opacity: 0, translateX: -50 }}
+            exit={{ opacity: 1, translateX: 0 }}
+            animate={{ opacity: 1, translateX: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Logo />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, translateX: 50 }}
+            animate={{ opacity: 1, translateX: 0 }}
+            exit={{ opacity: 1, translateX: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Card className="w-[300px] mx-4 sm:w-[350px]">
+              <CardHeader className="">
+                <CardTitle>Login</CardTitle>
+                <CardDescription>
+                  Enter your email and password to log in.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Enter your email"
+                              disabled={isLoading}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage>
+                            {form.formState.errors.email?.message}
+                          </FormMessage>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="password"
+                              placeholder="Enter your password"
+                              disabled={isLoading}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage>
+                            {form.formState.errors.password?.message}
+                          </FormMessage>
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="submit"
+                      className="w-full bg-appCardGold text-appDark"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Logging in..." : "Log in"}
+                    </Button>
+                  </form>
+                </Form>
+              </CardContent>
+              <CardFooter className="flex justify-center">
+                <p className="text-sm text-muted-foreground">
+                  Don&apos;t have an account?{" "}
+                  <Link
+                    href={"/signup"}
+                    className="text-appGold100 cursor-pointer hover:underline"
+                  >
+                    Sign up
+                  </Link>
+                </p>
+              </CardFooter>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+      <div className="w-1/2 hidden md:flex justify-start items-center">
+        <div className="w-full grid justify-items-start">
+          <LoginAdsSlider />
+        </div>
+      </div>
     </div>
   );
-};
+}

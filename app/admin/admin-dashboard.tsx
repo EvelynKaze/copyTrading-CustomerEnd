@@ -65,7 +65,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectUser }) => {
 
     fetchUsers();
     console.log("fetchUsers()", users);
-  }, []);
+  }, [users]);
 
   const filteredUsers = users.filter(
       (user) =>

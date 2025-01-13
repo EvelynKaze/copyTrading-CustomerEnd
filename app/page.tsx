@@ -3,7 +3,6 @@ import CryptoBg from "@/components/landing/coins-bg";
 import { motion } from "framer-motion";
 import PublicNav from "../components/PublicNav";
 import Image from "next/image";
-import { dashboardImg, marketsImg, tradingView } from "@/constants/AppImages";
 import KeyFeatures from "@/components/landing/KeyFeatures";
 import AnimatedLine from "@/components/landing/AnimatedLine";
 import AnimatedSlideshow from "@/components/landing/StartingSteps";
@@ -14,10 +13,15 @@ import { advantages, disadvantages } from "@/constants/prosCons";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import Footer from "@/components/landing/Footer";
 import DropDownNav from "@/components/landing/DropDownNav";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
+import LoadingScreen from "@/components/loading-screen";
+import { StatisticsChart } from "@/components/landing/statistics-chart";
+import { StockOptions } from "@/components/stock-options";
+import { DashboardLayout } from "@/components/landing/dashboard-preview";
 
 export default function Home() {
   const [showAll, setShowAll] = useState<boolean>(false);
-
 
   // Number of rows to show initially
   const visibleRows = 2;
@@ -25,6 +29,12 @@ export default function Home() {
 
   // Calculate items to show based on the number of visible rows
   const visibleItems = visibleRows * itemsPerRow;
+
+  const { loading } = useSelector((state: RootState) => state.loading);
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="bg-white relative dark:bg-appDarkGradient w-full">
@@ -37,7 +47,7 @@ export default function Home() {
         <div className="inner text-center mt-12 grid justify-items-center gap-4">
           <motion.div
             initial={{ opacity: 0, translateY: -50 }}
-            whileInView={{ opacity: 1, translateY: 0 }}
+            animate={{ opacity: 1, translateY: 0 }}
             transition={{ duration: 0.5, once: true }}
           >
             <h1 className="text-3xl md:text-7xl font-bold">
@@ -53,26 +63,34 @@ export default function Home() {
           </span>
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ once: true }}
           >
             <p className="max-w-prose text-sm">
-              CopyTrading Markets empowers you to achieve your financial goals
-              by following strategies that work. Harness the expertise of
-              seasoned traders and make informed decisions with confidence.
+              CopyTrading Markets brings innovation and accessibility to crypto
+              investing. Whether you're a seasoned trader or just starting, our
+              platform empowers you to <b>Buy Stocks with Crypto,</b> seamlessly
+              purchase stocks and diversify your portfolio using your favorite
+              cryptocurrencies. <br /> <b>Invest in Copy Trading Options,</b>{" "}
+              mirror the trades of successful investors and let their expertise
+              guide your growth. <br />
+              <b> Secure, Fast, and Transparent Transactions,</b> powered by
+              blockchain technology, we ensure your investments are safe,
+              efficient, and completely transparent.
             </p>
           </motion.div>
         </div>
         <motion.div
           initial={{ opacity: 0, translateY: 50 }}
-          whileInView={{ opacity: 1, translateY: 0 }}
+          animate={{ opacity: 1, translateY: 0 }}
           transition={{ duration: 0.5, once: true }}
           className="max-w-3xl mx-4 w-full opacity-75 relative mt-6 rounded-lg overflow-hidden aspect-video"
         >
           <Image
-            src={dashboardImg}
-            alt="dashboard preview"
-            className="object-cover"
+            src={"/dashboard-preview-dark.jpg"}
+            width={1000}
+            height={600}
+            alt="dashboard"
           />
         </motion.div>
       </section>
@@ -86,7 +104,7 @@ export default function Home() {
         <div className="inner grid gap-2 text-center justify-items-center">
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
+            animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, once: true }}
             className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
           >
@@ -95,7 +113,7 @@ export default function Home() {
 
           <motion.h1
             initial={{ opacity: 0, translateY: -50 }}
-            whileInView={{ opacity: 1, translateY: 0 }}
+            animate={{ opacity: 1, translateY: 0 }}
             transition={{ duration: 0.5, once: true }}
             className="text-2xl md:text-5xl mb-3 font-bold"
           >
@@ -103,7 +121,7 @@ export default function Home() {
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, scale: 0.8 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            animate={{ opacity: 1, scale: 1 }}
             className="max-w-prose text-base"
           >
             Whether you&apos;re a beginner or an experienced investor,
@@ -113,7 +131,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row justify-center max-w-4xl gap-8 mt-12">
             <motion.div
               initial={{ opacity: 0, translateX: -70 }}
-              whileInView={{ opacity: 1, translateX: 0 }}
+              animate={{ opacity: 1, translateX: 0 }}
               transition={{
                 duration: 0.5,
                 type: "spring",
@@ -122,13 +140,15 @@ export default function Home() {
                 delay: 0.5,
                 once: true,
               }}
-              className="text-start border-opacity-45 max-w-2xl items-center rounded-3xl overflow-hidden backdrop-blur-md border border-appDarkCard dark:border-appGold200"
+              className="text-start border-opacity-45 sm:w-1/2 max-w-2xl items-center rounded-3xl overflow-hidden backdrop-blur-md border border-appDarkCard dark:border-appGold200"
             >
               <div className="aspect-video w-full rounded-b-3xl dark:opacity-55 overflow-hidden">
                 <Image
-                  src={tradingView}
-                  className="w-full object-cover"
-                  alt="Markets"
+                  src={"/statistics-dark.jpg"}
+                  width={1000}
+                  height={600}
+                  className="w-full h-full object-cover"
+                  alt="stats"
                 />
               </div>
               <div className="p-8 min-h-72 flex flex-col justify-between items-start">
@@ -149,7 +169,7 @@ export default function Home() {
             </motion.div>
             <motion.div
               initial={{ opacity: 0, translateX: 70 }}
-              whileInView={{ opacity: 1, translateX: 0 }}
+              animate={{ opacity: 1, translateX: 0 }}
               transition={{
                 duration: 0.5,
                 type: "spring",
@@ -158,24 +178,26 @@ export default function Home() {
                 delay: 0.5,
                 once: true,
               }}
-              className="text-start border-opacity-45 max-w-2xl items-center rounded-3xl overflow-hidden backdrop-blur-md border border-appDarkCard dark:border-appGold200"
+              className="text-start border-opacity-45 sm:w-1/2 max-w-2xl items-center rounded-3xl overflow-hidden backdrop-blur-md border border-appDarkCard dark:border-appGold200"
             >
               <div className="aspect-video w-full rounded-b-3xl dark:opacity-55 overflow-hidden">
                 <Image
-                  src={marketsImg}
-                  className="w-full object-cover"
-                  alt="Markets"
+                  src={"/stock-options-dark.jpg"}
+                  width={1000}
+                  height={700}
+                  className="w-full h-full object-cover"
+                  alt="stock options"
                 />
               </div>
               <div className="p-8 min-h-72 flex flex-col justify-between items-start">
                 <div>
                   <h1 className="font-semibold text-xl sm:text-3xl mb-2">
-                    Expert Guidance
+                    Stock Investments
                   </h1>
                   <p className="max-w-[50ch] text-sm sm:text-base">
-                    Follow top-performing traders, access their performance
-                    metrics, and replicate proven strategies with real-time
-                    support
+                    Explore diverse stock options and make informed investment
+                    choices. Our platform provides you with the tools and
+                    insights needed to navigate the stock market confidently.
                   </p>
                 </div>
                 <button className="px-4 py-1 text-sm rounded bg-appCardGold text-appDarkCard mt-6">
@@ -195,7 +217,7 @@ export default function Home() {
         <div className="inner grid justify-items-center text-center">
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
+            animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
             className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
           >
@@ -214,7 +236,7 @@ export default function Home() {
         <div className="inner flex flex-col items-center">
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
+            animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
             className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
           >
@@ -231,7 +253,7 @@ export default function Home() {
         <div className="inner grid justify-items-center text-center">
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
+            animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, once: true }}
             className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
           >
@@ -248,7 +270,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row justify-center max-w-4xl gap-8 mt-12">
             <motion.div
               initial={{ opacity: 0, translateX: -70 }}
-              whileInView={{ opacity: 1, translateX: 0 }}
+              animate={{ opacity: 1, translateX: 0 }}
               transition={{
                 duration: 0.5,
                 type: "spring",
@@ -267,7 +289,7 @@ export default function Home() {
                   {advantages.map((item, index) => (
                     <motion.li
                       initial={{ opacity: 0, translateX: -50 }}
-                      whileInView={{ opacity: 1, translateX: 0 }}
+                      animate={{ opacity: 1, translateX: 0 }}
                       transition={{ duration: 0.5, delay: 0.5, once: true }}
                       className="border-b border-appDarkCard border-opacity-25 text-sm pb-2 flex gap-1 items-start"
                       key={index}
@@ -281,7 +303,7 @@ export default function Home() {
             </motion.div>
             <motion.div
               initial={{ opacity: 0, translateX: 70 }}
-              whileInView={{ opacity: 1, translateX: 0 }}
+              animate={{ opacity: 1, translateX: 0 }}
               transition={{
                 duration: 0.5,
                 type: "spring",
@@ -300,7 +322,7 @@ export default function Home() {
                   {disadvantages.map((item, index) => (
                     <motion.li
                       initial={{ opacity: 0, translateX: -50 }}
-                      whileInView={{ opacity: 1, translateX: 0 }}
+                      animate={{ opacity: 1, translateX: 0 }}
                       transition={{ duration: 0.5, delay: 0.5, once: true }}
                       className="border-b border-appGold20 text-sm pb-2 flex gap-1 items-start"
                       key={index}
@@ -324,7 +346,7 @@ export default function Home() {
         <div className="inner grid justify-items-center">
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
+            animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, once: true }}
             className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
           >
@@ -343,7 +365,7 @@ export default function Home() {
               .map((item, index) => (
                 <motion.div
                   initial={{ opacity: 0, translateY: -50 }}
-                  whileInView={{ opacity: 1, translateY: 0 }}
+                  animate={{ opacity: 1, translateY: 0 }}
                   transition={{ duration: 0.5, delay: 0.3, once: true }}
                   key={index}
                 >
@@ -375,7 +397,7 @@ export default function Home() {
         <div className="inner grid text-center justify-items-center">
           <motion.span
             initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
+            animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, once: true }}
             className="border-b border-appDarkCard dark:border-appGold200 backdrop-blur-sm mb-4 rounded-full py-2 px-6 text-xs"
           >
@@ -383,7 +405,7 @@ export default function Home() {
           </motion.span>
           <motion.h2
             initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
+            animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, once: true }}
             className="text-xl sm:text-3xl font-semibold mb-2 sm:mb-4"
           >
@@ -391,7 +413,7 @@ export default function Home() {
           </motion.h2>
           <motion.p
             initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
+            animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, once: true }}
             className="text-sm"
           >
@@ -400,7 +422,7 @@ export default function Home() {
           </motion.p>
           <motion.button
             initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
+            animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, once: true }}
             className="mt-4 px-4 py-2 text-appDarkCard bg-appCardGold text-sm font-semibold rounded"
           >

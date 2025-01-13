@@ -4,6 +4,7 @@ import modalReduer from "./modalSlice";
 import sidebarReducer from "./sideBar";
 import userReducer from "./userSlice";
 import profileReducer from "./profileSlice";
+import loadingReducer from "./loadingSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     modal: modalReduer,
     user: userReducer,
     profile: profileReducer,
+    loading: loadingReducer,
   },
 });
 
