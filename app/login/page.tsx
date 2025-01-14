@@ -34,6 +34,7 @@ import { setProfile } from "@/store/profileSlice";
 import { ToastAction } from "@/components/ui/toast";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { Icon } from "@iconify/react/dist/iconify.js";
 import { LoginAdsSlider } from "@/components/login-ads";
 // import withLoggedIn from "../hoc/with-loggedIn";
 // import ENV from "@/constants/env"
@@ -71,6 +72,10 @@ export default function LoginForm() {
       password: "",
     },
   });
+  const handleGoogleSignIn = () => {
+    // Implement Google Sign-In logic here
+    console.log("Sign in with Google clicked");
+  };
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
 
@@ -199,6 +204,25 @@ export default function LoginForm() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full mb-4"
+                  onClick={handleGoogleSignIn}
+                >
+                  <Icon icon={"devicon:google"} className="mr-2 h-4 w-4" />
+                  Sign in with Google
+                </Button>
+                <div className="relative mb-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
