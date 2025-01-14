@@ -35,6 +35,7 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { startLoading, stopLoading } from "@/store/loadingSlice";
 import { LoginAdsSlider } from "@/components/login-ads";
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 const signupSchema = z
   .object({
@@ -81,6 +82,11 @@ export default function SignupForm() {
     },
   });
 
+  const handleGoogleSignIn = () => {
+    // Implement Google Sign-In logic here
+    console.log("Sign in with Google clicked");
+  };
+
   const onSubmit = async (data: SignupFormValues) => {
     dispatch(startLoading());
 
@@ -120,14 +126,14 @@ export default function SignupForm() {
   };
 
   return (
-    <div className="flex justify-center relative w-full h-screen">
+    <div className="flex justify-center relative w-full min-h-screen">
       <div className="absolute top-8 right-8">
         <ThemeToggle />
       </div>
       <Link href="/" className="absolute top-8 left-8 text-sm">
         Return
       </Link>
-      <div className="flex flex-col w-full md:w-1/2 justify-center items-center md:items-end">
+      <div className="flex flex-col w-full md:w-1/2 justify-center before:block before:h-20 items-center md:items-end">
         <div className="grid justify-items-center gap-4">
           <motion.div
             initial={{ opacity: 0, translateX: -50 }}
@@ -151,6 +157,25 @@ export default function SignupForm() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full mb-4"
+                  onClick={handleGoogleSignIn}
+                >
+                  <Icon icon={"devicon:google"} className="mr-2 h-4 w-4" />
+                  Sign in with Google
+                </Button>
+                <div className="relative mb-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-background px-2 text-muted-foreground">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
@@ -236,12 +261,6 @@ export default function SignupForm() {
                     Log in
                   </Link>
                 </p>
-                {/*<div*/}
-                {/*  className="cursor-pointer text-orange-600 px-3"*/}
-                {/*  onClick={() => logout()}*/}
-                {/*>*/}
-                {/*  Log out*/}
-                {/*</div>*/}
               </CardFooter>
             </Card>
           </motion.div>

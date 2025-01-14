@@ -64,7 +64,7 @@ export const LoginAdsSlider: React.FC = () => {
 
   return (
     <div
-      className="relative w-full max-w-lg h-96 overflow-hidden rounded-xl shadow-lg"
+      className="relative w-full max-w-lg h-96 overflow-hidden rounded-xl"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -90,7 +90,7 @@ export const LoginAdsSlider: React.FC = () => {
             <h2 className="text-xl font-bold mb-2 text-appGold200">
               {slides[currentIndex].title}
             </h2>
-            <p className="text-sm text-gray-200 max-w-96">
+            <p className="text-sm dark:text-gray-200 max-w-96">
               {slides[currentIndex].content}
             </p>
           </div>
