@@ -15,21 +15,14 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import {
-  storage,
-  databases,
-  ID,
-  Permission,
-  Role,
-} from "@/lib/appwrite";
+import { storage, databases, ID, Permission, Role } from "@/lib/appwrite";
 import { useToast } from "@/hooks/use-toast";
 import { setProfile } from "@/store/profileSlice";
 // import withOnboarding from "../hoc/with-onboarding";
 import { useAppDispatch } from "@/store/hook";
-import ENV from "@/constants/env"
+import ENV from "@/constants/env";
 
-
-export default function OnboardingPage(){
+export default function OnboardingPage() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -42,20 +35,20 @@ export default function OnboardingPage(){
   const [avatar, setAvatar] = useState<string | null>(null);
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const user = useSelector((state: RootState) => state.user.user);
-    //const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
+  //const isLoggedIn = useSelector((state: RootState) => state.user.isLoggedIn);
   const { isLoggedIn } = useSelector((state: RootState) => state.user);
   const { profile } = useSelector((state: RootState) => state.profile);
-  
-      useEffect(() => {
-        console.log("isLoggedIn", isLoggedIn);
-        console.log("profile", profile);
-        if (!isLoggedIn) {
-          router.push("/login"); // Redirect to login if not logged in
-        } else if (isLoggedIn && profile?.id) {
-          console.log("Redirecting to dashboard", profile);
-          router.push("/dashboard"); // Redirect to dashboard if profile exists
-        }
-      }, [isLoggedIn, profile, router]);
+
+  useEffect(() => {
+    console.log("isLoggedIn", isLoggedIn);
+    console.log("profile", profile);
+    if (!isLoggedIn) {
+      router.push("/login"); // Redirect to login if not logged in
+    } else if (isLoggedIn && profile?.id) {
+      console.log("Redirecting to dashboard", profile);
+      router.push("/dashboard"); // Redirect to dashboard if profile exists
+    }
+  }, [isLoggedIn, profile, router]);
 
   console.log("user", isLoggedIn);
 
@@ -145,8 +138,8 @@ export default function OnboardingPage(){
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <Card className="max-w-md mx-auto">
+    <div className="container flex items-center min-h-screen mx-auto p-4">
+      <Card className="max-w-md w-full mx-auto">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
             Complete Your Profile
@@ -167,7 +160,7 @@ export default function OnboardingPage(){
               </Avatar>
               <Label
                 htmlFor="avatar"
-                className="cursor-pointer text-sm text-blue-600 hover:text-blue-800"
+                className="cursor-pointer text-sm text-appGold200 hover:text-appGold600"
               >
                 Upload Profile Picture
               </Label>
@@ -221,4 +214,4 @@ export default function OnboardingPage(){
       </Card>
     </div>
   );
-};
+}
