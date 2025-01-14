@@ -29,11 +29,13 @@ export interface MonthlyStats {
 
 export interface Trader {
   id: string;
-  trader_name: string;
-  success_rate: number;
-  monthly_return: number;
-  trader_followers: number;
-  successful_trades: number;
+  trade_title: string;
+  trade_max: number;
+  trade_min: number;
+  trade_roi_min: number;
+  trade_roi_max: number;
+  trade_description: string;
+  trade_risk: string;
   user_id?: string;
   user_name?: string;
 }

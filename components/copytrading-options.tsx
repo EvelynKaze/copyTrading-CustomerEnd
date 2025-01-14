@@ -1,8 +1,8 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Copy, Star } from "lucide-react";
+import { Copy, Star, Check } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Trader } from "@/types/dashboard"
 import { useState, useEffect } from "react";
@@ -23,11 +23,13 @@ export function CopyTradingOptions() {
         setTraders(
             response.documents.map((doc) => ({
               id: doc.$id,
-              trader_name: doc.trader_name,
-              success_rate: doc.success_rate,
-              monthly_return: doc.monthly_return,
-              trader_followers: doc.trader_followers,
-              successful_trades: doc.successful_trades,
+              trade_title: doc.trade_title,
+              trade_max: doc.trade_max,
+              trade_min: doc.trade_min,
+              trade_roi_min: doc.trade_roi_min,
+              trade_roi_max: doc.trade_roi_max,
+              trade_description: doc.trade_description,
+              trade_risk: doc.trade_risk,
             }))
         );
       } catch (error) {
@@ -43,43 +45,40 @@ export function CopyTradingOptions() {
       <CardHeader>
         <CardTitle className="text-lg font-semibold flex items-center justify-between">
           <div className="flex text-sm items-center gap-2">
-            <Copy className="w-4 h-4" />
+            {/* <Copy className="w-4 h-4" /> */}
             CopyTrading Options
           </div>
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ScrollArea className="h-[400px] pr-4">
+        <ScrollArea className="h-[400px] pr-2">
           <div className="grid gap-4">
             {traders?.map((trader) => (
-              <Card key={trader.id} className="p-4">
-                <div className="">
-                  <div className="flex gap-2">
-                    <div>
-                      <h3 className="font-semibold text-base">{trader.trader_name}</h3>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                        <Star className="w-3 h-3 fill-yellow-500 stroke-yellow-500" />
-                        <span>{trader?.success_rate}% Success Rate</span>
-                      </div>
-                      <span className="text-green-500 text-xs">
-                        +{trader?.monthly_return}% Monthly
-                      </span>
-                      <div className="flex gap-3 mt-2 text-xs text-muted-foreground">
-                        <span>{trader?.trader_followers} followers</span>
-                        <span>{trader?.successful_trades} trades</span>
-                      </div>
-                    </div>
+              <Card key={trader.id} className="flex flex-col">
+                <CardHeader className="flex-1">
+                  <h3 className="text-2xl font-bold text-center">{trader?.trade_title}</h3>
+                  <p className="text-center text-muted-foreground">{trader?.trade_description}</p>
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <div className="text-center mb-4">
+                    <span className="text-3xl font-bold">${trader?.trade_min} - ${trader?.trade_max}</span>
                   </div>
-                  <div className="flex flex-col gap-2 mt-3">
-                    <Button
-                      size="sm"
-                      className="w-full bg-appCardGold text-appDarkCard "
-                    >
-                      <Copy className="w-3 h-3 mr-1" />
-                      Copy Trades
-                    </Button>
-                  </div>
-                </div>
+                  <ul className="space-y-2">
+                    <li className="flex items-center">
+                      <Check className="mr-2 h-4 w-4 text-green-500" />
+                      <span>Daily ROI: {trader?.trade_roi_max}%-{trader?.trade_roi_max}%</span>
+                    </li>
+                    <li className="flex items-center">
+                      <Check className="mr-2 h-4 w-4 text-green-500" />
+                      <span>Risk: {trader?.trade_risk}</span>
+                    </li>
+                  </ul>
+                </CardContent>
+                <CardFooter>
+                  <Button className="w-full hover:bg-appPremuimGold" variant="outline">
+                    Invest
+                  </Button>
+                </CardFooter>
               </Card>
             ))}
           </div>

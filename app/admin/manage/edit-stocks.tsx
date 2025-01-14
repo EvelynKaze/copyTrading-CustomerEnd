@@ -110,7 +110,7 @@ export default function AdminStocks() {
           price: newStock?.price,
           symbol: newStock?.symbol,
           change: newStock?.change,
-          isMinus: false,
+          isMinus: newStock?.isMinus,
           user_id: profile?.user_id,
           user_name: profile?.user_name,
         }
@@ -307,7 +307,7 @@ function StockForm({ initialData, onSubmit, isLoading }: StockFormProps) {
   const handleSelectChange = (value: string) => {
     setFormData((prev) => ({
       ...prev,
-      isMinus: value === "bearish",
+      isMinus: value === "bullish",
     }));
   };
 
@@ -368,7 +368,7 @@ function StockForm({ initialData, onSubmit, isLoading }: StockFormProps) {
         <Label htmlFor="trend">Trend</Label>
         <Select
           onValueChange={handleSelectChange}
-          defaultValue={formData.isMinus ? "bearish" : "bullish"}
+          defaultValue={formData.isMinus ? "bullish" : "bearish"}
         >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select trend" />
