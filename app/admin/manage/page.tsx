@@ -5,12 +5,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AdminStocks from "./edit-stocks";
 import CryptocurrenciesAdmin from "./manage-crypto";
 import AdminCopyTrading from "./edit-copytrades";
+import { motion } from "framer-motion";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("stocks");
 
   return (
-    <div className="container mx-auto p-6">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="container mx-auto h-full overflow-y-scroll p-4"
+    >
       <h1 className="text-xl md:text-3xl font-bold mb-6">Manage Options</h1>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-3">
@@ -43,6 +49,6 @@ export default function AdminDashboard() {
           <AdminCopyTrading />
         </TabsContent>
       </Tabs>
-    </div>
+    </motion.div>
   );
 }

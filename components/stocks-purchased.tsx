@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
@@ -217,7 +218,7 @@ const PortfolioPage = () => {
                     <TableCell>${calculateTotalValue(stock)}</TableCell>
                     <TableCell
                       className={
-                        calculateProfitLoss(stock) >= 0
+                        Number(calculateProfitLoss(stock)) >= 0
                           ? "text-green-600"
                           : "text-red-600"
                       }
@@ -226,7 +227,7 @@ const PortfolioPage = () => {
                     </TableCell>
                     <TableCell
                       className={
-                        calculatePercentageChange(stock) >= 0
+                        Number(calculateProfitLoss(stock)) >= 0
                           ? "text-green-600"
                           : "text-red-600"
                       }
