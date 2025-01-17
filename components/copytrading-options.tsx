@@ -1,8 +1,7 @@
 "use client";
-
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Copy, Star, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Trader } from "@/types/dashboard"
 import { useState, useEffect } from "react";
@@ -66,16 +65,16 @@ export function CopyTradingOptions() {
                   <ul className="space-y-2">
                     <li className="flex items-center">
                       <Check className="mr-2 h-4 w-4 text-green-500" />
-                      <span>Daily ROI: {trader?.trade_roi_max}%-{trader?.trade_roi_max}%</span>
+                      <span>Daily ROI: {trader?.trade_roi_min}%{" - "}{trader?.trade_roi_max}%</span>
                     </li>
                     <li className="flex items-center">
                       <Check className="mr-2 h-4 w-4 text-green-500" />
-                      <span>Risk: {trader?.trade_risk}</span>
+                      <span>Risk: <b className="capitalize">{trader?.trade_risk}</b></span>
                     </li>
                   </ul>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full hover:bg-appPremuimGold" variant="outline">
+                  <Button className="w-full hover:bg-appGold200" variant="outline">
                     Invest
                   </Button>
                 </CardFooter>

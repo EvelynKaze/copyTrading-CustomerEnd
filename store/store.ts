@@ -1,18 +1,20 @@
 import { configureStore } from "@reduxjs/toolkit";
 import navReducer from "./navSlice";
-import modalReduer from "./modalSlice";
+import modalReducer from "./modalSlice";
 import sidebarReducer from "./sideBar";
 import userReducer from "./userSlice";
 import profileReducer from "./profileSlice";
 import loadingReducer from "./loadingSlice";
+import stockOptionReducer from "./stockOptionsSlice"
 
 export const store = configureStore({
   reducer: {
     nav: navReducer,
     sidebar: sidebarReducer,
-    modal: modalReduer,
+    modal: modalReducer,
     user: userReducer,
     profile: profileReducer,
+    stockOption: stockOptionReducer,
     loading: loadingReducer,
   },
 });

@@ -199,9 +199,6 @@ export default function LoginForm() {
             <Card className="w-[300px] mx-4 sm:w-[350px]">
               <CardHeader className="">
                 <CardTitle>Login</CardTitle>
-                <CardDescription>
-                  Enter your email and password to log in.
-                </CardDescription>
               </CardHeader>
               <CardContent>
                 <Button
@@ -223,6 +220,9 @@ export default function LoginForm() {
                     </span>
                   </div>
                 </div>
+                <CardDescription>
+                  Enter your email and password to log in.
+                </CardDescription>
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
