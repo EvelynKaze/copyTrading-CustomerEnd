@@ -88,7 +88,7 @@ const PortfolioPage = () => {
           });
 
   const calculateTotalValue = (stock: any) => {
-    return (stock.stock_quantity * stock.stock_current_values).toFixed(2);
+    return (stock.stock_quantity * stock.stock_current_value).toFixed(2);
   };
 
   // const calculateProfitLoss = (stock: any) => {
@@ -199,25 +199,36 @@ const PortfolioPage = () => {
                           ${stock?.stock_initial_value.toFixed(2)}
                         </TableCell>
                         <TableCell>
-                          {stock?.stock_current_values == 0 ?
-                              <span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">
+                          {stock?.stock_status == "pending" ?
+                              (<span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">
                                 Processing
-                              </span>
-                              :`$${stock?.stock_current_values.toFixed(2)}`}
+                              </span>) :
+                              stock?.stock_status == "rejected" ?
+                                  (<span className="bg-red-400 rounded-xl animate-pulse p-2 text-white">
+                                Rejected
+                              </span>)
+                              :`$${stock?.stock_current_value.toFixed(2)}`}
                         </TableCell>
                         <TableCell>
-                          { stock?.stock_current_values == 0 ?
-                              <span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">
+                          {stock?.stock_status == "pending" ?
+                              (<span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">
                                 Processing
-                              </span>
+                              </span>) :
+                              stock?.stock_status == "rejected" ?
+                                  (<span className="bg-red-400 rounded-xl animate-pulse p-2 text-white">
+                                Rejected
+                              </span>)
                               : `$${calculateTotalValue(stock)}`}
                         </TableCell>
                         <TableCell>
-                          {stock?.stock_current_values === 0 ? (
-                              <span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">
-                          Processing
-                        </span>
-                          ) : (
+                          {stock?.stock_status == "pending" ?
+                              (<span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">
+                                Processing
+                              </span>) :
+                              stock?.stock_status == "rejected" ?
+                                  (<span className="bg-red-400 rounded-xl animate-pulse p-2 text-white">
+                                Rejected
+                              </span>) : (
                               <span
                                   className={
                                     stock?.isProfit ? "text-green-600" : "text-red-600"
@@ -228,11 +239,14 @@ const PortfolioPage = () => {
                           )}
                         </TableCell>
                         <TableCell>
-                          {stock?.stock_current_values === 0 ? (
-                              <span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">
-                          Processing
-                        </span>
-                          ) : (
+                          {stock?.stock_status == "pending" ?
+                              (<span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">
+                                Processing
+                              </span>) :
+                              stock?.stock_status == "rejected" ?
+                                  (<span className="bg-red-400 rounded-xl animate-pulse p-2 text-white">
+                                Rejected
+                              </span>) : (
                               <span
                                   className={
                                     stock?.isMinus ? "text-green-600" : "text-red-600"

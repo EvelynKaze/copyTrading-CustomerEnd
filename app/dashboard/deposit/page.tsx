@@ -119,7 +119,7 @@ const Deposit = () => {
           stock_quantity: stockOption.stock.quantity || 1,
           stock_initial_value: stockOption.stock.total,
           stock_change: stockOption.stock.change,
-          stock_current_values: 0.0,
+          stock_current_value: 0.0,
           stock_total_value: 0.0,
           stock_profit_loss: 0.0,
           isProfit: false,
@@ -127,6 +127,7 @@ const Deposit = () => {
           stock_value_entered: data.amount,
           stock_token: data.currency,
           stock_token_address: selectedAddress,
+          stock_status: "pending",
           full_name: profile?.full_name,
           user_id: profile?.user_id
         }
@@ -173,7 +174,7 @@ const Deposit = () => {
       setIsLoading(false);
       // Ensure clearStockOption is called
       if (typeof clearStockOption === "function") {
-        clearStockOption();
+        dispatch(clearStockOption());
       }
     }
   }
