@@ -31,12 +31,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Trash2, Plus } from "lucide-react";
+import {Trash2, Plus, TrendingUp, TrendingDown} from "lucide-react";
 import { databases, ID } from "@/lib/appwrite";
 import { useProfile } from "@/app/context/ProfileContext";
 import { useToast } from "@/hooks/use-toast";
 import { Trader } from "@/types/dashboard"
 import ENV from "@/constants/env"
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
 export default function AdminCopyTrading() {
   const [traders, setTraders] = useState<Trader[]>([]);
@@ -60,11 +61,13 @@ export default function AdminCopyTrading() {
         setTraders(
             response.documents.map((doc) => ({
               id: doc.$id,
-              trader_name: doc.trader_name,
-              success_rate: doc.success_rate,
-              monthly_return: doc.monthly_return,
-              trader_followers: doc.trader_followers,
-              successful_trades: doc.successful_trades,
+              trade_title: doc.trade_title,
+              trade_max: doc.trade_max,
+              trade_min: doc.trade_min,
+              trade_roi_min: doc.trade_roi_min,
+              trade_roi_max: doc.trade_roi_max,
+              trade_description: doc.trade_description,
+              trade_risk: doc.trade_risk,
               user_id: doc.user_id,
               user_name: doc.user_name,
             }))
@@ -81,35 +84,38 @@ export default function AdminCopyTrading() {
 
   const handleAddTrader = async (newTrader: Omit<Trader, "id" | "user_id" | "user_name">) => {
     setIsLoading(true);
+    console.log("checking trade_risk", newTrader?.trade_risk)
     try {
       const response = await databases.createDocument(
           databaseId,
           collectionId,
           ID.unique(),
           {
-            trader_name: newTrader.trader_name,
-            success_rate: newTrader.success_rate,
-            monthly_return: newTrader.monthly_return,
-            trader_followers: newTrader.trader_followers,
-            successful_trades: newTrader.successful_trades,
+            trade_title: newTrader.trade_title,
+            trade_max: newTrader.trade_max,
+            trade_min: newTrader.trade_min,
+            trade_description: newTrader.trade_description,
+            trade_roi_min: newTrader?.trade_roi_min,
+            trade_roi_max: newTrader?.trade_roi_max,
+            trade_risk: newTrader.trade_risk,
             user_id: profile?.user_id,
             user_name: profile?.user_name,
           }
       );
       setTraders([...traders, { ...newTrader, id: response.$id }]);
       toast({
-        title: "New Trader Added",
-        description: `Added ${newTrader?.trader_name}`,
+        title: "New Trade Added",
+        description: `Added ${newTrader?.trade_title}`,
       });
       setIsAddDialogOpen(false);
     } catch (err) {
       const error = err as Error;
       toast({
-        title: "Error Adding New Trader",
+        title: "Error Adding New Trade",
         description: `Error: ${error.message}`,
         variant: "destructive"
       })
-      console.error("Failed to add trader:", error);
+      console.error("Failed to add trade:", error);
     } finally {
       setIsLoading(false);
     }
@@ -126,16 +132,16 @@ export default function AdminCopyTrading() {
       );
       setTraders(traders.filter((trader) => trader.id !== id));
       toast({
-        title: "Delete Trader",
-        description: "Deleted Trader Successfully!",
+        title: "Delete Trade",
+        description: "Deleted Trade Successfully!",
       })
     } catch (err) {
       const error = err as Error;
       toast({
-        title: "Error deleting Trader",
+        title: "Error deleting Trade",
         description: `Error: ${error.message}`,
       })
-      console.error("Failed to delete trader:", error);
+      console.error("Failed to delete trade:", error);
     } finally {
       setIsLoading(false);
     }
@@ -167,11 +173,13 @@ export default function AdminCopyTrading() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Trader</TableHead>
-                <TableHead>Success Rate</TableHead>
-                <TableHead>Monthly Return</TableHead>
-                <TableHead>Followers</TableHead>
-                <TableHead>Trades</TableHead>
+                <TableHead>Trade</TableHead>
+                <TableHead>Trade Desc.</TableHead>
+                <TableHead>Trade Risk</TableHead>
+                <TableHead>Trade Min</TableHead>
+                <TableHead>Trade Max</TableHead>
+                <TableHead>Trade ROI Min(%)</TableHead>
+                <TableHead>Trade ROI Min(%)</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -180,13 +188,15 @@ export default function AdminCopyTrading() {
                   <TableRow key={trader?.id}>
                     <TableCell className="font-medium">
                       <div className="flex items-center gap-2">
-                        {trader?.trader_name}
+                        {trader?.trade_title}
                       </div>
                     </TableCell>
-                    <TableCell>{trader?.success_rate}%</TableCell>
-                    <TableCell>{trader?.monthly_return}%</TableCell>
-                    <TableCell>{trader?.trader_followers}</TableCell>
-                    <TableCell>{trader?.successful_trades}</TableCell>
+                    <TableCell>{trader?.trade_description}</TableCell>
+                    <TableCell>{trader?.trade_risk}</TableCell>
+                    <TableCell>${trader?.trade_min}</TableCell>
+                    <TableCell>${trader?.trade_max}</TableCell>
+                    <TableCell>{trader?.trade_roi_min}%</TableCell>
+                    <TableCell>{trader?.trade_roi_max}%</TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
                         <AlertDialog>
@@ -228,100 +238,157 @@ export default function AdminCopyTrading() {
 }
 
 interface TraderFormProps {
-  isLoading: boolean;
-  onSubmit: (trader: Omit<Trader, "id" | "user_id" | "user_name">) => void;
+    isLoading: boolean;
+    onSubmit: (trader: Omit<Trader, "id" | "user_id" | "user_name">) => void;
 }
 
 function TraderForm({ onSubmit, isLoading }: TraderFormProps) {
-  const [formData, setFormData] = useState<Omit<Trader, "id" | "user_id" | "user_name">>(
-      {
-        trader_name: "",
-        success_rate: 0,
-        monthly_return: 0,
-        trader_followers: 0,
-        successful_trades: 0,
-      }
-  );
+    const [formData, setFormData] = useState<Omit<Trader, "id" | "user_id" | "user_name">>({
+        trade_title: "",
+        trade_description: "",
+        trade_risk: "",
+        trade_min: 0,
+        trade_max: 0,
+        trade_roi_min: 0,
+        trade_roi_max: 0,
+    });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === "trader_name" ? value : parseFloat(value),
-    }));
-  };
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(formData);
-  };
+        setFormData((prev) => ({
+            ...prev,
+            [name]:
+                name === "trade_title" ||
+                name === "trade_description" ||
+                name === "trade_risk"
+                    ? value
+                    : parseFloat(value) || 0, // Default to 0 if parsing fails for numeric fields
+        }));
+    };
 
-  return (
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid w-full items-center gap-1.5">
-          <Label htmlFor="trader_name">Trader Name</Label>
-          <Input
-              type="text"
-              id="trader_name"
-              name="trader_name"
-              value={formData.trader_name}
-              onChange={handleChange}
-              required
-          />
-        </div>
-        <div className="grid w-full items-center gap-1.5">
-          <Label htmlFor="success_rate">Success Rate (%)</Label>
-          <Input
-              type="number"
-              id="success_rate"
-              name="success_rate"
-              value={formData.success_rate}
-              onChange={handleChange}
-              min="0"
-              max="100"
-              step="0.1"
-              required
-          />
-        </div>
-        <div className="grid w-full items-center gap-1.5">
-          <Label htmlFor="monthly_return">Monthly Return (%)</Label>
-          <Input
-              type="number"
-              id="monthly_return"
-              name="monthly_return"
-              value={formData.monthly_return}
-              onChange={handleChange}
-              step="0.1"
-              required
-          />
-        </div>
-        <div className="grid w-full items-center gap-1.5">
-          <Label htmlFor="trader_followers">Followers</Label>
-          <Input
-              type="number"
-              id="trader_followers"
-              name="trader_followers"
-              value={formData.trader_followers}
-              onChange={handleChange}
-              min="0"
-              required
-          />
-        </div>
-        <div className="grid w-full items-center gap-1.5">
-          <Label htmlFor="successful_trades">Successful Trades</Label>
-          <Input
-              type="number"
-              id="successful_trades"
-              name="successful_trades"
-              value={formData.successful_trades}
-              onChange={handleChange}
-              min="0"
-              required
-          />
-        </div>
-        <Button disabled={isLoading} type="submit" className="bg-appCardGold text-appDarkCard">
-          {isLoading ? "Adding Trader.." : "Add Trader"}
-        </Button>
-      </form>
-  );
+    const handleSelectChange = (value: string) => {
+        setFormData((prev) => ({
+            ...prev,
+            trade_risk: value, // Set the trade_risk field based on the selected value
+        }));
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        onSubmit(formData);
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid w-full items-center gap-1.5">
+                <Label htmlFor="trade_title">Trade Title</Label>
+                <Input
+                    type="text"
+                    id="trade_title"
+                    name="trade_title"
+                    value={formData.trade_title}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+            <div className="grid w-full items-center gap-1.5">
+                <Label htmlFor="trade_description">Trade Description</Label>
+                <Input
+                    type="text"
+                    id="trade_description"
+                    name="trade_description"
+                    value={formData.trade_description}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+            <div className="grid w-full items-center gap-1.5">
+                <Label htmlFor="trade_risk">Trade Risk</Label>
+                <Select
+                    onValueChange={handleSelectChange}
+                    defaultValue={formData.trade_risk} // Default to medium if trade_risk is empty
+                >
+                    <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select trade risk" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="low">
+                            <div className="flex items-center">
+                                {/*<TrendingUp className="mr-2 h-4 w-4 text-green-500" />*/}
+                                Low
+                            </div>
+                        </SelectItem>
+                        <SelectItem value="medium">
+                            <div className="flex items-center">
+                                {/*<TrendingDown className="mr-2 h-4 w-4 text-yellow-500" />*/}
+                                Medium
+                            </div>
+                        </SelectItem>
+                        <SelectItem value="high">
+                            <div className="flex items-center">
+                                {/*<TrendingDown className="mr-2 h-4 w-4 text-red-500" />*/}
+                                High
+                            </div>
+                        </SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+            <div className="grid w-full items-center gap-1.5">
+                <Label htmlFor="trade_min">Trade Min</Label>
+                <Input
+                    type="number"
+                    id="trade_min"
+                    name="trade_min"
+                    value={formData.trade_min}
+                    onChange={handleChange}
+                    min="0"
+                    max="100000000000000"
+                    step="0.1"
+                    required
+                />
+            </div>
+            <div className="grid w-full items-center gap-1.5">
+                <Label htmlFor="trade_max">Trade Max</Label>
+                <Input
+                    type="number"
+                    id="trade_max"
+                    name="trade_max"
+                    value={formData.trade_max}
+                    onChange={handleChange}
+                    min="0"
+                    max="100000000000000"
+                    step="0.1"
+                    required
+                />
+            </div>
+            <div className="grid w-full items-center gap-1.5">
+                <Label htmlFor="trade_roi_min">Trade ROI Min(%)</Label>
+                <Input
+                    type="number"
+                    id="trade_roi_min"
+                    name="trade_roi_min"
+                    value={formData.trade_roi_min}
+                    onChange={handleChange}
+                    min="0"
+                    required
+                />
+            </div>
+            <div className="grid w-full items-center gap-1.5">
+                <Label htmlFor="trade_roi_max">Trade ROI Max(%)</Label>
+                <Input
+                    type="number"
+                    id="trade_roi_max"
+                    name="trade_roi_max"
+                    value={formData.trade_roi_max}
+                    onChange={handleChange}
+                    min="0"
+                    required
+                />
+            </div>
+            <Button disabled={isLoading} type="submit" className="bg-appCardGold text-appDarkCard">
+                {isLoading ? "Adding Trade.." : "Add Trade"}
+            </Button>
+        </form>
+    );
 }

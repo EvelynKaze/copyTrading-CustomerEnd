@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CopyTradingPage from "@/components/copied-trades";
-import PortfolioPage from "@/components/stocks-purchased";
+import AdminPortfolioPage from "@/components/admin-stocks-purchased";
+import AdminCopyTradingPage from "@/components/admin-copied-trades";
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState("stocks");
+  const [activeTab, setActiveTab] = useState("copy-trades");
 
   return (
     <div className="container mx-auto p-6">
@@ -15,22 +15,22 @@ export default function AdminDashboard() {
         <TabsList className="grid w-full grid-cols-2 p-2">
           <TabsTrigger
             className="overflow-hidden p-1 text-xs sm:text-base"
-            value="stocks"
-          >
-            Stocks
-          </TabsTrigger>
-          <TabsTrigger
-            className="overflow-hidden p-1 text-xs sm:text-base"
             value="copy-trades"
           >
             Copy Trades
           </TabsTrigger>
+          <TabsTrigger
+            className="overflow-hidden p-1 text-xs sm:text-base"
+            value="stocks"
+          >
+            Stock Options
+          </TabsTrigger>
         </TabsList>
-        <TabsContent value="stocks" className="mt-6">
-          <PortfolioPage />
-        </TabsContent>
         <TabsContent value="copy-trades" className="mt-6">
-          <CopyTradingPage />
+          <AdminCopyTradingPage />
+        </TabsContent>
+        <TabsContent value="stocks" className="mt-6">
+          <AdminPortfolioPage />
         </TabsContent>
       </Tabs>
     </div>

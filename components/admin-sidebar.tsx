@@ -21,6 +21,11 @@ const navigation = [
     icon: "grommet-icons:transaction",
   },
   {
+    name: "Portfolio",
+    href: "/admin/portfolio",
+    icon: "bytesize:portfolio",
+  },
+  {
     name: "Manage",
     href: "/admin/manage",
     icon: "material-symbols:manage-accounts-outline-rounded",
