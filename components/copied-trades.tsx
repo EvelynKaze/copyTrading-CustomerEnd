@@ -45,7 +45,7 @@ interface TradePayload {
 }
 
 const CopyTradingPage = () => {
-  const [copyTradingData, setCopyTradingData] = useState<TradePayload[]>([]);
+  const [copyTradingData, setCopyTradingData] = useState<any>([]);
   const { profile } = useProfile();
   const user_id = profile?.user_id || "";
   const [sortConfig, setSortConfig] = useState({
@@ -146,9 +146,9 @@ const CopyTradingPage = () => {
                 <TableHeader>
                   <TableRow>
                     {[
-                      { label: "Full Name", key: "full_name" },
                       { label: "Trade Title", key: "trade_title" },
                       { label: "Initial Investment", key: "initial_investment" },
+                      { label: "Token", key: "trade_token" },
                       { label: "Current Value", key: "trade_current_value" },
                       { label: "Profit/Loss", key: "trade_profit_loss" },
                       { label: "Win Rate", key: "trade_win_rate" },
@@ -171,14 +171,12 @@ const CopyTradingPage = () => {
                 </TableHeader>
                 <TableBody>
                   {filteredData.map((trade) => (
-                      <TableRow key={trade.trade_title}>
-                        <TableCell className="font-medium">
-                          {trade.full_name}
-                        </TableCell>
-                        <TableCell>{trade.trade_title}</TableCell>
+                      <TableRow key={trade?.$id}>
+                        <TableCell>{trade?.trade_title}</TableCell>
                         <TableCell>
-                          {formatCurrency(trade.initial_investment)}
+                          {trade?.trade_token === "USDT" ? formatCurrency(trade?.initial_investment) : trade?.initial_investment}
                         </TableCell>
+                        <TableCell>{trade?.trade_token}</TableCell>
                         <TableCell>
                           {trade.trade_status === "pending" ?
                               (<span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">
@@ -198,7 +196,7 @@ const CopyTradingPage = () => {
                           (<span className="bg-red-400 rounded-xl animate-pulse p-2 text-white">
                                 Rejected
                               </span>) :
-                          (<span>
+                          (<span className={`${trade.isProfit ? "text-green-600" : "text-red-500"}`}>
                             {trade.isProfit ? (
                                 <TrendingUp className="inline mr-1" />
                             ) : (
@@ -216,7 +214,7 @@ const CopyTradingPage = () => {
                                   (<span className="bg-red-400 rounded-xl animate-pulse p-2 text-white">
                                 Rejected
                               </span>) :
-                                  (<span>
+                                  (<span className={`${trade.isProfit ? "text-green-600" : "text-red-500"}`}>
                             {trade.isProfit ? (
                                 <TrendingUp className="inline mr-1" />
                             ) : (

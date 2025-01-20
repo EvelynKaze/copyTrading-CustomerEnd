@@ -84,6 +84,7 @@ export default function AdminCopyTrading() {
 
   const handleAddTrader = async (newTrader: Omit<Trader, "id" | "user_id" | "user_name">) => {
     setIsLoading(true);
+    console.log("checking trade_risk", newTrader?.trade_risk)
     try {
       const response = await databases.createDocument(
           databaseId,
@@ -131,16 +132,16 @@ export default function AdminCopyTrading() {
       );
       setTraders(traders.filter((trader) => trader.id !== id));
       toast({
-        title: "Delete Trader",
-        description: "Deleted Trader Successfully!",
+        title: "Delete Trade",
+        description: "Deleted Trade Successfully!",
       })
     } catch (err) {
       const error = err as Error;
       toast({
-        title: "Error deleting Trader",
+        title: "Error deleting Trade",
         description: `Error: ${error.message}`,
       })
-      console.error("Failed to delete trader:", error);
+      console.error("Failed to delete trade:", error);
     } finally {
       setIsLoading(false);
     }
@@ -306,7 +307,7 @@ function TraderForm({ onSubmit, isLoading }: TraderFormProps) {
                 <Label htmlFor="trade_risk">Trade Risk</Label>
                 <Select
                     onValueChange={handleSelectChange}
-                    defaultValue={formData.trade_risk || "medium"} // Default to medium if trade_risk is empty
+                    defaultValue={formData.trade_risk} // Default to medium if trade_risk is empty
                 >
                     <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select trade risk" />

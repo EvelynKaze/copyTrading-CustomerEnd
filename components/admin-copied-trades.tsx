@@ -198,7 +198,7 @@ const AdminCopyTradingPage = () => {
                                 {filteredOptions.map((option) => (
                                     <TableRow key={option?.$id}>
                                         <TableCell className="font-medium">{option?.trade_title}</TableCell>
-                                        <TableCell>{formatCurrency(option?.initial_investment)}</TableCell>
+                                        <TableCell>{option.trade_token === "USDT" ? formatCurrency(option?.initial_investment) : option?.initial_investment}</TableCell>
                                         <TableCell>{formatCurrency(option?.trade_current_value)}</TableCell>
                                         <TableCell
                                             className={
@@ -218,7 +218,7 @@ const AdminCopyTradingPage = () => {
                                               className={`px-2 py-1 capitalize rounded-full text-xs ${
                                                   option?.trade_risk === "low"
                                                       ? "bg-green-200 text-green-800"
-                                                      : option.risk === "medium"
+                                                      : option.trade_risk === "medium"
                                                           ? "bg-yellow-200 text-yellow-800"
                                                           : "bg-red-200 text-red-800"
                                               }`}
