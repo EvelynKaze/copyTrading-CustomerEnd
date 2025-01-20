@@ -8,13 +8,13 @@ import {
     DialogTrigger
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import {Button} from "@/components/ui/button";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import React from "react";
 
 
-export default function UpdateStockDialog({stock, selectedStock, setSelectedStock, handleUpdateStock}) {
+export default function UpdateStockDialog({stock, selectedStock, loading, setSelectedStock, handleUpdateStock}) {
     const isDisabled = selectedStock?.stock_status === "pending" || selectedStock?.stock_status === "rejected";
 
     console.log("Selected Stock", selectedStock);
@@ -123,7 +123,7 @@ export default function UpdateStockDialog({stock, selectedStock, setSelectedStoc
                     </div>
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="stock-name" className="text-right">
-                            Initial Value
+                            Ini. Total Value
                         </Label>
                         <Input
                             value={selectedStock?.stock_initial_value || ""}
@@ -131,6 +131,22 @@ export default function UpdateStockDialog({stock, selectedStock, setSelectedStoc
                                 setSelectedStock({
                                     ...selectedStock,
                                     stock_initial_value: e.target.value,
+                                })
+                            }
+                            className="col-span-3"
+                            disabled
+                        />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="stock-name" className="text-right">
+                            Ini. Value(pu)
+                        </Label>
+                        <Input
+                            value={selectedStock?.stock_initial_value_pu || ""}
+                            onChange={(e) =>
+                                setSelectedStock({
+                                    ...selectedStock,
+                                    stock_initial_value_pu: e.target.value,
                                 })
                             }
                             className="col-span-3"
@@ -266,9 +282,9 @@ export default function UpdateStockDialog({stock, selectedStock, setSelectedStoc
                     <DialogFooter>
                         <Button
                             type="submit"
-                            disabled={isDisabled}
+                            disabled={isDisabled || loading}
                         >
-                            Save Changes
+                            {loading ? "Saving Changes..." : "Save Changes"}
                         </Button>
                     </DialogFooter>
                 </form>

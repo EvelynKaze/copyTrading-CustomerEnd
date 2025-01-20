@@ -6,6 +6,7 @@ import userReducer from "./userSlice";
 import profileReducer from "./profileSlice";
 import loadingReducer from "./loadingSlice";
 import stockOptionReducer from "./stockOptionsSlice"
+import copyTradeReducer from "./copyTradeSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     user: userReducer,
     profile: profileReducer,
     stockOption: stockOptionReducer,
+    copyTrade: copyTradeReducer,
     loading: loadingReducer,
   },
 });

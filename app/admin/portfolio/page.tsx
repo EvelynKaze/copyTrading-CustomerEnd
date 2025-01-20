@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CopyTradingPage from "@/components/copied-trades";
 import AdminPortfolioPage from "@/components/admin-stocks-purchased";
+import AdminCopyTradingPage from "@/components/admin-copied-trades";
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("copy-trades");
@@ -27,7 +27,7 @@ export default function AdminDashboard() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="copy-trades" className="mt-6">
-          <CopyTradingPage />
+          <AdminCopyTradingPage />
         </TabsContent>
         <TabsContent value="stocks" className="mt-6">
           <AdminPortfolioPage />

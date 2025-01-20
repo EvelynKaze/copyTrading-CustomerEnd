@@ -6,7 +6,7 @@ import CopyTradingPage from "@/components/copied-trades";
 import PortfolioPage from "@/components/stocks-purchased";
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState("copy-trades");
+  const [activeTab, setActiveTab] = useState("stocks");
 
   return (
     <div className="container mx-auto p-6">
@@ -15,22 +15,22 @@ export default function AdminDashboard() {
         <TabsList className="grid w-full grid-cols-2 p-2">
           <TabsTrigger
             className="overflow-hidden p-1 text-xs sm:text-base"
+            value="stocks"
+          >
+            Stocks
+          </TabsTrigger>
+          <TabsTrigger
+            className="overflow-hidden p-1 text-xs sm:text-base"
             value="copy-trades"
           >
             Copy Trades
           </TabsTrigger>
-          <TabsTrigger
-            className="overflow-hidden p-1 text-xs sm:text-base"
-            value="stocks"
-          >
-            Stock Options
-          </TabsTrigger>
         </TabsList>
-        <TabsContent value="copy-trades" className="mt-6">
-          <CopyTradingPage />
-        </TabsContent>
         <TabsContent value="stocks" className="mt-6">
           <PortfolioPage />
+        </TabsContent>
+        <TabsContent value="copy-trades" className="mt-6">
+          <CopyTradingPage />
         </TabsContent>
       </Tabs>
     </div>

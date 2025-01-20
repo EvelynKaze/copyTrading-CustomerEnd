@@ -36,6 +36,7 @@ import ENV from "@/constants/env";
 import { useProfile } from "@/app/context/ProfileContext";
 import { RootState } from "@/store/store";
 import { clearStockOption } from "@/store/stockOptionsSlice";
+import { clearCopyTrade } from "@/store/copyTradeSlice";
 
 const depositSchema = z.object({
   currency: z.string().nonempty("Please select a cryptocurrency."),
@@ -51,6 +52,8 @@ const Deposit = () => {
   const { toast } = useToast();
   const dispatch = useDispatch();
   const stockOption = useSelector((state: RootState) => state.stockOption);
+  const copyTrade = useSelector((state: RootState) => state.copyTrade)
+
   const [cryptocurrencies, setCryptocurrencies] = useState<
       { name: string; value: string; address: string }[]
   >([]);
@@ -68,6 +71,7 @@ const Deposit = () => {
   });
 
   console.log("Stocks!!!", stockOption)
+  console.log("Copy Trade Plan", copyTrade)
 
   useEffect(() => {
     const fetchCryptocurrencies = async () => {
@@ -118,6 +122,7 @@ const Deposit = () => {
           stock_name: stockOption.stock.name,
           stock_quantity: stockOption.stock.quantity || 1,
           stock_initial_value: stockOption.stock.total,
+          stock_initial_value_pu: stockOption.stock?.price,
           stock_change: stockOption.stock.change,
           stock_current_value: 0.0,
           stock_total_value: 0.0,
@@ -128,10 +133,34 @@ const Deposit = () => {
           stock_token: data.currency,
           stock_token_address: selectedAddress,
           stock_status: "pending",
+          isTrading: false,
           full_name: profile?.full_name,
           user_id: profile?.user_id
         }
         : null;
+
+    // Conditionally include stock data if available
+    const copyTradePayload =
+        copyTrade?.copy && copyTrade.copy.title.trim() !== ""
+            ? {
+              trade_title: copyTrade?.copy?.title,
+              trade_min: copyTrade?.copy?.trade_min,
+              trade_max: copyTrade?.copy?.trade_max,
+              trade_roi_min: copyTrade?.copy?.trade_roi_min,
+              trade_roi_max: copyTrade?.copy?.trade_roi_max,
+              trade_win_rate: 0.0,
+              trade_risk: copyTrade?.copy?.trade_risk,
+              trade_current_value: 0.0,
+              trade_profit_loss: 0.0,
+              isProfit: false,
+              initial_investment: data.amount,
+              trade_token: data.currency,
+              trade_token_address: selectedAddress,
+              trade_status: "pending",
+              full_name: profile?.full_name,
+              user_id: profile?.user_id
+            }
+            : null;
 
     try {
       // Create transaction document
@@ -149,6 +178,15 @@ const Deposit = () => {
             ENV.collections.stockOptionsPurchases,
             ID.unique(),
             stockPurchasePayload
+        );
+      }
+
+      if (copyTradePayload) {
+        await databases.createDocument(
+            ENV.databaseId,
+            ENV.collections.copyTradingPurchases,
+            ID.unique(),
+            copyTradePayload
         );
       }
 
@@ -175,6 +213,9 @@ const Deposit = () => {
       // Ensure clearStockOption is called
       if (typeof clearStockOption === "function") {
         dispatch(clearStockOption());
+      }
+      if (typeof clearCopyTrade === "function") {
+        dispatch(clearCopyTrade());
       }
     }
   }
@@ -309,6 +350,21 @@ const Deposit = () => {
                           <p className="text-sm text-muted-foreground">
                             Deposit the exact total amount stated above in crypto to complete
                             the stock purchase.
+                          </p>
+                        </div>
+                    )}
+                    {copyTrade?.copy?.title !== '' && Object.keys(copyTrade?.copy).length > 0 && (
+                        <div>
+                          <FormLabel>Plan</FormLabel>
+                          <Input
+                              type="text"
+                              value={copyTrade?.copy?.title}
+                              disabled
+                              className="mb-2"
+                          />
+                          <p className="text-sm text-muted-foreground">
+                            Deposit an amount within the range of ${copyTrade?.copy?.trade_min} to ${copyTrade?.copy?.trade_max}{" "}
+                            above in crypto to complete the Plan purchase.
                           </p>
                         </div>
                     )}

@@ -21,6 +21,7 @@ import UpdateStockDialog from "@/components/update-stock-dialog";
 const AdminPortfolioPage = () => {
     const [stocks, setStocks] = useState([]);
     const [selectedStock, setSelectedStock] = useState(null);
+    const [isLoading, setIsLoading] = useState(false)
     const { toast } = useToast();
 
     useEffect(() => {
@@ -67,12 +68,66 @@ const AdminPortfolioPage = () => {
     };
 
     const handleUpdateStock = async (updatedStock: any) => {
+        setIsLoading(true);
+        console.log("Updated Stock Payload:", updatedStock);
+
+        // Extract values and ensure stock_current_value is a float
+        const {
+            stock_change,
+            stock_current_value,
+            isProfit,
+            stock_profit_loss,
+            isMinus,
+        } = updatedStock;
+
+        // Convert stock_current_value to a float if it's not already
+        const validStockCurrentValue = parseFloat(stock_current_value);
+        const validStockProfitLoss = parseFloat(stock_profit_loss);
+        const validStockChange = parseFloat(stock_change);
+
+
+        if (isNaN(validStockCurrentValue)) {
+            console.error("Invalid stock_current_value:", stock_current_value);
+            toast({
+                title: "Error",
+                description: "Stock current value must be a valid number.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        if (isNaN(validStockProfitLoss)) {
+            console.error("Invalid stock_current_value:", stock_profit_loss);
+            toast({
+                title: "Error",
+                description: "Stock profit/loss must be a valid number.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        if (isNaN(validStockChange)) {
+            console.error("Invalid stock_current_value:", stock_change);
+            toast({
+                title: "Error",
+                description: "Stock change must be a valid number.",
+                variant: "destructive",
+            });
+            return;
+        }
+
         try {
             await databases.updateDocument(
                 ENV.databaseId,
                 ENV.collections.stockOptionsPurchases,
                 updatedStock.$id,
-                updatedStock
+                {
+                    stock_profit_loss: validStockProfitLoss,
+                    stock_current_value: validStockCurrentValue,
+                    stock_change: validStockChange,
+                    isProfit,
+                    isMinus,
+                }
             );
             setStocks((prevStocks: any) =>
                 prevStocks.map((stock: any) =>
@@ -90,8 +145,11 @@ const AdminPortfolioPage = () => {
                 description: "Failed to update stock. Please try again.",
                 variant: "destructive",
             });
+        } finally {
+            setIsLoading(false);
         }
     };
+
 
     return (
         <div className="flex h-full justify-center items-center w-full">
@@ -111,7 +169,7 @@ const AdminPortfolioPage = () => {
                                     <TableHead>Name</TableHead>
                                     <TableHead>Stock</TableHead>
                                     <TableHead>Quantity</TableHead>
-                                    <TableHead>Ini. Val.</TableHead>
+                                    <TableHead>Ini. Val.(pu)</TableHead>
                                     <TableHead>Cur. Val.(pu)</TableHead>
                                     <TableHead>Total Val.</TableHead>
                                     <TableHead>Status</TableHead>
@@ -124,10 +182,10 @@ const AdminPortfolioPage = () => {
                                         <TableCell>{stock.full_name}</TableCell>
                                         <TableCell>{stock.stock_symbol}</TableCell>
                                         <TableCell>{stock.stock_quantity}</TableCell>
-                                        <TableCell>${stock.stock_initial_value.toFixed(2)}</TableCell>
-                                        <TableCell>${stock.stock_current_value.toFixed(2)}</TableCell>
+                                        <TableCell>${Number(stock?.stock_initial_value_pu || 0).toFixed(2)}</TableCell>
+                                        <TableCell>${Number(stock?.stock_current_value || 0).toFixed(2)}</TableCell>
                                         <TableCell>
-                                            ${(stock.stock_quantity * stock.stock_current_value).toFixed(2)}
+                                            ${(Number(stock?.stock_quantity || 0) * Number(stock?.stock_current_value || 0)).toFixed(2)}
                                         </TableCell>
                                         <TableCell>
                                             {stock.stock_status === "rejected" ? (
@@ -163,6 +221,7 @@ const AdminPortfolioPage = () => {
                                                 <UpdateStockDialog
                                                     stock={stock}
                                                     selectedStock={selectedStock}
+                                                    loading={isLoading}
                                                     setSelectedStock={setSelectedStock}
                                                     handleUpdateStock={handleUpdateStock}
                                                 />

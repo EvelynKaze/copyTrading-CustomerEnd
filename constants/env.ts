@@ -16,6 +16,7 @@ interface AppwriteConfig {
         stockOptions: string;
         stockOptionsPurchases: string;
         copyTrading: string;
+        copyTradingPurchases: string;
         cryptoOptions: string;
     };
 
@@ -42,6 +43,7 @@ const ENV: AppwriteConfig = {
         stockOptions: process.env.NEXT_PUBLIC_APPWRITE_STOCKOPTIONS_COLLECTION_ID!,
         stockOptionsPurchases: process.env.NEXT_PUBLIC_APPWRITE_STOCKOPTIONS_PURCHASE_COLLECTION_ID!,
         copyTrading: process.env.NEXT_PUBLIC_APPWRITE_COPYTRADING_COLLECTION_ID!,
+        copyTradingPurchases: process.env.NEXT_PUBLIC_APPWRITE_COPYTRADING_PURCHASE_COLLECTION_ID!,
         cryptoOptions: process.env.NEXT_PUBLIC_APPWRITE_CRYPTO_OPTIONS_COLLECTION_ID!,
     },
 

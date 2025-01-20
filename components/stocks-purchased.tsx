@@ -51,7 +51,7 @@ const PortfolioPage = () => {
     };
 
     fetchStocks();
-  }, []);
+  }, [user_id]);
 
   const handleSort = (key: string) => {
     let direction = "asc";
@@ -168,13 +168,22 @@ const PortfolioPage = () => {
                         onClick={() => handleSort("stock_initial_value")}
                         className="cursor-pointer"
                     >
-                      Initial Value{" "}
+                      Ini. Total Value{" "}
                       {sortConfig.key === "stock_initial_value" && (
                           <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                       )}
                     </TableHead>
                     <TableHead
-                        onClick={() => handleSort("stock_current_values")}
+                        onClick={() => handleSort("stock_current_value")}
+                        className="cursor-pointer"
+                    >
+                      Initial Value(pu){" "}
+                      {sortConfig.key === "stock_current_values" && (
+                          <ArrowUpDown className="ml-2 h-4 w-4 inline" />
+                      )}
+                    </TableHead>
+                    <TableHead
+                        onClick={() => handleSort("stock_current_value")}
                         className="cursor-pointer"
                     >
                       Current Value(pu){" "}
@@ -185,6 +194,7 @@ const PortfolioPage = () => {
                     <TableHead>Total Value</TableHead>
                     <TableHead>Profit/Loss</TableHead>
                     <TableHead>% Change</TableHead>
+                    <TableHead></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -196,7 +206,10 @@ const PortfolioPage = () => {
                         <TableCell>{stock?.stock_name}</TableCell>
                         <TableCell>{stock?.stock_quantity}</TableCell>
                         <TableCell>
-                          ${stock?.stock_initial_value.toFixed(2)}
+                          ${Number(stock?.stock_initial_value || 0).toFixed(2)}
+                        </TableCell>
+                        <TableCell>
+                          ${Number(stock?.stock_initial_value_pu || 0).toFixed(2)}
                         </TableCell>
                         <TableCell>
                           {stock?.stock_status == "pending" ?
@@ -254,6 +267,15 @@ const PortfolioPage = () => {
                               >
                           {stock?.stock_change.toFixed(2)}%
                         </span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {stock?.stock_status == "approved" && (
+                              <Button
+                                  className="bg-appCardGold w-full sm:w-max"
+                              >
+                                {stock?.isTrading ? "View Trade" : "Copy Trade"}
+                              </Button>
                           )}
                         </TableCell>
                       </TableRow>
