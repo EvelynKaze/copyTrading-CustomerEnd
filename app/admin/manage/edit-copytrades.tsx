@@ -31,7 +31,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {Trash2, Plus, TrendingUp, TrendingDown} from "lucide-react";
+import {Trash2, Plus } from "lucide-react";
 import { databases, ID } from "@/lib/appwrite";
 import { useProfile } from "@/app/context/ProfileContext";
 import { useToast } from "@/hooks/use-toast";

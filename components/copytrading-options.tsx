@@ -46,7 +46,7 @@ export function CopyTradingOptions() {
     fetchTrades();
   }, []);
 
-    const handlePurchase = (trade: any) => {
+    const handlePurchase = (trade: Trader) => {
         try{
             dispatch(
                 setCopyTrade({

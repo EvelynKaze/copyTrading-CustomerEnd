@@ -27,6 +27,7 @@ import ENV from "@/constants/env";
 import { useProfile } from "@/app/context/ProfileContext";
 
 interface TradePayload {
+  $id: string;
   trade_title: string;
   trade_min: number;
   trade_max: number;
@@ -48,7 +49,7 @@ const CopyTradingPage = () => {
   const [copyTradingData, setCopyTradingData] = useState<any>([]);
   const { profile } = useProfile();
   const user_id = profile?.user_id || "";
-  const [sortConfig, setSortConfig] = useState({
+  const [sortConfig, setSortConfig] = useState<SortConfig>({
     key: "trade_profit_loss",
     direction: "desc",
   });
@@ -63,7 +64,24 @@ const CopyTradingPage = () => {
           ENV.collections.copyTradingPurchases,
           [Query.equal("user_id", user_id)]
       );
-      setCopyTradingData(response.documents as TradePayload[]);
+      setCopyTradingData(response.documents.map(doc => ({
+        $id: doc.$id,
+        trade_title: doc.trade_title,
+        trade_min: doc.trade_min,
+        trade_max: doc.trade_max,
+        trade_roi_min: doc.trade_roi_min,
+        trade_roi_max: doc.trade_roi_max,
+        trade_risk: doc.trade_risk,
+        trade_current_value: doc.trade_current_value,
+        trade_profit_loss: doc.trade_profit_loss,
+        trade_win_rate: doc.trade_win_rate,
+        isProfit: doc.isProfit,
+        initial_investment: doc.initial_investment,
+        trade_token: doc.trade_token,
+        trade_token_address: doc.trade_token_address,
+        trade_status: doc.trade_status,
+        full_name: doc.full_name,
+      })));
     } catch (error) {
       console.error("Error fetching trade data:", error);
     }
@@ -86,12 +104,17 @@ const CopyTradingPage = () => {
     setFilter(value);
   };
 
-  const filteredData = copyTradingData
-      .filter((trade) =>
+  interface SortConfig {
+    key: keyof TradePayload;
+    direction: "asc" | "desc";
+  }
+
+  const filteredData: TradePayload[] = copyTradingData
+      .filter((trade: TradePayload) =>
           filter === "all" ? true : trade.trade_risk.toLowerCase() === filter
       )
-      .sort((a, b) => {
-        const { key, direction } = sortConfig;
+      .sort((a: TradePayload, b: TradePayload) => {
+        const { key, direction }: SortConfig = sortConfig;
         if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
         if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
         return 0;
@@ -170,94 +193,94 @@ const CopyTradingPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredData.map((trade) => (
+                    {filteredData.map((trade: TradePayload) => (
                       <TableRow key={trade?.$id}>
-                        <TableCell>{trade?.trade_title}</TableCell>
-                        <TableCell>
-                          {trade?.trade_token === "USDT" ? formatCurrency(trade?.initial_investment) : trade?.initial_investment}
-                        </TableCell>
-                        <TableCell>{trade?.trade_token}</TableCell>
-                        <TableCell>
-                          {trade.trade_status === "pending" ?
-                              (<span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">
-                                Processing
-                              </span>) :
-                              trade?.trade_status == "rejected" ?
-                                  (<span className="bg-red-400 rounded-xl animate-pulse p-2 text-white">
-                                Rejected
-                              </span>) : formatCurrency(trade.trade_current_value)}
-                        </TableCell>
-                        <TableCell>
-                          {trade.trade_status === "pending" ?
+                      <TableCell>{trade?.trade_title}</TableCell>
+                      <TableCell>
+                        {trade?.trade_token === "USDT" ? formatCurrency(trade?.initial_investment) : trade?.initial_investment}
+                      </TableCell>
+                      <TableCell>{trade?.trade_token}</TableCell>
+                      <TableCell>
+                        {trade.trade_status === "pending" ?
                           (<span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">
-                                Processing
-                              </span>) :
+                          Processing
+                          </span>) :
                           trade?.trade_status == "rejected" ?
-                          (<span className="bg-red-400 rounded-xl animate-pulse p-2 text-white">
-                                Rejected
-                              </span>) :
-                          (<span className={`${trade.isProfit ? "text-green-600" : "text-red-500"}`}>
-                            {trade.isProfit ? (
-                                <TrendingUp className="inline mr-1" />
-                            ) : (
-                                <TrendingDown className="inline mr-1" />
-                            )}
-                            {trade.trade_profit_loss}%
-                          </span>)}
-                        </TableCell>
-                        <TableCell>
-                          {trade.trade_status === "pending" ?
-                              (<span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">
-                                Processing
-                              </span>) :
-                              trade?.trade_status == "rejected" ?
-                                  (<span className="bg-red-400 rounded-xl animate-pulse p-2 text-white">
-                                Rejected
-                              </span>) :
-                                  (<span className={`${trade.isProfit ? "text-green-600" : "text-red-500"}`}>
-                            {trade.isProfit ? (
-                                <TrendingUp className="inline mr-1" />
-                            ) : (
-                                <TrendingDown className="inline mr-1" />
-                            )}
-                                    {trade.trade_win_rate}%
-                          </span>)}
-                        </TableCell>
-                        <TableCell>
+                            (<span className="bg-red-400 rounded-xl animate-pulse p-2 text-white">
+                          Rejected
+                          </span>) : formatCurrency(trade.trade_current_value)}
+                      </TableCell>
+                      <TableCell>
+                        {trade.trade_status === "pending" ?
+                        (<span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">
+                          Processing
+                          </span>) :
+                        trade?.trade_status == "rejected" ?
+                        (<span className="bg-red-400 rounded-xl animate-pulse p-2 text-white">
+                          Rejected
+                          </span>) :
+                        (<span className={`${trade.isProfit ? "text-green-600" : "text-red-500"}`}>
+                        {trade.isProfit ? (
+                          <TrendingUp className="inline mr-1" />
+                        ) : (
+                          <TrendingDown className="inline mr-1" />
+                        )}
+                        {trade.trade_profit_loss}%
+                        </span>)}
+                      </TableCell>
+                      <TableCell>
+                        {trade.trade_status === "pending" ?
+                          (<span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">
+                          Processing
+                          </span>) :
+                          trade?.trade_status == "rejected" ?
+                            (<span className="bg-red-400 rounded-xl animate-pulse p-2 text-white">
+                          Rejected
+                          </span>) :
+                            (<span className={`${trade.isProfit ? "text-green-600" : "text-red-500"}`}>
+                        {trade.isProfit ? (
+                          <TrendingUp className="inline mr-1" />
+                        ) : (
+                          <TrendingDown className="inline mr-1" />
+                        )}
+                            {trade.trade_win_rate}%
+                        </span>)}
+                      </TableCell>
+                      <TableCell>
                       <span
-                          className={`px-2 py-1 capitalize rounded-full text-xs ${
-                              trade.trade_risk === "low"
-                                  ? "bg-green-200 text-green-800"
-                                  : trade.trade_risk === "medium"
-                                      ? "bg-yellow-200 text-yellow-800"
-                                      : "bg-red-200 text-red-800"
-                          }`}
+                        className={`px-2 py-1 capitalize rounded-full text-xs ${
+                          trade.trade_risk === "low"
+                            ? "bg-green-200 text-green-800"
+                            : trade.trade_risk === "medium"
+                              ? "bg-yellow-200 text-yellow-800"
+                              : "bg-red-200 text-red-800"
+                        }`}
                       >
-                        {trade.trade_risk}
+                      {trade.trade_risk}
                       </span>
-                        </TableCell>
-                        <TableCell>
-                          {trade.trade_status === "pending" ?
-                              (<span className="bg-yellow-500 rounded-xl animate-pulse p-2 text-white">
-                                Processing
-                              </span>) :
-                              trade?.trade_status == "rejected" ?
-                                  (<span className="bg-red-500 rounded-xl animate-pulse p-2 text-white">
-                                Rejected
-                              </span>) :
-                                  (<span className="bg-green-500 rounded-xl animate-pulse p-2 text-white capitalize">{trade.trade_status} </span>)}
-                        </TableCell>
-                        <TableCell>
-                          <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleManage(trade)}
-                          >
-                            Manage
-                          </Button>
-                        </TableCell>
+                      </TableCell>
+                      <TableCell>
+                        {trade.trade_status === "pending" ?
+                          (<span className="bg-yellow-500 rounded-xl animate-pulse p-2 text-white">
+                          Processing
+                          </span>) :
+                          trade?.trade_status == "rejected" ?
+                            (<span className="bg-red-500 rounded-xl animate-pulse p-2 text-white">
+                          Rejected
+                          </span>) :
+                            (<span className="bg-green-500 rounded-xl animate-pulse p-2 text-white capitalize">{trade.trade_status} </span>)}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleManage(trade)}
+                        >
+                        Manage
+                        </Button>
+                      </TableCell>
                       </TableRow>
-                  ))}
+                    ))}
                 </TableBody>
               </Table>
             </CardContent>

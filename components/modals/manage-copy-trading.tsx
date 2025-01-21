@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,13 +11,13 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectTrigger,
+//   SelectContent,
+//   SelectItem,
+//   SelectValue,
+// } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 
 interface ManageCopyTradingModalProps {
@@ -50,11 +50,11 @@ const ManageCopyTradingModal: React.FC<ManageCopyTradingModalProps> = ({
   // const [tradeStatus, setTradeStatus] = useState(trade.trade_status);
   // const [tradeRisk, setTradeRisk] = useState(trade.trade_risk);
 
-  const handleSave = () => {
-    // Logic to save changes (e.g., API call to update the trade status and risk level)
-    // console.log("Updated Trade Data:", { tradeStatus, tradeRisk });
-    onClose();
-  };
+  // const handleSave = () => {
+  //   // Logic to save changes (e.g., API call to update the trade status and risk level)
+  //   // console.log("Updated Trade Data:", { tradeStatus, tradeRisk });
+  //   onClose();
+  // };
 
   if (!isOpen) return null;
 
