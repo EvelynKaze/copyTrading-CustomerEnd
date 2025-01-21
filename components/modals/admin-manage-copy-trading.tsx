@@ -24,7 +24,16 @@ import { databases } from "@/lib/appwrite"; // Ensure appwriteConfig is correctl
 import ENV from "@/constants/env"
 import { useToast } from "@/hooks/use-toast";
 
-const AdminManageCopyTradingModal = ({ isOpen, onClose, selectedOption, setSelectedOption, isLoading, setIsLoading }) => {
+interface AdminManageCopyTradingModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    selectedOption: any; // Replace 'any' with a more specific type if possible
+    setSelectedOption: (option: any) => void; // Replace 'any' with a more specific type if possible
+    isLoading: boolean;
+    setIsLoading: (loading: boolean) => void;
+}
+
+const AdminManageCopyTradingModal: React.FC<AdminManageCopyTradingModalProps> = ({ isOpen, onClose, selectedOption, setSelectedOption, isLoading, setIsLoading }) => {
     const isDisabled = selectedOption?.trade_status === "pending" || selectedOption?.trade_status === "rejected";
     console.log("Selected Trade Option", selectedOption);
     const { toast } = useToast();

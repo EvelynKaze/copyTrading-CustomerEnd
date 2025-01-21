@@ -21,11 +21,30 @@ import {
 import {ArrowUpDown, RefreshCw, TrendingUp, TrendingDown, Check, X} from "lucide-react";
 import { databases } from "@/lib/appwrite"; // Ensure the Appwrite client is configured
 import ENV from "@/constants/env"
-import AdminManageCopyTradingModal from "@/components/admin-manage-copy-trading";
+import AdminManageCopyTradingModal from "@/components/modals/admin-manage-copy-trading";
 import { useToast } from "@/hooks/use-toast";
 
 const AdminCopyTradingPage = () => {
-    const [copyTradingOptions, setCopyTradingOptions] = useState<any[]>([]);
+    interface CopyTradingOption {
+        $id: string;
+        trade_title: string;
+        trade_token: string;
+        initial_investment: number;
+        trade_current_value: number;
+        isProfit: boolean;
+        trade_profit_loss: number;
+        trade_win_rate: number;
+        trade_risk: string;
+        copiedSince: string;
+        $createdAt: string;
+        trade_status: string;
+    }
+
+    // type CopyTradingOptionKey = {
+    //     [key: string]: string | number; // Adjust the value types based on your data structure
+    // };
+
+    const [copyTradingOptions, setCopyTradingOptions] = useState<CopyTradingOption[]>([]);
     const [isLoading, setIsLoading] = useState(false)
     const { toast } = useToast()
     const [sortConfig, setSortConfig] = useState({
@@ -33,7 +52,7 @@ const AdminCopyTradingPage = () => {
         direction: "desc",
     });
     const [filter, setFilter] = useState("all");
-    const [selectedOption, setSelectedOption] = useState<any>(null);
+    const [selectedOption, setSelectedOption] = useState<CopyTradingOption | null>(null);  
     const [isManageModalOpen, setIsManageModalOpen] = useState(false);
 
     // Fetch data from Appwrite
@@ -43,13 +62,23 @@ const AdminCopyTradingPage = () => {
                 ENV.databaseId,
                 ENV.collections.copyTradingPurchases
             );
-            const formattedData = response.documents.map((doc: any) => ({
-                ...doc,
+            const formattedData = response.documents.map((doc) => ({
+                $id: doc.$id,
+                trade_title: doc.trade_title,
+                trade_token: doc.trade_token,
+                initial_investment: doc.initial_investment,
+                trade_current_value: doc.trade_current_value,
+                isProfit: doc.isProfit,
+                trade_profit_loss: doc.trade_profit_loss,
+                trade_win_rate: doc.trade_win_rate,
+                trade_risk: doc.trade_risk,
                 copiedSince: new Date(doc.$createdAt).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "short",
                     day: "numeric",
                 }),
+                $createdAt: doc.$createdAt,
+                trade_status: doc.trade_status,
             }));
             setCopyTradingOptions(formattedData);
         } catch (error) {
@@ -61,7 +90,7 @@ const AdminCopyTradingPage = () => {
         fetchCopyTradingData();
     }, []);
 
-    const handleSort = (key: string) => {
+    const handleSort = (key: keyof CopyTradingOption) => {
         let direction = "asc";
         if (sortConfig.key === key && sortConfig.direction === "asc") {
             direction = "desc";
@@ -69,7 +98,7 @@ const AdminCopyTradingPage = () => {
         setSortConfig({ key, direction });
 
         setCopyTradingOptions(
-            [...copyTradingOptions].sort((a: any, b: any) => {
+            [...copyTradingOptions].sort((a: CopyTradingOption, b: CopyTradingOption) => {
                 if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
                 if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
                 return 0;
@@ -85,7 +114,7 @@ const AdminCopyTradingPage = () => {
         filter === "all"
             ? copyTradingOptions
             : copyTradingOptions.filter(
-                (option) => option.risk.toLowerCase() === filter
+                (option) => option.trade_risk.toLowerCase() === filter
             );
 
     const formatCurrency = (value: number) => {
@@ -95,12 +124,12 @@ const AdminCopyTradingPage = () => {
         }).format(value);
     };
 
-    const handleManage = (option: any) => {
+    const handleManage = (option: CopyTradingOption) => {
         setSelectedOption(option);
         setIsManageModalOpen(true);
     };
 
-    const updateTradeStatus = async (tradeId, status) => {
+    const updateTradeStatus = async (tradeId: string, status: string) => {
         try {
             await databases.updateDocument(
                 ENV.databaseId,
@@ -108,8 +137,8 @@ const AdminCopyTradingPage = () => {
                 tradeId,
                 { trade_status: status }
             );
-            setCopyTradingOptions((prevTrade: any) =>
-                prevTrade.map((trade: any) =>
+            setCopyTradingOptions((prevTrade: CopyTradingOption[]) =>
+                prevTrade.map((trade: CopyTradingOption) =>
                     trade.$id === tradeId ? { ...trade, trade_status: status } : trade
                 )
             );
@@ -171,18 +200,18 @@ const AdminCopyTradingPage = () => {
                             <TableHeader>
                                 <TableRow>
                                     {[
-                                        { label: "Trade", key: "tradeName" },
-                                        { label: "Initial Investment", key: "initialInvestment" },
-                                        { label: "Current Value", key: "currentValue" },
-                                        { label: "Profit/Loss %", key: "profitLoss" },
-                                        { label: "Win Rate %", key: "winRate" },
-                                        { label: "Risk Level", key: "risk" },
+                                        { label: "Trade", key: "trade_title" },
+                                        { label: "Initial Investment", key: "initial_investment" },
+                                        { label: "Current Value", key: "trade_current_value" },
+                                        { label: "Profit/Loss %", key: "trade_profit_loss" },
+                                        { label: "Win Rate %", key: "trade_win_rate" },
+                                        { label: "Risk Level", key: "trade_risk" },
                                         { label: "Copied Since", key: "copiedSince" },
-                                        { label: "Status", key: "status" },
+                                        { label: "Status", key: "trade_status" },
                                     ].map((column) => (
                                         <TableHead
                                             key={column.key}
-                                            onClick={() => handleSort(column.key)}
+                                            onClick={() => handleSort(column.key as keyof CopyTradingOption)}
                                             className="cursor-pointer"
                                         >
                                             {column.label}{" "}
@@ -280,7 +309,7 @@ const AdminCopyTradingPage = () => {
                     </CardContent>
                 </Card>
             </motion.div>
-            {selectedOption && (
+            {selectedOption !== null && (
                 <AdminManageCopyTradingModal
                     isOpen={isManageModalOpen}
                     isLoading={isLoading}

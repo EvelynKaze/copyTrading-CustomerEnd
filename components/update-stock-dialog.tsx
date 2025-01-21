@@ -13,8 +13,34 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import React from "react";
 
+interface Stock {
+    $id: string;
+    stock_status: string;
+    full_name: string;
+    stock_symbol: string;
+    stock_quantity: number;
+    stock_initial_value_pu: number;
+    stock_current_value: number;
+    stock_change: number;
+    isProfit: boolean;
+    stock_profit_loss: number;
+    isMinus: boolean;
+    stock_token: string;
+    stock_name: string;
+    stock_initial_value: number;
+    stock_value_entered: number;
+    stock_token_address: string;
+}
 
-export default function UpdateStockDialog({stock, selectedStock, loading, setSelectedStock, handleUpdateStock}) {
+interface UpdateStockDialogProps {
+    stock: Stock;
+    selectedStock: Stock | null;
+    loading: boolean;
+    setSelectedStock: React.Dispatch<React.SetStateAction<Stock | null>>;
+    handleUpdateStock: (stock: Stock) => void;
+}
+
+export default function UpdateStockDialog({stock, selectedStock, loading, setSelectedStock, handleUpdateStock}: UpdateStockDialogProps) {
     const isDisabled = selectedStock?.stock_status === "pending" || selectedStock?.stock_status === "rejected";
 
     console.log("Selected Stock", selectedStock);
@@ -37,7 +63,9 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
-                        handleUpdateStock(selectedStock);
+                        if (selectedStock) {
+                            handleUpdateStock(selectedStock);
+                        }
                     }}
                     className="grid gap-4 py-4"
                 >
@@ -48,10 +76,10 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                         <Input
                             value={selectedStock?.full_name || ""}
                             onChange={(e) =>
-                                setSelectedStock({
+                                setSelectedStock(selectedStock ? {
                                     ...selectedStock,
                                     full_name: e.target.value,
-                                })
+                                } : null)
                             }
                             className="col-span-3"
                             disabled
@@ -64,10 +92,10 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                         <Input
                             value={selectedStock?.stock_symbol || ""}
                             onChange={(e) =>
-                                setSelectedStock({
+                                setSelectedStock(selectedStock ? {
                                     ...selectedStock,
                                     stock_symbol: e.target.value,
-                                })
+                                } : null)
                             }
                             className="col-span-3"
                             disabled
@@ -80,10 +108,10 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                         <Input
                             value={selectedStock?.stock_name || ""}
                             onChange={(e) =>
-                                setSelectedStock({
+                                setSelectedStock(selectedStock ? {
                                     ...selectedStock,
                                     stock_name: e.target.value,
-                                })
+                                } : null)
                             }
                             className="col-span-3"
                             disabled
@@ -96,10 +124,10 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                         <Input
                             value={selectedStock?.stock_quantity || ""}
                             onChange={(e) =>
-                                setSelectedStock({
+                                setSelectedStock(selectedStock ? {
                                     ...selectedStock,
-                                    stock_quantity: e.target.value,
-                                })
+                                    stock_quantity: parseFloat(e.target.value),
+                                } : null)
                             }
                             className="col-span-3"
                             disabled
@@ -112,10 +140,10 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                         <Input
                             value={selectedStock?.stock_token || ""}
                             onChange={(e) =>
-                                setSelectedStock({
+                                setSelectedStock(selectedStock ? {
                                     ...selectedStock,
                                     stock_token: e.target.value,
-                                })
+                                } : null)
                             }
                             className="col-span-3"
                             disabled
@@ -128,10 +156,10 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                         <Input
                             value={selectedStock?.stock_initial_value || ""}
                             onChange={(e) =>
-                                setSelectedStock({
+                                setSelectedStock(selectedStock ? {
                                     ...selectedStock,
-                                    stock_initial_value: e.target.value,
-                                })
+                                    stock_initial_value: parseFloat(e.target.value),
+                                } : null)
                             }
                             className="col-span-3"
                             disabled
@@ -144,10 +172,10 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                         <Input
                             value={selectedStock?.stock_initial_value_pu || ""}
                             onChange={(e) =>
-                                setSelectedStock({
+                                setSelectedStock(selectedStock ? {
                                     ...selectedStock,
-                                    stock_initial_value_pu: e.target.value,
-                                })
+                                    stock_initial_value_pu: parseFloat(e.target.value),
+                                } : null)
                             }
                             className="col-span-3"
                             disabled
@@ -160,10 +188,10 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                         <Input
                             value={selectedStock?.stock_value_entered || ""}
                             onChange={(e) =>
-                                setSelectedStock({
+                                setSelectedStock(selectedStock ? {
                                     ...selectedStock,
-                                    stock_value_entered: e.target.value,
-                                })
+                                    stock_value_entered: parseFloat(e.target.value),
+                                } : null)
                             }
                             className="col-span-3"
                             disabled
@@ -176,10 +204,10 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                         <Input
                             value={selectedStock?.stock_token_address || ""}
                             onChange={(e) =>
-                                setSelectedStock({
+                                setSelectedStock(selectedStock ? {
                                     ...selectedStock,
                                     stock_token_address: e.target.value,
-                                })
+                                } : null)
                             }
                             className="col-span-3"
                             disabled
@@ -192,10 +220,10 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                         <Input
                             value={selectedStock?.stock_current_value || ""}
                             onChange={(e) =>
-                                setSelectedStock({
+                                setSelectedStock(selectedStock ? {
                                     ...selectedStock,
-                                    stock_current_value: e.target.value,
-                                })
+                                    stock_current_value: parseFloat(e.target.value),
+                                } : null)
                             }
                             className="col-span-3"
                             type="number"
@@ -208,10 +236,10 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                         <Input
                             value={selectedStock?.stock_change || ""}
                             onChange={(e) =>
-                                setSelectedStock({
+                                setSelectedStock(selectedStock ? {
                                     ...selectedStock,
-                                    stock_change: e.target.value,
-                                })
+                                    stock_change: parseFloat(e.target.value),
+                                } : null)
                             }
                             className="col-span-3"
                             type="number"
@@ -224,10 +252,10 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                         <Input
                             value={selectedStock?.stock_profit_loss || ""}
                             onChange={(e) =>
-                                setSelectedStock({
+                                setSelectedStock(selectedStock ? {
                                     ...selectedStock,
-                                    stock_profit_loss: e.target.value,
-                                })
+                                    stock_profit_loss: parseFloat(e.target.value),
+                                } : null)
                             }
                             className="col-span-3"
                             type="number"
@@ -239,10 +267,10 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                         </Label>
                         <Select
                             onValueChange={(value) =>
-                                setSelectedStock({
+                                setSelectedStock(selectedStock ? {
                                     ...selectedStock,
                                     isMinus: value === "bearish" ? false : true,
-                                })
+                                } : null)
                             }
                             value={selectedStock?.isMinus ? "bullish" : "bearish"}
                             className="col-span-3"
@@ -262,10 +290,10 @@ export default function UpdateStockDialog({stock, selectedStock, loading, setSel
                         </Label>
                         <Select
                             onValueChange={(value) =>
-                                setSelectedStock({
+                                setSelectedStock(selectedStock ? {
                                     ...selectedStock,
                                     isProfit: value === "profit" ? true : false,
-                                })
+                                } : null)
                             }
                             value={selectedStock?.isProfit ? "profit" : "loss"}
                             className="col-span-3"

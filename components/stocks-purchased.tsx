@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -25,8 +24,24 @@ import { databases, Query } from "@/lib/appwrite"; // Import your database clien
 import ENV from "@/constants/env";
 import {useProfile} from "@/app/context/ProfileContext"; // Import environment variables
 
+interface Stock {
+  $id: string;
+  stock_symbol: string;
+  stock_name: string;
+  stock_quantity: number;
+  stock_initial_value: number;
+  stock_initial_value_pu: number;
+  stock_current_value: number;
+  stock_status: string;
+  isProfit: boolean;
+  stock_profit_loss: number;
+  stock_change: number;
+  isMinus: boolean;
+  isTrading: boolean;
+}
+
 const PortfolioPage = () => {
-  const [stocks, setStocks] = useState([]);
+  const [stocks, setStocks] = useState<Stock[]>([]);
   const { profile } = useProfile();
   const user_id = profile?.user_id || ""
   const [sortConfig, setSortConfig] = useState({
@@ -45,7 +60,22 @@ const PortfolioPage = () => {
                 Query.equal("user_id", user_id)
             ]
         );
-        setStocks(response.documents);
+        const stocksData = response.documents.map((doc) => ({
+          $id: doc.$id,
+          stock_symbol: doc.stock_symbol,
+          stock_name: doc.stock_name,
+          stock_quantity: doc.stock_quantity,
+          stock_initial_value: doc.stock_initial_value,
+          stock_initial_value_pu: doc.stock_initial_value_pu,
+          stock_current_value: doc.stock_current_value,
+          stock_status: doc.stock_status,
+          isProfit: doc.isProfit,
+          stock_profit_loss: doc.stock_profit_loss,
+          stock_change: doc.stock_change,
+          isMinus: doc.isMinus,
+          isTrading: doc.isTrading,
+        }));
+        setStocks(stocksData);
       } catch (error) {
         console.error("Error fetching stock data:", error);
       }
@@ -54,21 +84,26 @@ const PortfolioPage = () => {
     fetchStocks();
   }, [user_id]);
 
-  const handleSort = (key: string) => {
+//   type StockKey = {
+//     [key: string]: string | number; // Adjust based on the actual properties and types of your stock data
+// };
+
+const handleSort = (key: keyof Stock) => {
     let direction = "asc";
     if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
+        direction = "desc";
     }
     setSortConfig({ key, direction });
 
     setStocks((prevStocks) =>
-        [...prevStocks].sort((a: any, b: any) => {
-          if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
-          if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
-          return 0;
+        [...prevStocks].sort((a: Stock, b: Stock) => {
+            if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
+            if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
+            return 0;
         })
     );
-  };
+};
+
 
   const handleFilter = (value: string) => {
     setFilter(value);
@@ -77,8 +112,8 @@ const PortfolioPage = () => {
   const filteredStocks =
       filter === "all"
           ? stocks
-          : stocks.filter((stock: any) => {
-            const totalValue = stock.stock_total_value;
+          : stocks.filter((stock: Stock) => {
+            const totalValue = stock.stock_current_value * stock.stock_quantity;
             const purchaseValue = stock.stock_initial_value;
             const percentageChange =
                 ((totalValue - purchaseValue) / purchaseValue) * 100;
@@ -88,7 +123,7 @@ const PortfolioPage = () => {
             return true;
           });
 
-  const calculateTotalValue = (stock: any) => {
+  const calculateTotalValue = (stock: Stock) => {
     return (stock.stock_quantity * stock.stock_current_value).toFixed(2);
   };
 
@@ -199,7 +234,7 @@ const PortfolioPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredStocks.map((stock: any) => (
+                  {filteredStocks.map((stock: Stock) => (
                       <TableRow key={stock?.$id}>
                         <TableCell className="font-medium">
                           {stock?.stock_symbol}
