@@ -95,6 +95,7 @@ export default function OnboardingPage() {
       const profileData = {
         user_id: user?.id,
         full_name: formData.fullName,
+        email_address: user?.email,
         phone_number: formData.phoneNumber,
         user_name: formData.username,
         avatar_url: imageUrl,

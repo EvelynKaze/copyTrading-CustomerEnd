@@ -1,4 +1,5 @@
 "use client";
+import "./../globals.css";
 import { Header } from "@/components/header";
 import { MobileSidebar } from "@/components/mobile-sidebar";
 import Sidebar from "@/components/sidebar";
@@ -31,7 +32,7 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
 
   return (
    <ProfileProvider profile={profile}>
-    <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
+    <div className="flex font-poppins h-screen flex-col md:flex-row md:overflow-hidden">
       <div className="hidden lg:block">
         <Sidebar />
       </div>

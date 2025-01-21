@@ -11,6 +11,7 @@ const loadFromLocalStorage = () => {
           profile: {
             id: null,
             full_name: "",
+            email_address: "",
             phone_number: "",
             user_name: "",
             avatar_url: "",
@@ -30,6 +31,7 @@ const loadFromLocalStorage = () => {
       profile: {
         id: null,
         full_name: "",
+        email_address: "",
         phone_number: "",
         user_name: "",
         avatar_url: "",
@@ -75,6 +77,7 @@ const profileSlice = createSlice({
       state.profile = {
         id: null,
         full_name: "",
+        email_address: "",
         phone_number: "",
         user_name: "",
         avatar_url: "",

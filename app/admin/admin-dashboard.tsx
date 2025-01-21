@@ -23,6 +23,7 @@ interface User {
   user_name: string;
   user_id: string;
   full_name: string;
+  email_address: string;
   status: boolean;
   isAdmin: boolean;
   lastSeen: string;
@@ -51,6 +52,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectUser }) => {
           user_name: doc.user_name,
           user_id: doc.user_id,
           full_name: doc.full_name,
+          email_address: doc.email_address,
           isAdmin: doc.isAdmin,
           status: doc.account_status,
           lastSeen: doc.$updatedAt,
@@ -110,7 +112,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectUser }) => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Username</TableHead>
-                  <TableHead>Full Name</TableHead>
+                  {/* <TableHead>Full Name</TableHead> */}
                   <TableHead>Status</TableHead>
                   <TableHead>Last Seen</TableHead>
                 </TableRow>
@@ -125,7 +127,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectUser }) => {
                     <TableCell className="font-medium">
                       {user?.user_name}
                     </TableCell>
-                    <TableCell>{user?.full_name}</TableCell>
+                    {/* <TableCell>{user?.full_name}</TableCell> */}
                     <TableCell>
                       <Badge
                         variant={user.status ? "secondary" : "default"}
