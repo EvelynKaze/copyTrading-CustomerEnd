@@ -1,5 +1,6 @@
 "use client";
 import "./../globals.css";
+import '@rainbow-me/rainbowkit/styles.css';
 import { Header } from "@/components/header";
 import { MobileSidebar } from "@/components/mobile-sidebar";
 import Sidebar from "@/components/sidebar";
@@ -9,6 +10,14 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import withAuth from "../hoc/with-auth";
 import { ProfileProvider } from "../context/ProfileContext";
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WagmiProvider } from 'wagmi';
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+
+import { config } from '../../constants/wagmi';
+
+const client = new QueryClient();
 
 const Layout = ({ children }: { children?: React.ReactNode }) => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -31,18 +40,24 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
   }
 
   return (
-   <ProfileProvider profile={profile}>
-    <div className="flex font-poppins h-screen flex-col md:flex-row md:overflow-hidden">
-      <div className="hidden lg:block">
-        <Sidebar />
-      </div>
-      <MobileSidebar />
-      <div className="w-full md:flex-grow h-full">
-        <Header userName={userName} avatarUrl={avatarUrl} accountTrader={accountTrader} /> {/* Pass avatarUrl */}
-        <div className="lg:h-[calc(100dvh-6rem)] p-4 md:p-12">{children}</div>
-      </div>
-    </div>
-   </ProfileProvider>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={client}>
+        <RainbowKitProvider>
+        <ProfileProvider profile={profile}>
+          <div className="flex font-poppins h-screen flex-col md:flex-row md:overflow-hidden">
+            <div className="hidden lg:block">
+              <Sidebar />
+            </div>
+            <MobileSidebar />
+            <div className="w-full md:flex-grow h-full">
+              <Header userName={userName} avatarUrl={avatarUrl} accountTrader={accountTrader} /> {/* Pass avatarUrl */}
+              <div className="lg:h-[calc(100dvh-6rem)] p-4 md:p-12">{children}</div>
+            </div>
+          </div>
+        </ProfileProvider>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 };
 
