@@ -39,6 +39,7 @@ interface User {
   user_name: string;
   user_id: string;
   full_name: string;
+  email_address: string;
   isAdmin: boolean;
   status: boolean;
   lastSeen: string;
@@ -101,6 +102,10 @@ const UserDetails: React.FC<UserDetailsProps> = ({
             <div>
               <p className="font-semibold">Full Name:</p>
               <p>{user?.full_name}</p>
+            </div>
+            <div>
+              <p className="font-semibold">Email:</p>
+              <p>{user?.email_address}</p>
             </div>
             <div>
               <p className="font-semibold">Status:</p>

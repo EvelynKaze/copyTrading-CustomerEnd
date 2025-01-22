@@ -13,6 +13,7 @@ interface User {
   user_id: string;
   isAdmin: boolean;
   full_name: string;
+  email_address: string;
   status: boolean;
   lastSeen: string;
   registeredDate: string;

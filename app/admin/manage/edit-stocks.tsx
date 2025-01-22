@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, TrendingDown, TrendingUp } from "lucide-react";
+import { Plus, Trash2, TrendingDown, TrendingUp } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -61,9 +61,9 @@ interface Stock {
 
 export default function AdminStocks() {
   const [stocks, setStocks] = useState<Stock[]>([]);
-  const [editingStock, setEditingStock] = useState<Stock | null>(null);
+  // const [editingStock, setEditingStock] = useState<Stock | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  // const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { profile } = useProfile();
   const { toast } = useToast();
@@ -134,15 +134,15 @@ export default function AdminStocks() {
     }
   };
 
-  const handleEditStock = (updatedStock: Stock) => {
-    setStocks(
-      stocks?.map((stock) =>
-        stock.id === updatedStock.id ? updatedStock : stock
-      )
-    );
-    setIsEditDialogOpen(false);
-    setEditingStock(null);
-  };
+  // const handleEditStock = (updatedStock: Stock) => {
+  //   setStocks(
+  //     stocks?.map((stock) =>
+  //       stock.id === updatedStock.id ? updatedStock : stock
+  //     )
+  //   );
+  //   setIsEditDialogOpen(false);
+  //   setEditingStock(null);
+  // };
 
   const handleDeleteStock = async (id: string) => {
     setIsLoading(true);
@@ -212,32 +212,7 @@ export default function AdminStocks() {
                 </TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
-                    <Dialog
-                      open={isEditDialogOpen}
-                      onOpenChange={setIsEditDialogOpen}
-                    >
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setEditingStock(stock)}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Edit Stock</DialogTitle>
-                        </DialogHeader>
-                        {editingStock && (
-                          <StockForm
-                            isLoading={isLoading}
-                            initialData={editingStock}
-                            onSubmit={() => handleEditStock(editingStock)}
-                          />
-                        )}
-                      </DialogContent>
-                    </Dialog>
+                    
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button variant="destructive" size="sm">
@@ -399,3 +374,30 @@ function StockForm({ initialData, onSubmit, isLoading }: StockFormProps) {
     </form>
   );
 }
+
+// <Dialog
+//                       open={isEditDialogOpen}
+//                       onOpenChange={setIsEditDialogOpen}
+//                     >
+//                       <DialogTrigger asChild>
+//                         <Button
+//                           variant="outline"
+//                           size="sm"
+//                           onClick={() => setEditingStock(stock)}
+//                         >
+//                           <Pencil className="h-4 w-4" />
+//                         </Button>
+//                       </DialogTrigger>
+//                       <DialogContent>
+//                         <DialogHeader>
+//                           <DialogTitle>Edit Stock</DialogTitle>
+//                         </DialogHeader>
+//                         {editingStock && (
+//                           <StockForm
+//                             isLoading={isLoading}
+//                             initialData={editingStock}
+//                             onSubmit={() => handleEditStock(editingStock)}
+//                           />
+//                         )}
+//                       </DialogContent>
+//                     </Dialog>
