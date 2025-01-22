@@ -17,6 +17,7 @@ import { Search } from "lucide-react";
 import { databases } from "@/lib/appwrite";
 import ENV from "@/constants/env";
 import { Transaction } from "@/app/admin/user-details";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface User {
   id: string;
@@ -34,13 +35,52 @@ interface User {
 interface AdminDashboardProps {
   onSelectUser: (user: User) => void;
 }
-
+export const TableSkeleton = () => (
+  <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHead>
+          <Skeleton className="h-4 w-20" />
+        </TableHead>
+        <TableHead>
+          <Skeleton className="h-4 w-20" />
+        </TableHead>
+        <TableHead>
+          <Skeleton className="h-4 w-20" />
+        </TableHead>
+        <TableHead>
+          <Skeleton className="h-4 w-20" />
+        </TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      {[...Array(5)].map((_, index) => (
+        <TableRow key={index}>
+          <TableCell>
+            <Skeleton className="h-4 w-24" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="h-4 w-16" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="h-4 w-12" />
+          </TableCell>
+          <TableCell>
+            <Skeleton className="h-4 w-28" />
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+);
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectUser }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
+      setLoading(true);
       try {
         const response = await databases.listDocuments(
           ENV.databaseId,
@@ -60,8 +100,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectUser }) => {
         }));
 
         setUsers(profiles);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching user profiles:", error);
+        setLoading(false);
       }
     };
 
@@ -108,43 +150,46 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectUser }) => {
             />
           </div>
           <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Username</TableHead>
-                  {/* <TableHead>Full Name</TableHead> */}
-                  <TableHead>Status</TableHead>
-                  <TableHead>Last Seen</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredUsers.map((user) => (
-                  <TableRow
-                    key={user?.id}
-                    className="cursor-pointer hover:bg-appGold20"
-                    onClick={() => onSelectUser(user)}
-                  >
-                    <TableCell className="font-medium">
-                      {user?.user_name}
-                    </TableCell>
-                    {/* <TableCell>{user?.full_name}</TableCell> */}
-                    <TableCell>
-                      <Badge
-                        variant={user.status ? "secondary" : "default"}
-                        className={`w-full flex justify-center max-w-28 text-white ${
-                          user.status
-                            ? "bg-green-500 hover:bg-green-600"
-                            : "bg-red-600 hover:bg-red-700"
-                        }`}
-                      >
-                        {user.status ? "Active" : "Suspended"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{formatLastSeen(user.lastSeen)}</TableCell>
+            {loading ? (
+              <TableSkeleton />
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Username</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Last Seen</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredUsers.map((user) => (
+                    <TableRow
+                      key={user?.id}
+                      className="cursor-pointer hover:bg-appGold20"
+                      onClick={() => onSelectUser(user)}
+                    >
+                      <TableCell className="font-medium">
+                        {user?.user_name}
+                      </TableCell>
+                      {/* <TableCell>{user?.full_name}</TableCell> */}
+                      <TableCell>
+                        <Badge
+                          variant={user.status ? "secondary" : "default"}
+                          className={`w-full flex justify-center max-w-28 text-white ${
+                            user.status
+                              ? "bg-green-500 hover:bg-green-600"
+                              : "bg-red-600 hover:bg-red-700"
+                          }`}
+                        >
+                          {user.status ? "Active" : "Suspended"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{formatLastSeen(user.lastSeen)}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </div>
         </CardContent>
       </Card>

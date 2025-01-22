@@ -141,6 +141,11 @@ export default function Sidebar() {
           className="bg-appGold200 cursor-pointer flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium dark:text-white text-appDarkCard hover:bg-appGold20"
           onClick={() => logout()}
         >
+          <Icon
+            strokeWidth={1.5}
+            icon={"mdi:logout"}
+            className="h-5 w-5 text-3xl"
+          />
           Log Out
         </div>
       </nav>

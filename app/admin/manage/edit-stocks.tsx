@@ -49,6 +49,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { TableSkeleton } from "../admin-dashboard";
 
 interface Stock {
   id: string;
@@ -80,14 +81,16 @@ export default function AdminStocks() {
           databaseId,
           collectionId
         );
-        setStocks(response.documents.map((doc) => ({
-          id: doc.$id,
-          symbol: doc.symbol,
-          name: doc.name,
-          price: doc.price,
-          change: doc.change,
-          isMinus: doc.isMinus,
-        })));
+        setStocks(
+          response.documents.map((doc) => ({
+            id: doc.$id,
+            symbol: doc.symbol,
+            name: doc.name,
+            price: doc.price,
+            change: doc.change,
+            isMinus: doc.isMinus,
+          }))
+        );
       } catch (error) {
         console.error("Failed to fetch traders:", error);
       } finally {
@@ -189,60 +192,65 @@ export default function AdminStocks() {
             </DialogContent>
           </Dialog>
         </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Symbol</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Change</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {stocks?.map((stock) => (
-              <TableRow key={stock.id}>
-                <TableCell className="font-medium">{stock.symbol}</TableCell>
-                <TableCell>{stock.name}</TableCell>
-                <TableCell>${stock.price.toFixed(2)}</TableCell>
-                <TableCell
-                  className={stock.isMinus ? "text-green-600" : "text-red-600"}
-                >
-                  {stock.change.toFixed(2)}%
-                </TableCell>
-                <TableCell>
-                  <div className="flex space-x-2">
-                    
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="destructive" size="sm">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete the stock from the system.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDeleteStock(stock.id)}
-                          >
-                            Delete
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
-                </TableCell>
+        {isLoading ? (
+          <TableSkeleton />
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Symbol</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Price</TableHead>
+                <TableHead>Change</TableHead>
+                <TableHead>Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {stocks?.map((stock) => (
+                <TableRow key={stock.id}>
+                  <TableCell className="font-medium">{stock.symbol}</TableCell>
+                  <TableCell>{stock.name}</TableCell>
+                  <TableCell>${stock.price.toFixed(2)}</TableCell>
+                  <TableCell
+                    className={
+                      stock.isMinus ? "text-green-600" : "text-red-600"
+                    }
+                  >
+                    {stock.change.toFixed(2)}%
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex space-x-2">
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="destructive" size="sm">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will
+                              permanently delete the stock from the system.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                              onClick={() => handleDeleteStock(stock.id)}
+                            >
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </CardContent>
     </Card>
   );

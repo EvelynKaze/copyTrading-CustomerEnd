@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import type React from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -45,10 +46,13 @@ interface User {
   lastSeen: string;
   registeredDate: string;
   transactions?: Transaction[];
+  roi: number;
+  currentValue: number;
+  totalInvestment: number;
 }
 
 interface UserDetailsProps {
-  user: User;
+  initialUser: User;
   onBack: () => void;
   onSuspendAccount: (userID: string) => void;
   onUnSuspendAccount: (userID: string) => void;
@@ -56,12 +60,14 @@ interface UserDetailsProps {
 }
 
 const UserDetails: React.FC<UserDetailsProps> = ({
-  user,
+  initialUser,
   onBack,
   onSuspendAccount,
   onDeleteAccount,
-  onUnSuspendAccount
+  onUnSuspendAccount,
 }) => {
+  const [user, setUser] = useState<User>(initialUser);
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleString("en-US", {
@@ -73,8 +79,24 @@ const UserDetails: React.FC<UserDetailsProps> = ({
     });
   };
 
-  console.log("real users:", user)
+  const handleFieldChange = (field: string, value: any) => {
+    setUser((prevUser) => ({
+      ...prevUser,
+      [field]: value,
+    }));
+  };
 
+  const handleSave = async () => {
+    try {
+      // Here you would typically call an API to save the changes
+      // For now, we'll just log the updated user object
+      console.log("Saving user changes:", user);
+      // You can add a toast notification here to indicate successful save
+    } catch (error) {
+      console.error("Error saving user changes:", error);
+      // You can add an error toast notification here
+    }
+  };
 
   return (
     <motion.div
@@ -97,25 +119,25 @@ const UserDetails: React.FC<UserDetailsProps> = ({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="font-semibold">Username:</p>
-              <p>{user?.user_name}</p>
+              <p>{user.user_name}</p>
             </div>
             <div>
               <p className="font-semibold">Full Name:</p>
-              <p>{user?.full_name}</p>
+              <p>{user.full_name}</p>
             </div>
             <div>
               <p className="font-semibold">Email:</p>
-              <p>{user?.email_address}</p>
+              <p>{user.email_address}</p>
             </div>
             <div>
               <p className="font-semibold">Status:</p>
               <Badge
-                  variant={user?.status ? "secondary" : "default"}
-                  className={
-                    user.status
-                        ? "bg-green-400 hover:bg-green-600"
-                        : "bg-red-400 hover:text-red-600"
-                  }
+                variant={user.status ? "secondary" : "default"}
+                className={
+                  user.status
+                    ? "bg-green-400 hover:bg-green-600"
+                    : "bg-red-400 hover:text-red-600"
+                }
               >
                 {user.status ? "Active" : "Suspended"}
               </Badge>
@@ -130,7 +152,81 @@ const UserDetails: React.FC<UserDetailsProps> = ({
             </div>
             <div>
               <p className="font-semibold">Designation:</p>
-              <p>{user.isAdmin ? "Admin" : "User"}</p>
+              {initialUser.isAdmin ? (
+                <select
+                  value={user.isAdmin ? "Admin" : "User"}
+                  onChange={(e) =>
+                    handleFieldChange("isAdmin", e.target.value === "Admin")
+                  }
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                >
+                  <option value="Admin">Admin</option>
+                  <option value="User">User</option>
+                </select>
+              ) : (
+                <p>{user.isAdmin ? "Admin" : "User"}</p>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>User Portfolio</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <p className="font-semibold">ROI:</p>
+              {initialUser.isAdmin ? (
+                <input
+                  type="number"
+                  value={user.roi}
+                  onChange={(e) =>
+                    handleFieldChange("roi", Number.parseFloat(e.target.value))
+                  }
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
+              ) : (
+                <p>{user.roi}%</p>
+              )}
+            </div>
+            <div>
+              <p className="font-semibold">Current Value:</p>
+              {initialUser.isAdmin ? (
+                <input
+                  type="number"
+                  value={user.currentValue}
+                  onChange={(e) =>
+                    handleFieldChange(
+                      "currentValue",
+                      Number.parseFloat(e.target.value)
+                    )
+                  }
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
+              ) : (
+                <p>${user.currentValue}</p>
+              )}
+            </div>
+            <div>
+              <p className="font-semibold">Total Investment:</p>
+              {initialUser.isAdmin ? (
+                <input
+                  type="number"
+                  value={user.totalInvestment}
+                  onChange={(e) =>
+                    handleFieldChange(
+                      "totalInvestment",
+                      Number.parseFloat(e.target.value)
+                    )
+                  }
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                />
+              ) : (
+                <p>${user.totalInvestment.toFixed(2)}</p>
+              )}
             </div>
           </div>
         </CardContent>
@@ -152,7 +248,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {user?.transactions?.map((transaction) => (
+                {user.transactions?.map((transaction) => (
                   <TableRow key={transaction.id}>
                     <TableCell>{transaction.type}</TableCell>
                     <TableCell>{transaction.amount}</TableCell>
@@ -169,15 +265,17 @@ const UserDetails: React.FC<UserDetailsProps> = ({
       <div className="flex space-x-4">
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="destructive">{user.status ? "Suspend Account" : "Unsuspend Account"}</Button>
+            <Button variant="destructive">
+              {user.status ? "Suspend Account" : "Unsuspend Account"}
+            </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This will temporarily suspend the user&#39;s account. They will not
-                be able to log in or access any services until the suspension is
-                lifted.
+                This will temporarily suspend the user&#39;s account. They will
+                not be able to log in or access any services until the
+                suspension is lifted.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -185,14 +283,14 @@ const UserDetails: React.FC<UserDetailsProps> = ({
               <AlertDialogAction
                 className="bg-appCardGold text-appDarkCard"
                 onClick={() => {
-                  if(user?.status) {
-                    onSuspendAccount(user.id)
+                  if (user.status) {
+                    onSuspendAccount(user.id);
                   } else {
-                    onUnSuspendAccount(user.id)
+                    onUnSuspendAccount(user.id);
                   }
                 }}
               >
-                Suspend Account
+                {user.status ? "Suspend Account" : "Unsuspend Account"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -221,6 +319,15 @@ const UserDetails: React.FC<UserDetailsProps> = ({
           </AlertDialogContent>
         </AlertDialog>
       </div>
+
+      {initialUser.isAdmin && (
+        <Button
+          onClick={handleSave}
+          className="mt-4 bg-appCardGold text-appDarkCard"
+        >
+          Save Changes
+        </Button>
+      )}
     </motion.div>
   );
 };
