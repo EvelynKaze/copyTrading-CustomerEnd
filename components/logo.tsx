@@ -8,7 +8,7 @@ const Logo = () => {
         icon={"mingcute:currency-baht-line"}
       />
       <p className="text-appDarkCard dark:text-white font-semibold text-base md:text-xl">
-        CopyTradeMarkets
+        CopyTradingMarkets
       </p>
     </div>
   );

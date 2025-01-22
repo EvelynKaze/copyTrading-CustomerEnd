@@ -152,7 +152,7 @@ export default function LoginForm() {
         toast({
           title: "Account Suspended!!!",
           description:
-            "Please try again at a later date or contact support at support@copytrademarkets.com.",
+            "Please try again at a later date or contact support at support@CopyTradingMarkets.com.",
         });
       }
     } catch (err) {
