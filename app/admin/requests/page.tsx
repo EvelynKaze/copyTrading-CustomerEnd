@@ -23,6 +23,7 @@ import { databases } from "@/lib/appwrite";
 import ENV from "@/constants/env";
 import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
+import { TableSkeleton } from "../admin-dashboard";
 
 export default function TransactionsPage() {
   const { toast } = useToast();
@@ -38,10 +39,12 @@ export default function TransactionsPage() {
   }
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Fetch transactions from Appwrite database
   useEffect(() => {
     const fetchTransactions = async () => {
+      setIsLoading(true);
       try {
         const response = await databases.listDocuments(
           ENV.databaseId,
@@ -71,6 +74,8 @@ export default function TransactionsPage() {
           description: "Failed to fetch transactions.",
           variant: "destructive",
         });
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -142,85 +147,85 @@ export default function TransactionsPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Type</TableHead>
-                <TableHead>Token</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Withdraw Address</TableHead>
-                <TableHead>User</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {transactions.map((transaction) => (
-                <TableRow key={transaction.$id}>
-                  <TableCell>
-                    <Badge
-                      variant={
-                        transaction.isWithdraw ? "destructive" : "default"
-                      }
-                    >
-                      {transaction.isWithdraw ? (
-                        <ArrowUpIcon className="mr-1 h-4 w-4" />
-                      ) : (
-                        <ArrowDownIcon className="mr-1 h-4 w-4" />
-                      )}
-                      {transaction.isWithdraw ? "withdrawal" : "deposit"}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{transaction.token_name}</TableCell>
-                  <TableCell>${transaction.amount}</TableCell>
-                  <TableCell>
-                    {transaction.isWithdraw
-                      ? transaction.token_withdraw_address
-                      : "(empty)"}
-                  </TableCell>
-                  <TableCell>{transaction.full_name}</TableCell>
-                  <TableCell>
-                    {new Date(transaction.$createdAt).toLocaleString()}
-                  </TableCell>
-                  <TableCell>
-                    <Badge
-                      className={
-                        transaction.status === "pending"
-                          ? "bg-yellow-400"
-                          : transaction.status === "approved"
-                          ? "bg-green-500"
-                          : "bg-red-600"
-                      }
-                    >
-                      {transaction.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {transaction.status === "pending" && (
-                      <div className="flex space-x-2">
-                        <Button
-                          size="sm"
-                          onClick={() => handleApprove(transaction.$id)}
-                        >
-                          <CheckIcon className="mr-1 h-4 w-4" />
-                          Approve
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => handleReject(transaction.$id)}
-                        >
-                          <XIcon className="mr-1 h-4 w-4" />
-                          Reject
-                        </Button>
-                      </div>
-                    )}
-                  </TableCell>
+          {isLoading ? (
+            <TableSkeleton />
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Token</TableHead>
+                  <TableHead>Amount</TableHead>
+                  <TableHead>Withdraw Address</TableHead>
+                  <TableHead>User</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {transactions.map((transaction) => (
+                  <TableRow key={transaction.$id}>
+                    <TableCell>
+                      <Badge>
+                        {transaction.isWithdraw ? (
+                          <ArrowUpIcon className="mr-1 h-4 w-4" />
+                        ) : (
+                          <ArrowDownIcon className="mr-1 h-4 w-4" />
+                        )}
+                        {transaction.isWithdraw ? "withdrawal" : "deposit"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{transaction.token_name}</TableCell>
+                    <TableCell>${transaction.amount}</TableCell>
+                    <TableCell>
+                      {transaction.isWithdraw
+                        ? transaction.token_withdraw_address
+                        : "(empty)"}
+                    </TableCell>
+                    <TableCell>{transaction.full_name}</TableCell>
+                    <TableCell>
+                      {new Date(transaction.$createdAt).toLocaleString()}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        className={
+                          transaction.status === "pending"
+                            ? "bg-yellow-400"
+                            : transaction.status === "approved"
+                            ? "bg-green-500"
+                            : "bg-red-600"
+                        }
+                      >
+                        {transaction.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      {transaction.status === "pending" && (
+                        <div className="flex space-x-2">
+                          <Button
+                            size="sm"
+                            onClick={() => handleApprove(transaction.$id)}
+                          >
+                            <CheckIcon className="mr-1 h-4 w-4" />
+                            Approve
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => handleReject(transaction.$id)}
+                          >
+                            <XIcon className="mr-1 h-4 w-4" />
+                            Reject
+                          </Button>
+                        </div>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </motion.div>

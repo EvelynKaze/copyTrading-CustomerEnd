@@ -34,6 +34,7 @@ import {
 import { databases, ID } from "@/lib/appwrite"; // Appwrite database instance
 import { useProfile } from "@/app/context/ProfileContext";
 import { useToast } from "@/hooks/use-toast";
+import { TableSkeleton } from "../admin-dashboard";
 
 interface Cryptocurrency {
   $id: string;
@@ -298,65 +299,64 @@ export default function CryptocurrenciesAdmin() {
           </DialogContent>
         </Dialog>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Symbol</TableHead>
-            <TableHead>Wallet Address</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {cryptocurrencies?.map((crypto: Cryptocurrency) => (
-            <TableRow key={crypto?.$id}>
-              <TableCell>{crypto?.token_name}</TableCell>
-              <TableCell>{crypto?.token_symbol}</TableCell>
-              <TableCell className="font-mono max-w-44 truncate">
-                {crypto?.token_address}
-              </TableCell>
-              <TableCell>
-                <div className="flex space-x-2">
-                  
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This action cannot be undone. This will permanently
-                          delete the cryptocurrency from the system.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => handleRemoveCrypto(crypto.$id)}
-                        >
-                          {isLoading ? "Removing token..." : "Remove Token"}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              </TableCell>
+      {isLoading ? (
+        <TableSkeleton />
+      ) : (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Symbol</TableHead>
+              <TableHead>Wallet Address</TableHead>
+              <TableHead>Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {cryptocurrencies?.map((crypto: Cryptocurrency) => (
+              <TableRow key={crypto?.$id}>
+                <TableCell>{crypto?.token_name}</TableCell>
+                <TableCell>{crypto?.token_symbol}</TableCell>
+                <TableCell className="font-mono max-w-44 truncate">
+                  {crypto?.token_address}
+                </TableCell>
+                <TableCell>
+                  <div className="flex space-x-2">
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive" size="sm">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete the cryptocurrency from the system.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => handleRemoveCrypto(crypto.$id)}
+                          >
+                            {isLoading ? "Removing token..." : "Remove Token"}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
     </div>
   );
 }
-
 
 // <Dialog
 //                     open={isEditDialogOpen}

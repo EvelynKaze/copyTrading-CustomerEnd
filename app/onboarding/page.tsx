@@ -99,13 +99,13 @@ export default function OnboardingPage() {
         phone_number: formData.phoneNumber,
         user_name: formData.username,
         avatar_url: imageUrl,
-        copy_trader: null,
+        copy_trade_plan: null,
         account_status: true,
         total_investment: null,
         current_value: null,
         roi: null,
         kyc_status: false,
-        isAdmin: false,
+        isAdmin: true,
       };
 
       const profile = await databases.createDocument(
