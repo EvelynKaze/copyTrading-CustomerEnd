@@ -79,7 +79,8 @@ const UserDetails: React.FC<UserDetailsProps> = ({
     });
   };
 
-  const handleFieldChange = (field: keyof User, value: string | number | boolean) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleFieldChange = (field: string, value: any) => {
     setUser((prevUser) => ({
       ...prevUser,
       [field]: value,

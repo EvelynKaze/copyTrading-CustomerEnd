@@ -3,17 +3,6 @@ import FooterLinksSet from "./FooterLinks";
 
 const linksArray = [
   {
-    setofLinks: "Solutions",
-    links: [
-      {
-        name: "Smmart Bot",
-        href: "/",
-      },
-      { name: "Premium Indicator", href: "/" },
-      { name: "Pricing", href: "/" },
-    ],
-  },
-  {
     setofLinks: "Company",
     links: [
       { name: "About Us", href: "/about" },
