@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -30,6 +31,9 @@ interface User {
   lastSeen: string;
   registeredDate: string;
   transactions?: Transaction[];
+  roi: number;
+  currentValue: number;
+  totalInvestment: number;
 }
 
 interface AdminDashboardProps {
@@ -97,6 +101,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectUser }) => {
           status: doc.account_status,
           lastSeen: doc.$updatedAt,
           registeredDate: doc.$createdAt,
+          roi: doc.roi,
+          currentValue: doc.current_value,
+          totalInvestment: doc.total_investment,
         }));
 
         setUsers(profiles);

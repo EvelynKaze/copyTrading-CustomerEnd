@@ -96,6 +96,7 @@ const CopyTradingPage = () => {
 
   useEffect(() => {
     fetchTrades();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user_id]);
 
   const handleSort = (key: keyof TradePayload) => {
