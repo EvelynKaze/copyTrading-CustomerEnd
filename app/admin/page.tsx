@@ -17,6 +17,9 @@ interface User {
   status: boolean;
   lastSeen: string;
   registeredDate: string;
+  roi: number;
+  currentValue: number;
+  totalInvestment: number;
   transactions?: {
     id: string;
     type: string;
