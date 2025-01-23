@@ -79,7 +79,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
     });
   };
 
-  const handleFieldChange = (field: string, value: any) => {
+  const handleFieldChange = (field: keyof User, value: string | number | boolean) => {
     setUser((prevUser) => ({
       ...prevUser,
       [field]: value,
