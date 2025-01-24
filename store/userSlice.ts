@@ -13,21 +13,25 @@ interface UserState {
 // Load state from local storage
 const loadFromLocalStorage = (): UserState => {
   try {
-    const serializedState = localStorage.getItem("userState");
-    return serializedState
-      ? JSON.parse(serializedState)
-      : { user: null, isLoggedIn: false };
+    if (typeof window !== null) {
+      const serializedState = localStorage.getItem("userState");
+      return serializedState
+        ? JSON.parse(serializedState)
+        : { user: null, isLoggedIn: false };
+    }
   } catch (error) {
     console.error("Error loading state from localStorage:", error);
-    return { user: null, isLoggedIn: false };
   }
+  return { user: null, isLoggedIn: false };
 };
 
 // Save state to local storage
 const saveToLocalStorage = (state: UserState) => {
   try {
+    if(typeof window !== null) {
     const serializedState = JSON.stringify(state);
     localStorage.setItem("userState", serializedState);
+    }
   } catch (error) {
     console.error("Error saving state to localStorage:", error);
   }
