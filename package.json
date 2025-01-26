@@ -4,10 +4,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev",
     "build": "next build",
-    "start": "cross-env NODE_ENV=production node server.js",
-    "lint": "next lint"
+    "start": "cross-env NODE_ENV=production node server.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
