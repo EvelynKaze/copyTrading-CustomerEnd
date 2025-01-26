@@ -59,7 +59,7 @@ export function Header({ userName, avatarUrl, accountTrader }: HeaderProps){
                   if (!connected) {
                     return (
                       <button
-                        className='bg-[#ff8c00] cursor-pointer font-bold rounded-lg text-white p-2'
+                        className='bg-appPremuimGold cursor-pointer font-bold rounded-lg text-white p-2'
                         onClick={openConnectModal}
                       >
                         Connect Wallet
