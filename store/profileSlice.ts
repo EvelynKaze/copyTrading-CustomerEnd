@@ -4,27 +4,29 @@ import { createSlice } from "@reduxjs/toolkit";
 // Load state from local storage
 const loadFromLocalStorage = () => {
   try {
-    const serializedState = localStorage.getItem("profileState");
-    return serializedState
-      ? JSON.parse(serializedState)
-      : {
-          profile: {
-            id: null,
-            full_name: "",
-            email_address: "",
-            phone_number: "",
-            user_name: "",
-            avatar_url: "",
-            copy_trader: null,
-            account_status: null,
-            total_investment: null,
-            current_value: null,
-            roi: null,
-            kyc_status: false,
-            isAdmin: false,
-            user_id: "",
-          },
-        };
+    if(typeof window !== null) {
+      const serializedState = localStorage.getItem("profileState");
+      return serializedState
+        ? JSON.parse(serializedState)
+        : {
+            profile: {
+              id: null,
+              full_name: "",
+              email_address: "",
+              phone_number: "",
+              user_name: "",
+              avatar_url: "",
+              copy_trader: null,
+              account_status: null,
+              total_investment: null,
+              current_value: null,
+              roi: null,
+              kyc_status: false,
+              isAdmin: false,
+              user_id: "",
+            },
+          };
+    }
   } catch (error) {
     console.error("Error loading profile state from localStorage:", error);
     return {
@@ -53,8 +55,10 @@ const saveToLocalStorage = (state: {
   profile: (typeof initialState)["profile"];
 }) => {
   try {
-    const serializedState = JSON.stringify(state);
-    localStorage.setItem("profileState", serializedState);
+    if(typeof window !== null) {
+      const serializedState = JSON.stringify(state);
+      localStorage.setItem("profileState", serializedState);
+    }
   } catch (error) {
     console.error("Error saving profile state to localStorage:", error);
   }
