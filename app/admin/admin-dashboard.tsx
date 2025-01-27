@@ -19,6 +19,7 @@ import { databases } from "@/lib/appwrite";
 import ENV from "@/constants/env";
 import { Transaction } from "@/app/admin/user-details";
 import { Skeleton } from "@/components/ui/skeleton";
+import User from "@/app/admin/user-details";
 
 interface User {
   id: string;
@@ -37,7 +38,9 @@ interface User {
 }
 
 interface AdminDashboardProps {
-  onSelectUser: (user: User) => void;
+
+  onSelectUser: (user: User) => Promise<void>;
+
 }
 export const TableSkeleton = () => (
   <Table>

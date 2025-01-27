@@ -105,7 +105,7 @@ export default function OnboardingPage() {
         current_value: null,
         roi: null,
         kyc_status: false,
-        isAdmin: true,
+        isAdmin: false,
       };
 
       const profile = await databases.createDocument(

@@ -10,6 +10,15 @@ import { useEffect } from "react";
 import { ProfileProvider } from "../context/ProfileContext";
 import withAdmin from "../hoc/with-admin";
 
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WagmiProvider } from 'wagmi';
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+
+import { config } from '../../constants/wagmi';
+
+const client = new QueryClient();
+
 const Layout = ({ children }: { children?: React.ReactNode }) => {
   const user = useSelector((state: RootState) => state.user.user);
   const profile = useSelector((state: RootState) => state.profile.profile); // Access profile data
@@ -31,19 +40,25 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
   }
 
   return (
-    <ProfileProvider profile={profile}>
-      <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-        <div className="hidden md:block">
-          <AdminSidebar />
-        </div>
-        <AdminMobileSidebar />
-        <div className="w-full md:flex-grow h-full">
-          <Header userName={userName} avatarUrl={avatarUrl} />{" "}
-          {/* Pass avatarUrl */}
-          <div className="h-[calc(100dvh-6rem)] md:p-12">{children}</div>
-        </div>
-      </div>
-    </ProfileProvider>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={client}>
+        <RainbowKitProvider>
+          <ProfileProvider profile={profile}>
+            <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
+              <div className="hidden md:block">
+                <AdminSidebar />
+              </div>
+              <AdminMobileSidebar />
+              <div className="w-full md:flex-grow h-full">
+                <Header userName={userName} avatarUrl={avatarUrl} />{" "}
+                {/* Pass avatarUrl */}
+                <div className="h-[calc(100dvh-6rem)] md:p-12">{children}</div>
+              </div>
+            </div>
+          </ProfileProvider>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 };
 
