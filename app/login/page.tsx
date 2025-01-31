@@ -26,7 +26,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
-import { account, databases, Query } from "../../lib/appwrite";
+import { account, databases, Query, OAuthProvider } from "../../lib/appwrite";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/store/hook";
 import { setUser } from "@/store/userSlice";
@@ -72,10 +72,14 @@ export default function LoginForm() {
       password: "",
     },
   });
-  const handleGoogleSignIn = () => {
-    // Implement Google Sign-In logic here
-    console.log("Sign in with Google clicked");
+  const handleGoogleSignIn = async () => {
+    try {
+      await account.createOAuth2Session(OAuthProvider.Auth0)
+    } catch (error) {
+      console.error(error)
+    }
   };
+  
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
 

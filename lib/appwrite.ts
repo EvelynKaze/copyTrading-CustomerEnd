@@ -19,4 +19,5 @@ export {
     Query,
     Permission,
     Role,
+    OAuthProvider
 } from 'appwrite';

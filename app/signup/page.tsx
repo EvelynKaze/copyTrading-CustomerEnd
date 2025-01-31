@@ -28,7 +28,7 @@ import Link from "next/link";
 import Logo from "@/components/logo";
 import ThemeToggle from "@/components/toggleTheme";
 import { useRouter } from "next/navigation";
-import { account, ID } from "../../lib/appwrite";
+import { account, ID, OAuthProvider } from "../../lib/appwrite";
 import { useAppDispatch } from "@/store/hook";
 import { setUser } from "@/store/userSlice";
 import { RootState } from "@/store/store";
@@ -82,9 +82,12 @@ export default function SignupForm() {
     },
   });
 
-  const handleGoogleSignIn = () => {
-    // Implement Google Sign-In logic here
-    console.log("Sign in with Google clicked");
+  const handleGoogleSignUp = async () => {
+    try {
+      await account.createOAuth2Session(OAuthProvider.Auth0)
+    } catch (error) {
+      console.error(error)
+    }
   };
 
   const onSubmit = async (data: SignupFormValues) => {
@@ -161,10 +164,10 @@ export default function SignupForm() {
                   type="button"
                   variant="outline"
                   className="w-full mb-4"
-                  onClick={handleGoogleSignIn}
+                  onClick={handleGoogleSignUp}
                 >
                   <Icon icon={"devicon:google"} className="mr-2 h-4 w-4" />
-                  Sign in with Google
+                  Sign up with Google
                 </Button>
                 <div className="relative mb-4">
                   <div className="absolute inset-0 flex items-center">
