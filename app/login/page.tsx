@@ -74,12 +74,12 @@ export default function LoginForm() {
   });
   const handleGoogleSignIn = async () => {
     try {
-      await account.createOAuth2Session(OAuthProvider.Auth0)
+      await account.createOAuth2Session(OAuthProvider.Google)
     } catch (error) {
       console.error(error)
     }
   };
-  
+
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
 

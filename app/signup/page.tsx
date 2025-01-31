@@ -84,7 +84,7 @@ export default function SignupForm() {
 
   const handleGoogleSignUp = async () => {
     try {
-      await account.createOAuth2Session(OAuthProvider.Auth0)
+      await account.createOAuth2Session(OAuthProvider.Google)
     } catch (error) {
       console.error(error)
     }
