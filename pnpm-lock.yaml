@@ -53,6 +53,9 @@ importers:
       '@rainbow-me/rainbowkit':
         specifier: ^2.2.3
         version: 2.2.3(@tanstack/react-query@5.64.2(react@19.0.0))(@types/react@19.0.4)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(viem@2.22.11(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.1))(wagmi@2.14.8(@tanstack/query-core@5.64.2)(@tanstack/react-query@5.64.2(react@19.0.0))(@types/react@19.0.4)(bufferutil@4.0.9)(immer@10.1.1)(react@19.0.0)(typescript@5.7.3)(utf-8-validate@5.0.10)(viem@2.22.11(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)(zod@3.24.1))(zod@3.24.1))
+      '@react-oauth/google':
+        specifier: ^0.12.1
+        version: 0.12.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@reduxjs/toolkit':
         specifier: ^2.4.0
         version: 2.5.0(react-redux@9.2.0(@types/react@19.0.4)(react@19.0.0)(redux@5.0.1))(react@19.0.0)
@@ -1013,6 +1016,12 @@ packages:
       react-dom: '>=18'
       viem: 2.x
       wagmi: ^2.9.0
+
+  '@react-oauth/google@0.12.1':
+    resolution: {integrity: sha512-qagsy22t+7UdkYAiT5ZhfM4StXi9PPNvw0zuwNmabrWyMKddczMtBIOARflbaIj+wHiQjnMAsZmzsUYuXeyoSg==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
 
   '@reduxjs/toolkit@2.5.0':
     resolution: {integrity: sha512-awNe2oTodsZ6LmRqmkFhtb/KH03hUhxOamEQy411m3Njj3BbFvoBovxo4Q1cBWnV1ErprVj9MlF0UPXkng0eyg==}
@@ -4616,6 +4625,11 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
       - babel-plugin-macros
+
+  '@react-oauth/google@0.12.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
 
   '@reduxjs/toolkit@2.5.0(react-redux@9.2.0(@types/react@19.0.4)(react@19.0.0)(redux@5.0.1))(react@19.0.0)':
     dependencies:

@@ -9,9 +9,11 @@ import { RootState } from "@/store/store";
 import { useProfile } from "../../context/ProfileContext";
 
 
+
 export default function UserDashboard() {
   const userState = useSelector((state: RootState) => state.user.isLoggedIn);
   const { profile } = useProfile();
+
 
   console.log("Profileee", profile);
 
