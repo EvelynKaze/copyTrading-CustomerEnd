@@ -1,12 +1,12 @@
-// import { Search } from "lucide-react";
 import Image from "next/image";
-// import { Input } from "@/components/ui/input";
 import { profilepic } from "@/constants/AppImages";
 import ToggleSidebar from "./toggle-sidebar";
 // import { Button } from "./ui/button";
 // import { Icon } from "@iconify/react/dist/iconify.js";
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-
+// import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { Connect } from "@/components/user-deposit/Connect"
+import { Account } from "@/components/user-deposit/account"
+import { useAccount } from 'wagmi';
 
 interface HeaderProps {
     userName: string | null;
@@ -15,7 +15,9 @@ interface HeaderProps {
 }
 
 
-export function Header({ userName, avatarUrl, accountTrader }: HeaderProps){
+export function Header({ userName, avatarUrl }: HeaderProps){
+    const { isConnected } = useAccount();
+
   return (
     <header className="flex items-center justify-between w-full border-b px-4 md:px-6 h-16 md:h-24 py-4">
       <ToggleSidebar />
@@ -24,7 +26,7 @@ export function Header({ userName, avatarUrl, accountTrader }: HeaderProps){
             Welcome {userName || "Guest"}!
         </h1>
         <p className="text-xs sm:text-xs md:text-sm text-muted-foreground">
-          Account Copy Trader: {accountTrader || "Unassigned"}
+            {isConnected ? "Connected" : "Not Connected"}
         </p>
       </div>
       <div className="flex items-center gap-4">
@@ -32,7 +34,7 @@ export function Header({ userName, avatarUrl, accountTrader }: HeaderProps){
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input type="search" placeholder="Search..." className="w-64 pl-8" />
         </div> */}
-        <ConnectButton.Custom>
+        {/* <ConnectButton.Custom>
           {({
             account,
             chain,
@@ -86,7 +88,7 @@ export function Header({ userName, avatarUrl, accountTrader }: HeaderProps){
                       <button
                         onClick={openAccountModal}
                         style={{
-                          backgroundColor: '#ff8c00', 
+                          backgroundColor: '#ff8c00',
                           borderRadius: '12px',
                           color: 'white',
                           padding: '12px 24px',
@@ -102,7 +104,8 @@ export function Header({ userName, avatarUrl, accountTrader }: HeaderProps){
               </div>
             );
           }}
-        </ConnectButton.Custom>
+        </ConnectButton.Custom> */}
+        {isConnected ? <Account /> : <Connect />}
         <button className="relative h-8 w-8">
           <Image
             src={avatarUrl || profilepic}

@@ -16,9 +16,7 @@ import DropDownNav from "@/components/landing/DropDownNav";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import LoadingScreen from "@/components/loading-screen";
-// import { StatisticsChart } from "@/components/landing/statistics-chart";
-// import { StockOptions } from "@/components/stock-options";
-// import { DashboardLayout } from "@/components/landing/dashboard-preview";
+
 
 export default function Home() {
   const [showAll, setShowAll] = useState<boolean>(false);

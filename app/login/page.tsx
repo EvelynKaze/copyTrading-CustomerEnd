@@ -36,6 +36,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { LoginAdsSlider } from "@/components/login-ads";
+import { GoogleLogin } from "@react-oauth/google";
 // import withLoggedIn from "../hoc/with-loggedIn";
 // import ENV from "@/constants/env"
 
@@ -74,7 +75,11 @@ export default function LoginForm() {
   });
   const handleGoogleSignIn = async () => {
     try {
-      await account.createOAuth2Session(OAuthProvider.Google)
+      await account.createOAuth2Session(
+          OAuthProvider.Google,
+          "http://localhost:3000/dashboard",
+          "http://localhost:3000/failed",
+      )
     } catch (error) {
       console.error(error)
     }
@@ -214,6 +219,12 @@ export default function LoginForm() {
                   <Icon icon={"devicon:google"} className="mr-2 h-4 w-4" />
                   Sign in with Google
                 </Button>
+                {/*<GoogleLogin*/}
+                {/*  onSuccess={(credentialResponse) => {*/}
+                {/*    console.log(credentialResponse);*/}
+                {/*  }}*/}
+                {/*  onError={() => console.log("Login")}*/}
+                {/*/>*/}
                 <div className="relative mb-4">
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t" />
