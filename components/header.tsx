@@ -3,7 +3,7 @@ import { profilepic } from "@/constants/AppImages";
 import ToggleSidebar from "./toggle-sidebar";
 // import { Button } from "./ui/button";
 // import { Icon } from "@iconify/react/dist/iconify.js";
-// import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { Connect } from "@/components/user-deposit/Connect"
 import { Account } from "@/components/user-deposit/account"
 import { useAccount } from 'wagmi';
@@ -34,7 +34,8 @@ export function Header({ userName, avatarUrl }: HeaderProps){
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input type="search" placeholder="Search..." className="w-64 pl-8" />
         </div> */}
-        {/* <ConnectButton.Custom>
+        {isConnected ? <Account /> : 
+        <ConnectButton.Custom>
           {({
             account,
             chain,
@@ -104,8 +105,8 @@ export function Header({ userName, avatarUrl }: HeaderProps){
               </div>
             );
           }}
-        </ConnectButton.Custom> */}
-        {isConnected ? <Account /> : <Connect />}
+        </ConnectButton.Custom> }
+        {/* {isConnected ? <Account /> : <Connect />} */} 
         <button className="relative h-8 w-8">
           <Image
             src={avatarUrl || profilepic}
