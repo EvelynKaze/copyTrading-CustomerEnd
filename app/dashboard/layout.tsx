@@ -28,16 +28,16 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
   const router = useRouter();
 
   // Redirect to login page if user is not authenticated
-  useEffect(() => {
-    if (user === null) {
-      router.push("/login");
-    }
-  }, [user, router]);
+  // useEffect(() => {
+  //   if (user === null) {
+  //     router.push("/login");
+  //   }
+  // }, [user, router]);
 
-  // If user is null, temporarily render nothing (to prevent UI flicker)
-  if (user === null) {
-    return null; // Avoid rendering the layout until redirection happens
-  }
+  // // If user is null, temporarily render nothing (to prevent UI flicker)
+  // if (user === null) {
+  //   return null; // Avoid rendering the layout until redirection happens
+  // }
 
   return (
     <WagmiProvider config={config}>
@@ -61,4 +61,4 @@ const Layout = ({ children }: { children?: React.ReactNode }) => {
   );
 };
 
-export default withAuth(Layout);
+export default Layout;
