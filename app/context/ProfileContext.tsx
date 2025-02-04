@@ -30,10 +30,7 @@ export const useProfile = (): ProfileContextProps => {
     return context;
 };
 
-export const ProfileProvider: React.FC<{ profile: Profile | null; children: React.ReactNode }> = ({
-                                                                                                      profile,
-                                                                                                      children,
-                                                                                                  }) => {
+export const ProfileProvider: React.FC<{ profile: Profile | null; children: React.ReactNode }> = ({ profile, children }) => {
     return (
         <ProfileContext.Provider value={{ profile }}>
             {children}

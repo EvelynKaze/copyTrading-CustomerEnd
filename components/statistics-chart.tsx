@@ -58,7 +58,7 @@ export function StatisticsChart() {
       <div className="mb-4 flex items-start md:items-center justify-between">
         <h2 className="text-lg font-semibold">Statistics</h2>
         <div className="flex flex-col items-end md:flex-row md:items-center gap-2">
-          <Select
+          {/* <Select
             defaultValue="spending"
             onValueChange={(value) => setChartType(value as ChartType)}
           >
@@ -78,7 +78,7 @@ export function StatisticsChart() {
               <SelectItem value="2022">2022</SelectItem>
               <SelectItem value="2023">2023</SelectItem>
             </SelectContent>
-          </Select>
+          </Select> */} 
         </div>
       </div>
       <div className="h-[300px] overflow-x-scroll">

@@ -10,7 +10,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export const metadata: Metadata = {
   title: "CopyTradingMarkets",
-  description: "",
+  description: "Buy and Trade Stocks and the best Copytrade plans",
 };
 
 export default function RootLayout({

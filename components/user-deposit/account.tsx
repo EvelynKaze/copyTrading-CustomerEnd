@@ -26,7 +26,7 @@ export function Account() {
               </div>
             )}
             <div className="subtext">
-              Connected to {connector?.name} Connector
+              Connected to {connector?.name}
             </div>
           </div>
         </div>

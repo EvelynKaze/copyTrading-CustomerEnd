@@ -25,7 +25,21 @@ import { Button } from "@/components/ui/button";
 import { Copy } from "lucide-react";
 import DepositModal from "@/components/modals/deposit-modal";
 
-const DepositFunds = ({ form, cryptocurrencies, selectedAddress, copied, handleCopyAddress, handleCurrencyChange, onSubmit, isLoading, stockOption, copyTrade }) => {
+const DepositFunds = ({ 
+  form, 
+  cryptocurrencies, 
+  selectedAddress, 
+  copied, 
+  handleCopyAddress, 
+  handleCurrencyChange, 
+  onSubmit, 
+  isLoading, 
+  stockOption, 
+  copyTrade,
+  baseError,
+  tranHash
+}) => {
+  console.log("Tokens", cryptocurrencies)
   return (
     <div className="flex h-full justify-center items-center w-full gap-6">
       <div className="p-8 grid justify-items-center">
@@ -56,8 +70,8 @@ const DepositFunds = ({ form, cryptocurrencies, selectedAddress, copied, handleC
                           </FormControl>
                           <SelectContent className="dark:bg-appDark grid gap-2 p-2 rounded text-sm">
                             {cryptocurrencies.map((crypto) => (
-                              <SelectItem key={crypto.value} value={crypto.value} className="hover:bg-appGold20 outline-none hover:border-none p-1 rounded">
-                                {crypto.name}
+                              <SelectItem key={crypto?.id} value={crypto?.value} className="hover:bg-appGold20 outline-none hover:border-none p-1 rounded">
+                                {crypto?.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -109,6 +123,10 @@ const DepositFunds = ({ form, cryptocurrencies, selectedAddress, copied, handleC
                   <Button type="submit" className="w-full text-appDarkCard bg-appCardGold" disabled={isLoading}>
                     {isLoading ? "Processing..." : "Deposit"}
                   </Button>
+                  {baseError?.shortMessage && (
+                    <p className="text-sm text-red-500">{baseError?.shortMessage}</p>
+                  )}
+                  <div className="flex space-x-2 items-center justify-start"><span>Transaction Hash:</span> <Input type="text" value={tranHash} disabled /></div>
                 </form>
               </FormProvider>
             </CardContent>
