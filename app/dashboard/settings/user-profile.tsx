@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-const UserProfile = () => {
+const UserProfile = ({ profile }) => {
   return (
     <>
       <Card className="mb-6">
@@ -22,7 +22,7 @@ const UserProfile = () => {
         <CardContent className="space-y-4">
           <div className="flex items-center space-x-4">
             <Avatar className="w-20 h-20">
-              <AvatarImage src="/placeholder-avatar.jpg" alt="User Avatar" />
+              <AvatarImage src={profile?.avatar_url} alt="User Avatar" />
               <AvatarFallback>UN</AvatarFallback>
             </Avatar>
             <Button className="bg-appCardGold text-appDarkCard">
@@ -33,7 +33,7 @@ const UserProfile = () => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="first-name">First Name</Label>
-                <Input id="first-name" placeholder="John" />
+                <Input id="first-name" value={profile?.full_name} placeholder="John" />
               </div>
               <div>
                 <Label htmlFor="last-name">Last Name</Label>
@@ -41,16 +41,8 @@ const UserProfile = () => {
               </div>
             </div>
             <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="john.doe@example.com"
-              />
-            </div>
-            <div>
               <Label htmlFor="phone">Phone Number</Label>
-              <Input id="phone" type="tel" placeholder="+1 (555) 123-4567" />
+              <Input id="phone" type="tel" value={profile?.phone_number} />
             </div>
           </div>
         </CardContent>

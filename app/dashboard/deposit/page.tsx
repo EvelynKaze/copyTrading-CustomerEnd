@@ -80,47 +80,47 @@ const Deposit = () => {
   const baseError = error as BaseError || undefined;
   const tranHash = hash || undefined;
 
-  // useEffect(() => {
-  //   if (isConfirmed) {
-  //     const handleTransactionSuccess = async () => {
-  //       try {
-  //         const transactionPayload = {
-  //           token_name: form.getValues().currency,
-  //           isWithdraw: false,
-  //           isDeposit: true,
-  //           status: "pending",
-  //           amount: form.getValues().amount,
-  //           token_deposit_address: selectedAddress,
-  //           user_id: profile?.user_id,
-  //           full_name: profile?.full_name,
-  //         };
+  useEffect(() => {
+    if (isConfirmed) {
+      const handleTransactionSuccess = async () => {
+        try {
+          const transactionPayload = {
+            token_name: form.getValues().currency,
+            isWithdraw: false,
+            isDeposit: true,
+            status: "pending",
+            amount: form.getValues().amount,
+            token_deposit_address: selectedAddress,
+            user_id: profile?.user_id,
+            full_name: profile?.full_name,
+          };
 
-  //         await databases.createDocument(
-  //           ENV.databaseId,
-  //           ENV.collections.transactions,
-  //           ID.unique(),
-  //           transactionPayload
-  //         );
+          await databases.createDocument(
+            ENV.databaseId,
+            ENV.collections.transactions,
+            ID.unique(),
+            transactionPayload
+          );
 
-  //         dispatch(openModal({
-  //           modalType: "deposit",
-  //           modalProps: {
-  //             address: selectedAddress,
-  //             currency: form.getValues().currency,
-  //             amount: form.getValues().amount,
-  //           },
-  //         }));
-  //       } catch (error) {
-  //         toast({ title: "Error", description: "Failed to create transaction.", variant: "destructive" });
-  //       } finally {
-  //         setIsLoading(false);
-  //         dispatch(clearStockOption());
-  //         dispatch(clearCopyTrade());
-  //       }
-  //     };
-  //     handleTransactionSuccess();
-  //   }
-  // }, [isConfirmed]);
+          dispatch(openModal({
+            modalType: "deposit",
+            modalProps: {
+              address: selectedAddress,
+              currency: form.getValues().currency,
+              amount: form.getValues().amount,
+            },
+          }));
+        } catch (error) {
+          toast({ title: "Error", description: "Failed to create transaction.", variant: "destructive" });
+        } finally {
+          setIsLoading(false);
+          dispatch(clearStockOption());
+          dispatch(clearCopyTrade());
+        }
+      };
+      handleTransactionSuccess();
+    }
+  }, [isConfirmed]);
 
   const handleCurrencyChange = (currency) => {
     const selectedCrypto = cryptocurrencies.find(crypto => crypto.value === currency);

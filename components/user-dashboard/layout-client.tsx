@@ -1,5 +1,4 @@
 "use client";
-
 import "../../../copyTrading-CustomerEnd/app/globals.css";
 import '@rainbow-me/rainbowkit/styles.css';
 import { Header } from "@/components/header";
@@ -22,15 +21,15 @@ const LayoutClient = ({ children, cookies }: { children?: React.ReactNode; cooki
   const router = useRouter();
 
   // Redirect to login page if user is not authenticated
-//   useEffect(() => {
-//     if (user === null) {
-//       router.push("/login");
-//     }
-//   }, [user, router]);
+  useEffect(() => {
+    if (user === null) {
+      router.push("/login");
+    }
+  }, [user, router]);
 
-//   if (user === null) {
-//     return null;
-//   }
+  if (user === null) {
+    return null;
+  }
 
 
   return (

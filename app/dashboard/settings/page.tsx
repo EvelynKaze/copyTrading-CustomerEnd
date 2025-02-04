@@ -7,8 +7,11 @@ import { SettingsIcon, User, FileCheck } from "lucide-react";
 import GeneralSettings from "./general-settings";
 import UserProfile from "./user-profile";
 import KYC from "./kyc";
+import { useProfile } from "@/app/context/ProfileContext";
 
 const Settings = () => {
+  const { profile } = useProfile();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -46,7 +49,7 @@ const Settings = () => {
           <GeneralSettings />
         </TabsContent>
         <TabsContent value="profile">
-          <UserProfile />
+          <UserProfile profile={profile} />
         </TabsContent>
         <TabsContent value="kyc">
           <KYC />

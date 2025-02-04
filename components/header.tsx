@@ -4,8 +4,7 @@ import { profilepic } from "@/constants/AppImages";
 import ToggleSidebar from "./toggle-sidebar";
 // import { Icon } from "@iconify/react/dist/iconify.js";
 // import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { ConnectButton } from "@/components/user-deposit/ConnectButton"
-import { Account } from "@/components/user-deposit/account"
+// import { ConnectButton } from "@/components/user-deposit/ConnectButton"
 import { useAccount } from 'wagmi';
 import ConnectActionButtons from "@/components/user-deposit/ActionButtonList";
 
