@@ -2,11 +2,8 @@ import Image from "next/image";
 import Link from "next/link"
 import { profilepic } from "@/constants/AppImages";
 import ToggleSidebar from "./toggle-sidebar";
-// import { Icon } from "@iconify/react/dist/iconify.js";
-// import { ConnectButton } from '@rainbow-me/rainbowkit';
-// import { ConnectButton } from "@/components/user-deposit/ConnectButton"
 import { useAccount } from 'wagmi';
-import ConnectActionButtons from "@/components/user-deposit/ActionButtonList";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 interface HeaderProps {
     userName: string | null;
@@ -31,7 +28,7 @@ export function Header({ userName, avatarUrl }: HeaderProps){
       </div>
       <div className="flex items-center gap-4">
 
-        <ConnectActionButtons isConnected={isConnected} />
+        <ConnectButton />
 
         <button className="relative h-8 w-8">
           <Link href={"/dashboard/settings"}>
