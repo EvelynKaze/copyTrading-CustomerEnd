@@ -1,8 +1,8 @@
 "use client";
 import { useState } from 'react'
-import { ConnectButton } from "./ConnectButton";
-import { useDisconnect, useAppKit, useAppKitNetwork } from "@reown/appkit/react";
-import { networks } from "@/config";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+// import { useDisconnect, useAppKit, useAppKitNetwork } from "@reown/appkit/react";
+// import { networks } from "@/config";
 import { Ellipsis, LogOut, ArrowDownUp, ExternalLink} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -10,22 +10,22 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 const ConnectActionButtons = ({ isConnected }: { isConnected: boolean }) => {
   const [isOpen, setIsOpen] = useState(false)
-  const { disconnect } = useDisconnect();
-  const { open } = useAppKit();
-  const { switchNetwork } = useAppKitNetwork();
+  // const { disconnect } = useDisconnect();
+  // const { open } = useAppKit();
+  // const { switchNetwork } = useAppKitNetwork();
 
-  const handleDisconnect = async () => {
-    try {
-      await disconnect();
-    } catch (error) {
-      console.error("Failed to disconnect:", error);
-    }
-  };
+  // const handleDisconnect = async () => {
+  //   try {
+  //     await disconnect();
+  //   } catch (error) {
+  //     console.error("Failed to disconnect:", error);
+  //   }
+  // };
 
   return (
     <div className="flex gap-4">
       <ConnectButton />
-      {isConnected ? 
+      {/* {isConnected ? 
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="w-fit">
@@ -53,7 +53,7 @@ const ConnectActionButtons = ({ isConnected }: { isConnected: boolean }) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      : ""}
+      : ""} */}
     </div>
   );
 };
