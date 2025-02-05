@@ -3,14 +3,13 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SettingsIcon, User, FileCheck } from "lucide-react";
+import { SettingsIcon, User } from "lucide-react";
 import GeneralSettings from "./general-settings";
 import UserProfile from "./user-profile";
-import KYC from "./kyc";
-import { useProfile } from "@/app/context/ProfileContext";
+// import KYC from "./kyc";
+
 
 const Settings = () => {
-  const { profile } = useProfile();
 
   return (
     <motion.div
@@ -37,23 +36,23 @@ const Settings = () => {
             <User className="w-4 h-4 mr-2" />
             Profile
           </TabsTrigger>
-          <TabsTrigger
-            value="kyc"
-            className="flex items-center p-2 justify-center"
-          >
-            <FileCheck className="w-4 h-4 mr-2" />
-            KYC
-          </TabsTrigger>
+          {/*<TabsTrigger*/}
+          {/*  value="kyc"*/}
+          {/*  className="flex items-center p-2 justify-center"*/}
+          {/*>*/}
+          {/*  <FileCheck className="w-4 h-4 mr-2" />*/}
+          {/*  KYC*/}
+          {/*</TabsTrigger>*/}
         </TabsList>
         <TabsContent value="general">
           <GeneralSettings />
         </TabsContent>
         <TabsContent value="profile">
-          <UserProfile profile={profile} />
+          <UserProfile />
         </TabsContent>
-        <TabsContent value="kyc">
-          <KYC />
-        </TabsContent>
+        {/*<TabsContent value="kyc">*/}
+        {/*  <KYC />*/}
+        {/*</TabsContent>*/}
       </Tabs>
     </motion.div>
   );

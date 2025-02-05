@@ -24,8 +24,26 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Copy } from "lucide-react";
 import DepositModal from "@/components/modals/deposit-modal";
+import TransactionHash from "@/components/user-deposit/TransactionHash";
 
-const DepositFunds = ({ 
+import { UseFormReturn } from "react-hook-form";
+
+interface DepositFundsProps {
+  form: UseFormReturn<{ currency: string; amount: number }>;
+  cryptocurrencies: Array<{ id: string; value: string; name: string }>;
+  selectedAddress: string;
+  copied: boolean;
+  handleCopyAddress: () => void;
+  handleCurrencyChange: (value: string) => void;
+  onSubmit: (data: { currency: string; amount: number }) => void;
+  isLoading: boolean;
+  stockOption: { stock: { total: number } };
+  copyTrade: { copy: { title: string; trade_min: number; trade_max: number } };
+  baseError: { shortMessage: string };
+  tranHash: string;
+}
+
+const DepositFunds: React.FC<DepositFundsProps> = ({ 
   form, 
   cryptocurrencies, 
   selectedAddress, 
@@ -126,7 +144,9 @@ const DepositFunds = ({
                   {baseError?.shortMessage && (
                     <p className="text-sm text-red-500">{baseError?.shortMessage}</p>
                   )}
-                  <div className="flex space-x-2 items-center justify-start"><span>Transaction Hash:</span> <Input type="text" value={tranHash} disabled /></div>
+                    {tranHash && (
+                        <TransactionHash hash={tranHash} />
+                    )}
                 </form>
               </FormProvider>
             </CardContent>

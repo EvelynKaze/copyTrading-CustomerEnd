@@ -18,18 +18,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Mail } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const Help = () => {
+  const router = useRouter();
+
   const faqs = [
-    {
-      question: "How do I reset my password?",
-      answer:
-        "To reset your password, go to the login page and click on the 'Forgot Password' link. Follow the instructions sent to your email to create a new password.",
-    },
     {
       question: "How can I update my account information?",
       answer:
-        "You can update your account information by going to the Settings page. There, you'll find options to edit your profile, change your email, and update other account details.",
+        "You can update your account information by going to the Settings page. There, you'll find options to edit your profile, change your profile picture, and update other account details.",
     },
     {
       question: "Is my personal information secure?",
@@ -39,7 +37,7 @@ const Help = () => {
     {
       question: "How do I contact customer support?",
       answer:
-        "You can contact our customer support team by emailing support@example.com or by using the contact form at the bottom of this page. We aim to respond to all inquiries within 24 hours.",
+        "You can contact our customer support team by emailing support@copytradingmarkets.com or by using the contact form at the bottom of this page. We aim to respond to all inquiries within 24 hours.",
     },
   ];
 
@@ -90,7 +88,7 @@ const Help = () => {
           <CardDescription>Contact our support team</CardDescription>
         </CardHeader>
         <CardContent>
-          <Button className="w-full bg-appCardGold text-appDarkCard">
+          <Button onClick={() => router.push("/dashboard/support")} className="w-full bg-appCardGold text-appDarkCard">
             <Mail className="h-4 w-4 mr-2" />
             Contact Support
           </Button>

@@ -36,7 +36,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { LoginAdsSlider } from "@/components/login-ads";
-import { GoogleLogin } from "@react-oauth/google";
+// import { GoogleLogin } from "@react-oauth/google";
 // import withLoggedIn from "../hoc/with-loggedIn";
 // import ENV from "@/constants/env"
 

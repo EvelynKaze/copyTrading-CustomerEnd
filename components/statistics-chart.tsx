@@ -4,13 +4,13 @@ import { useState } from "react";
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 import { Card } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 import {
   ChartContainer,
   ChartTooltip,
@@ -51,7 +51,7 @@ const chartData = {
 
 export function StatisticsChart() {
   type ChartType = "spending" | "earnings";
-  const [chartType, setChartType] = useState<ChartType>("spending");
+  const [ chartType ] = useState<ChartType>("spending");
 
   return (
     <Card className="p-6">

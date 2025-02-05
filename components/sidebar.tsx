@@ -27,6 +27,11 @@ const navigation = [
 
 const secondaryNavigation = [
   {
+    name: "Support",
+    href: "/dashboard/support",
+    icon: "solar:support-agent",
+  },
+  {
     name: "Settings",
     href: "/dashboard/settings",
     icon: "solar:settings-linear",

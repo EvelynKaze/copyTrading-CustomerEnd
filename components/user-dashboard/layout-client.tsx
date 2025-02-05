@@ -50,4 +50,4 @@ const LayoutClient = ({ children, cookies }: { children?: React.ReactNode; cooki
   );
 };
 
-export default LayoutClient;
+export default withAuth(LayoutClient);
