@@ -1,5 +1,5 @@
 "use client";
-import "../../../copyTrading-CustomerEnd/app/globals.css";
+import "@/app/globals.css";
 import '@rainbow-me/rainbowkit/styles.css';
 import { Header } from "@/components/header";
 import { MobileSidebar } from "@/components/mobile-sidebar";
