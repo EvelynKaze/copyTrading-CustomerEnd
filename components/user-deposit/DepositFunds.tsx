@@ -24,8 +24,40 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Copy } from "lucide-react";
 import DepositModal from "@/components/modals/deposit-modal";
+import TransactionHash from "@/components/user-deposit/TransactionHash";
 
-const DepositFunds = ({ form, cryptocurrencies, selectedAddress, copied, handleCopyAddress, handleCurrencyChange, onSubmit, isLoading, stockOption, copyTrade }) => {
+import { UseFormReturn } from "react-hook-form";
+
+interface DepositFundsProps {
+  form: UseFormReturn<{ currency: string; amount: number }>;
+  cryptocurrencies: Array<{ id: string; value: string; name: string }>;
+  selectedAddress: string;
+  copied: boolean;
+  handleCopyAddress: () => void;
+  handleCurrencyChange: (value: string) => void;
+  onSubmit: (data: { currency: string; amount: number }) => void;
+  isLoading: boolean;
+  stockOption: { stock: { total: number } };
+  copyTrade: { copy: { title: string; trade_min: number; trade_max: number } };
+  baseError: { shortMessage: string };
+  tranHash: string;
+}
+
+const DepositFunds: React.FC<DepositFundsProps> = ({ 
+  form, 
+  cryptocurrencies, 
+  selectedAddress, 
+  copied, 
+  handleCopyAddress, 
+  handleCurrencyChange, 
+  onSubmit, 
+  isLoading, 
+  stockOption, 
+  copyTrade,
+  baseError,
+  tranHash
+}) => {
+  console.log("Tokens", cryptocurrencies)
   return (
     <div className="flex h-full justify-center items-center w-full gap-6">
       <div className="p-8 grid justify-items-center">
@@ -56,8 +88,8 @@ const DepositFunds = ({ form, cryptocurrencies, selectedAddress, copied, handleC
                           </FormControl>
                           <SelectContent className="dark:bg-appDark grid gap-2 p-2 rounded text-sm">
                             {cryptocurrencies.map((crypto) => (
-                              <SelectItem key={crypto.value} value={crypto.value} className="hover:bg-appGold20 outline-none hover:border-none p-1 rounded">
-                                {crypto.name}
+                              <SelectItem key={crypto?.id} value={crypto?.value} className="hover:bg-appGold20 outline-none hover:border-none p-1 rounded">
+                                {crypto?.name}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -109,6 +141,12 @@ const DepositFunds = ({ form, cryptocurrencies, selectedAddress, copied, handleC
                   <Button type="submit" className="w-full text-appDarkCard bg-appCardGold" disabled={isLoading}>
                     {isLoading ? "Processing..." : "Deposit"}
                   </Button>
+                  {baseError?.shortMessage && (
+                    <p className="text-sm text-red-500">{baseError?.shortMessage}</p>
+                  )}
+                    {tranHash && (
+                        <TransactionHash hash={tranHash} />
+                    )}
                 </form>
               </FormProvider>
             </CardContent>
