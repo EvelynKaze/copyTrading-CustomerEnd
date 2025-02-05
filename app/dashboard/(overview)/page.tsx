@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 // import { CryptoExchange } from "@/components/exchange";
 import { useProfile } from "../../context/ProfileContext";
+import TradingViewWidget from "@/components/TradingViewWidget"
 
 
 
@@ -31,7 +32,7 @@ export default function UserDashboard() {
     <div className="flex flex-col lg:flex-row h-full flex-1 gap-6">
       <div className="flex-1 h-full overflow-y-scroll space-y-6">
         <StatsCards stats={stats} />
-        <StatisticsChart />
+        <TradingViewWidget />
         <StockOptions />
       </div>
       <div className="w-full lg:w-80 space-y-6">
