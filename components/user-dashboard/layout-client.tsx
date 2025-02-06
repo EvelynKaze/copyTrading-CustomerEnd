@@ -10,9 +10,16 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import withAuth from "@/app/hoc/with-auth";
 import { ProfileProvider } from "@/app/context/ProfileContext";
-import ContexProvider from "@/app/context/index";
+// import ContexProvider from "@/app/context/index";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WagmiProvider } from 'wagmi';
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 
-const LayoutClient = ({ children, cookies }: { children?: React.ReactNode; cookies: string }) => {
+import { config } from '@/constants/wagmi';
+
+const queryClient = new QueryClient();
+
+const LayoutClient = ({ children }: { children?: React.ReactNode }) => {
   const user = useSelector((state: RootState) => state.user.user);
   const profile = useSelector((state: RootState) => state.profile.profile);
   const avatarUrl = profile?.avatar_url || null;
@@ -33,21 +40,26 @@ const LayoutClient = ({ children, cookies }: { children?: React.ReactNode; cooki
 
 
   return (
-    <ContexProvider cookies={cookies}>
-      <ProfileProvider profile={profile}>
-        <div className="flex font-poppins h-screen flex-col md:flex-row md:overflow-hidden">
-          <div className="hidden lg:block">
-            <Sidebar />
-          </div>
-          <MobileSidebar />
-          <div className="w-full md:flex-grow h-full">
-            <Header userName={userName} avatarUrl={avatarUrl} accountTrader={accountTrade} />
-            <div className="lg:h-[calc(100dvh-6rem)] p-4 md:p-12">{children}</div>
-          </div>
-        </div>
-      </ProfileProvider>
-    </ContexProvider>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider>
+          <ProfileProvider profile={profile}>
+            <div className="flex font-poppins h-screen flex-col md:flex-row md:overflow-hidden">
+              <div className="hidden lg:block">
+                <Sidebar />
+              </div>
+              <MobileSidebar />
+              <div className="w-full md:flex-grow h-full">
+                <Header userName={userName} avatarUrl={avatarUrl} accountTrader={accountTrade} />
+                <div className="lg:h-[calc(100dvh-6rem)] p-4 md:p-12">{children}</div>
+              </div>
+            </div>
+          </ProfileProvider>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 };
 
 export default withAuth(LayoutClient);
+// export default LayoutClient;
