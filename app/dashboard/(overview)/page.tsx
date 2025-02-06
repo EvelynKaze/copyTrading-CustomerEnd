@@ -1,7 +1,6 @@
 "use client";
 import { CopyTradingOptions } from "@/components/copytrading-options";
 import { StatsCards } from "@/components/stats-cards";
-import { StatisticsChart } from "@/components/statistics-chart";
 import { StockOptions } from "@/components/stock-options";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
