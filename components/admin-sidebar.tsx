@@ -30,21 +30,26 @@ const navigation = [
     href: "/admin/manage",
     icon: "material-symbols:manage-accounts-outline-rounded",
   },
+  // {
+  //   name: "Audit Log",
+  //   href: "/admin/audit-log",
+  //   icon: "mdi:clipboard-text-clock-outline",
+  // },
   {
-    name: "Audit Log",
-    href: "/admin/audit-log",
+    name: "Support Requests",
+    href: "/admin/support-requests",
     icon: "mdi:clipboard-text-clock-outline",
   },
 ];
 
-const secondaryNavigation = [
-  {
-    name: "Settings",
-    href: "/admin/settings",
-    icon: "solar:settings-linear",
-  },
-  { name: "Help", href: "/admin/help", icon: "tabler:help" },
-];
+// const secondaryNavigation = [
+//   // {
+//   //   name: "Settings",
+//   //   href: "/admin/settings",
+//   //   icon: "solar:settings-linear",
+//   // },
+//   { name: "Help", href: "/admin/help", icon: "tabler:help" },
+// ];
 
 export default function AdminSidebar() {
   const pathname = usePathname();
@@ -131,26 +136,26 @@ export default function AdminSidebar() {
           />
           {theme === "light" ? "Dark mode" : "Light mode"}
         </span>
-        {secondaryNavigation.map((item) => (
-          <Link
-            key={item.name}
-            href={item.href}
-            onClick={() => dispatch(closeSidebar())}
-            className={cn(
-              "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium dark:text-white text-appDarkCard hover:bg-appGold20",
-              pathname === item.href
-                ? "bg-appCardGold dark:text-appDarkCard"
-                : ""
-            )}
-          >
-            <Icon
-              strokeWidth={1.5}
-              icon={`${item.icon}`}
-              className="h-5 w-5 text-3xl"
-            />
-            {item.name}
-          </Link>
-        ))}
+        {/*{secondaryNavigation.map((item) => (*/}
+        {/*  <Link*/}
+        {/*    key={item.name}*/}
+        {/*    href={item.href}*/}
+        {/*    onClick={() => dispatch(closeSidebar())}*/}
+        {/*    className={cn(*/}
+        {/*      "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium dark:text-white text-appDarkCard hover:bg-appGold20",*/}
+        {/*      pathname === item.href*/}
+        {/*        ? "bg-appCardGold dark:text-appDarkCard"*/}
+        {/*        : ""*/}
+        {/*    )}*/}
+        {/*  >*/}
+        {/*    <Icon*/}
+        {/*      strokeWidth={1.5}*/}
+        {/*      icon={`${item.icon}`}*/}
+        {/*      className="h-5 w-5 text-3xl"*/}
+        {/*    />*/}
+        {/*    {item.name}*/}
+        {/*  </Link>*/}
+        {/*))}*/}
         <div
           className="bg-appGold200 cursor-pointer flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium dark:text-white text-appDarkCard hover:bg-appGold20"
           onClick={() => logout()}

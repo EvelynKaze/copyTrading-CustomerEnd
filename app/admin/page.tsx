@@ -6,28 +6,8 @@ import UserDetails from "./user-details";
 import { databases, Query } from "@/lib/appwrite";
 import ENV from "@/constants/env";
 import { useToast } from "@/hooks/use-toast";
+import type { User } from "@/types";
 
-interface User {
-  id: string;
-  user_name: string;
-  user_id: string;
-  isAdmin: boolean;
-  full_name: string;
-  email_address: string;
-  status: boolean;
-  lastSeen: string;
-  registeredDate: string;
-  roi: number;
-  currentValue: number;
-  totalInvestment: number;
-  transactions?: {
-    id: string;
-    type: string;
-    amount: number;
-    currency: string;
-    date: string;
-  }[];
-}
 
 const AdminPanel: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -49,6 +29,7 @@ const AdminPanel: React.FC = () => {
         type: doc.isDeposit ? "Deposit" : "Withdraw",
         amount: doc.amount,
         currency: doc.token_name,
+        status: doc.status,
         date: doc.$createdAt,
       }));
 

@@ -17,9 +17,9 @@ import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
 import { databases } from "@/lib/appwrite";
 import ENV from "@/constants/env";
-import { Transaction } from "@/app/admin/user-details";
 import { Skeleton } from "@/components/ui/skeleton";
 import User from "@/app/admin/user-details";
+import type { Transaction } from "@/types";
 
 interface User {
   id: string;
@@ -33,8 +33,8 @@ interface User {
   registeredDate: string;
   transactions?: Transaction[];
   roi: number;
-  currentValue: number;
-  totalInvestment: number;
+  current_value: number;
+  total_investment: number;
 }
 
 interface AdminDashboardProps {
@@ -105,8 +105,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onSelectUser }) => {
           lastSeen: doc.$updatedAt,
           registeredDate: doc.$createdAt,
           roi: doc.roi,
-          currentValue: doc.current_value,
-          totalInvestment: doc.total_investment,
+          current_value: doc.current_value,
+          total_investment: doc.total_investment,
         }));
 
         setUsers(profiles);

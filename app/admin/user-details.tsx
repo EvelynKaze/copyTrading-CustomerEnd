@@ -1,5 +1,4 @@
 "use client";
-
 import type React from "react";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -26,14 +25,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import UserPortfolioCard from "@/components/admin-manage/userPortfolioCard"
+import type { Transaction } from "@/types";
 
-export interface Transaction {
-  id: string;
-  type: string;
-  amount: number;
-  currency: string;
-  date: string;
-}
 
 interface User {
   id: string;
@@ -47,8 +41,8 @@ interface User {
   registeredDate: string;
   transactions?: Transaction[];
   roi: number;
-  currentValue: number;
-  totalInvestment: number;
+  current_value: number;
+  total_investment: number;
 }
 
 interface UserDetailsProps {
@@ -145,11 +139,11 @@ const UserDetails: React.FC<UserDetailsProps> = ({
             </div>
             <div>
               <p className="font-semibold">Last Seen:</p>
-              <p>{formatDate(user.lastSeen)}</p>
+              <p>{formatDate(user?.lastSeen)}</p>
             </div>
             <div>
               <p className="font-semibold">Registered Date:</p>
-              <p>{formatDate(user.registeredDate)}</p>
+              <p>{formatDate(user?.registeredDate)}</p>
             </div>
             <div>
               <p className="font-semibold">Designation:</p>
@@ -172,66 +166,10 @@ const UserDetails: React.FC<UserDetailsProps> = ({
         </CardContent>
       </Card>
 
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>User Portfolio</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="font-semibold">ROI:</p>
-              {initialUser.isAdmin ? (
-                <input
-                  type="number"
-                  value={user.roi}
-                  onChange={(e) =>
-                    handleFieldChange("roi", Number.parseFloat(e.target.value))
-                  }
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                />
-              ) : (
-                <p>{user.roi}%</p>
-              )}
-            </div>
-            <div>
-              <p className="font-semibold">Current Value:</p>
-              {initialUser.isAdmin ? (
-                <input
-                  type="number"
-                  value={user.currentValue}
-                  onChange={(e) =>
-                    handleFieldChange(
-                      "currentValue",
-                      Number.parseFloat(e.target.value)
-                    )
-                  }
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                />
-              ) : (
-                <p>${user.currentValue}</p>
-              )}
-            </div>
-            <div>
-              <p className="font-semibold">Total Investment:</p>
-              {initialUser.isAdmin ? (
-                <input
-                  type="number"
-                  value={user.totalInvestment}
-                  onChange={(e) =>
-                    handleFieldChange(
-                      "totalInvestment",
-                      Number.parseFloat(e.target.value)
-                    )
-                  }
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                />
-              ) : (
-                <p>${user.totalInvestment.toFixed(2)}</p>
-              )}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <UserPortfolioCard
+          user={user}
+          handleFieldChange={handleFieldChange}
+      />
 
       <Card className="mb-6">
         <CardHeader>
@@ -244,6 +182,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
                 <TableRow>
                   <TableHead>Type</TableHead>
                   <TableHead>Amount</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Currency</TableHead>
                   <TableHead>Date</TableHead>
                 </TableRow>
@@ -253,6 +192,7 @@ const UserDetails: React.FC<UserDetailsProps> = ({
                   <TableRow key={transaction.id}>
                     <TableCell>{transaction.type}</TableCell>
                     <TableCell>{transaction.amount}</TableCell>
+                    <TableCell>{transaction.status}</TableCell>
                     <TableCell>{transaction.currency}</TableCell>
                     <TableCell>{formatDate(transaction.date)}</TableCell>
                   </TableRow>
