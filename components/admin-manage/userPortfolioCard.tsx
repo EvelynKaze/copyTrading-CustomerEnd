@@ -94,7 +94,9 @@ const UserPortfolioCard = ({ user, handleFieldChange }: UserPortfolioCardProps) 
                         <DialogTrigger asChild>
                             <Button variant="outline" className="w-fit">
                                 <CardHeader>
-                                    <CardTitle>Edit Portfolio <Pencil className="h-4 w-4"/></CardTitle>
+                                    <CardTitle className="flex space-x-2">
+                                        <span>Edit Portfolio</CardTitle</span> 
+                                        <Pencil className="h-4 w-4"/></CardTitle>
                                 </CardHeader>
                             </Button>
                         </DialogTrigger>
