@@ -5,27 +5,27 @@ const linksArray = [
   {
     setofLinks: "Company",
     links: [
-      { name: "About Us", href: "/about" },
-      { name: "Help Desk", href: "/contact" },
-      { name: "Affiliate Program", href: "/careers" },
+      { name: "About Us", href: "#" },
+      { name: "Help Desk", href: "#" },
+      { name: "Affiliate Program", href: "#" },
     ],
   },
   {
     setofLinks: "Follow Us",
     links: [
-      { name: "Facebook", href: "https://www.facebook.com" },
-      { name: "Instagram", href: "https://www.instagram.com" },
-      { name: "Twitter", href: "https://www.twitter.com" },
-      { name: "Youtube", href: "https://www.youtube.com" },
+      { name: "Facebook", href: "#" },
+      { name: "Instagram", href: "#" },
+      { name: "Twitter", href: "#" },
+      { name: "Youtube", href: "#" },
     ],
   },
   {
     setofLinks: "Download The App",
     links: [
-      { name: "Get it on Google Play", href: "https://play.google.com" },
+      { name: "Get it on Google Play", href: "#" },
       {
         name: "Download on the App Store",
-        href: "https://www.apple.com/app-store",
+        href: "#",
       },
     ],
   },

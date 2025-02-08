@@ -41,6 +41,8 @@ export function SupportRequestList() {
                     title: doc.title,
                     message: doc.message,
                     status: doc.status,
+                    email: doc.email,
+                    full_name: doc.full_name,
                     priority: doc.priority,
                     $createdAt: doc.$createdAt,
                     $updatedAt: doc.$updatedAt,

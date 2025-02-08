@@ -1,11 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useState, useEffect } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 import {
   Table,
   TableBody,
@@ -21,30 +20,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import { databases, ID } from "@/lib/appwrite"; // Appwrite database instance
 import { useProfile } from "@/app/context/ProfileContext";
 import { useToast } from "@/hooks/use-toast";
 import { TableSkeleton } from "../admin-dashboard";
+import { DeleteCryptoDialog, EditCryptoDialog } from "@/components/admin-manage/CryptoDialogs";
+import type { Cryptocurrency } from "@/types";
 
-interface Cryptocurrency {
-  $id: string;
-  token_name: string;
-  token_symbol: string;
-  token_address: string;
-  user_id: string;
-  user_name: string;
-}
+
 
 export default function CryptocurrenciesAdmin() {
   const { profile } = useProfile();
@@ -54,10 +37,10 @@ export default function CryptocurrenciesAdmin() {
     []
   );
   const [newCrypto, setNewCrypto] = useState<Partial<Cryptocurrency>>({});
-  // const [editingCrypto, setEditingCrypto] =
-  //   useState<Partial<Cryptocurrency> | null>(null);
+  const [editingCrypto, setEditingCrypto] =
+    useState<Cryptocurrency | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  // const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const fetchCryptocurrencies = async () => {
     setIsLoading(true);
@@ -153,48 +136,48 @@ export default function CryptocurrenciesAdmin() {
     }
   };
 
-  // const handleEditCrypto = async () => {
-  //   setIsLoading(true);
-  //   if (editingCrypto) {
-  //     try {
-  //       const response = await databases.updateDocument(
-  //         process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
-  //         process.env.NEXT_PUBLIC_APPWRITE_CRYPTO_OPTIONS_COLLECTION_ID!,
-  //         editingCrypto.$id!,
-  //         {
-  //           token_name: editingCrypto.token_name,
-  //           token_address: editingCrypto.token_address,
-  //           token_symbol: editingCrypto.token_symbol,
-  //           user_id: profile?.user_id,
-  //           user_name: profile?.user_name,
-  //         }
-  //       );
-  //       setCryptocurrencies((prev: Cryptocurrency[]) =>
-  //         prev.map((crypto: Cryptocurrency) =>
-  //           crypto.$id === editingCrypto.$id
-  //             ? { ...crypto, ...response }
-  //             : crypto
-  //         )
-  //       );
-  //       setEditingCrypto(null);
-  //       setIsEditDialogOpen(false);
-  //       await refreshTokens();
-  //       toast({
-  //         title: "Updated",
-  //         description: "Updated successfully!",
-  //       });
-  //     } catch (err) {
-  //       const error = err as Error;
-  //       console.error("Error updating cryptocurrency:", error);
-  //       toast({
-  //         title: "Error updating",
-  //         description: `Error updating token: ${error.message}`,
-  //       });
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   }
-  // };
+  const handleEditCrypto = async () => {
+    setIsLoading(true);
+    if (editingCrypto) {
+      try {
+        const response = await databases.updateDocument(
+          process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID!,
+          process.env.NEXT_PUBLIC_APPWRITE_CRYPTO_OPTIONS_COLLECTION_ID!,
+          editingCrypto.$id!,
+          {
+            token_name: editingCrypto.token_name,
+            token_address: editingCrypto.token_address,
+            token_symbol: editingCrypto.token_symbol,
+            user_id: profile?.user_id,
+            user_name: profile?.user_name,
+          }
+        );
+        setCryptocurrencies((prev: Cryptocurrency[]) =>
+          prev.map((crypto: Cryptocurrency) =>
+            crypto.$id === editingCrypto.$id
+              ? { ...crypto, ...response }
+              : crypto
+          )
+        );
+        setEditingCrypto(null);
+        setIsEditDialogOpen(false);
+        await refreshTokens();
+        toast({
+          title: "Updated",
+          description: "Updated successfully!",
+        });
+      } catch (err) {
+        const error = err as Error;
+        console.error("Error updating cryptocurrency:", error);
+        toast({
+          title: "Error updating",
+          description: `Error updating token: ${error.message}`,
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
 
   const handleRemoveCrypto = async (id: string) => {
     setIsLoading(true);
@@ -322,32 +305,20 @@ export default function CryptocurrenciesAdmin() {
                 </TableCell>
                 <TableCell>
                   <div className="flex space-x-2">
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button variant="destructive" size="sm">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle>
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete the cryptocurrency from the system.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleRemoveCrypto(crypto.$id)}
-                          >
-                            {isLoading ? "Removing token..." : "Remove Token"}
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <EditCryptoDialog
+                        crypto={crypto}
+                        isEditDialogOpen={isEditDialogOpen}
+                        setIsEditDialogOpen={setIsEditDialogOpen}
+                        editingCrypto={editingCrypto}
+                        setEditingCrypto={setEditingCrypto}
+                        isLoading={isLoading}
+                        handleEditCrypto={handleEditCrypto}
+                    />
+                    <DeleteCryptoDialog
+                        cryptoId={crypto.$id}
+                        isLoading={isLoading}
+                        handleRemoveCrypto={handleRemoveCrypto}
+                    />
                   </div>
                 </TableCell>
               </TableRow>
@@ -359,80 +330,3 @@ export default function CryptocurrenciesAdmin() {
   );
 }
 
-// <Dialog
-//                     open={isEditDialogOpen}
-//                     onOpenChange={setIsEditDialogOpen}
-//                   >
-//                     <DialogTrigger asChild>
-//                       <Button
-//                         variant="outline"
-//                         size="sm"
-//                         onClick={() => setEditingCrypto(crypto)}
-//                       >
-//                         <Pencil className="h-4 w-4" />
-//                       </Button>
-//                     </DialogTrigger>
-//                     <DialogContent>
-//                       <DialogHeader>
-//                         <DialogTitle>Edit Cryptocurrency</DialogTitle>
-//                       </DialogHeader>
-//                       {editingCrypto && (
-//                         <div className="grid gap-4 py-4">
-//                           <div className="grid grid-cols-4 items-center gap-4">
-//                             <Label htmlFor="edit-name" className="text-right">
-//                               Token Name
-//                             </Label>
-//                             <Input
-//                               id="edit-name"
-//                               value={editingCrypto?.token_name || ""}
-//                               onChange={(e) =>
-//                                 setEditingCrypto({
-//                                   ...editingCrypto,
-//                                   token_name: e.target.value,
-//                                 })
-//                               }
-//                               className="col-span-3"
-//                             />
-//                           </div>
-//                           <div className="grid grid-cols-4 items-center gap-4">
-//                             <Label htmlFor="edit-symbol" className="text-right">
-//                               Token Symbol
-//                             </Label>
-//                             <Input
-//                               id="edit-symbol"
-//                               value={editingCrypto.token_symbol}
-//                               onChange={(e) =>
-//                                 setEditingCrypto({
-//                                   ...editingCrypto,
-//                                   token_symbol: e.target.value,
-//                                 })
-//                               }
-//                               className="col-span-3"
-//                             />
-//                           </div>
-//                           <div className="grid grid-cols-4 items-center gap-4">
-//                             <Label
-//                               htmlFor="edit-walletAddress"
-//                               className="text-right"
-//                             >
-//                               Wallet Address
-//                             </Label>
-//                             <Input
-//                               id="edit-walletAddress"
-//                               value={editingCrypto.token_address}
-//                               onChange={(e) =>
-//                                 setEditingCrypto({
-//                                   ...editingCrypto,
-//                                   token_address: e.target.value,
-//                                 })
-//                               }
-//                               className="col-span-3"
-//                             />
-//                           </div>
-//                         </div>
-//                       )}
-//                       <Button disabled={isLoading} onClick={handleEditCrypto}>
-//                         {isLoading ? "Saving Changes..." : "Save Changes"}
-//                       </Button>
-//                     </DialogContent>
-//                   </Dialog>
