@@ -80,6 +80,7 @@ const DepositFunds: React.FC<DepositFundsProps> = ({
 
   const handlePaymentOption = (option: string) => {
     if (option === "copy_wallet"){
+      form.handleSubmit(onSubmit)()
       dispatch(openModal({
         modalType: "deposit",
         modalProps: { address: selectedAddress, currency: form.getValues("currency"), amount: form.getValues("amount") },
@@ -92,16 +93,6 @@ const DepositFunds: React.FC<DepositFundsProps> = ({
     }
   };
 
-  // dispatch(
-  //     openModal({
-  //         modalType: "deposit",
-  //         modalProps: {
-  //             address: selectedAddress,
-  //             currency: data.currency,
-  //             amount: data.amount,
-  //         },
-  //     })
-  // );
   console.log("show payment state", showPaymentModal)
 
   return (
@@ -144,15 +135,7 @@ const DepositFunds: React.FC<DepositFundsProps> = ({
                       </FormItem>
                     )}
                   />
-                  {/*<div className="flex items-end gap-2">*/}
-                  {/*  <p className="text-sm w-5/6 overflow-x-scroll text-muted-foreground">*/}
-                  {/*    Wallet Address: <span className="font-medium">{selectedAddress}</span>*/}
-                  {/*  </p>*/}
-                  {/*  <Button type="button" variant="ghost" size="sm" onClick={handleCopyAddress} disabled={!selectedAddress}>*/}
-                  {/*    <Copy className="h-4 w-4" />*/}
-                  {/*    {copied ? "Copied!" : "Copy"}*/}
-                  {/*  </Button>*/}
-                  {/*</div>*/}
+                  
                   <FormField
                     control={form.control}
                     name="amount"
@@ -204,9 +187,18 @@ const DepositFunds: React.FC<DepositFundsProps> = ({
         </motion.div>
       </div>
       <DepositModal />
-      {/*{showPaymentModal && }*/}
     </div>
   );
 };
 
 export default DepositFunds;
+
+{/*<div className="flex items-end gap-2">*/}
+                  {/*  <p className="text-sm w-5/6 overflow-x-scroll text-muted-foreground">*/}
+                  {/*    Wallet Address: <span className="font-medium">{selectedAddress}</span>*/}
+                  {/*  </p>*/}
+                  {/*  <Button type="button" variant="ghost" size="sm" onClick={handleCopyAddress} disabled={!selectedAddress}>*/}
+                  {/*    <Copy className="h-4 w-4" />*/}
+                  {/*    {copied ? "Copied!" : "Copy"}*/}
+                  {/*  </Button>*/}
+                  {/*</div>*/}
