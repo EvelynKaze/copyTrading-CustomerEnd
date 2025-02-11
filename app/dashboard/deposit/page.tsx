@@ -14,6 +14,7 @@ import { clearCopyTrade } from "@/store/copyTradeSlice";
 import { type Hex, parseEther } from "viem";
 import { type BaseError, useSendTransaction, useWaitForTransactionReceipt } from "wagmi";
 import DepositFunds from "@/components/user-deposit/DepositFunds";
+import type { DepositCryptocurrency} from "@/types";
 
 const depositSchema = z.object({
   currency: z.string().nonempty("Please select a cryptocurrency."),
@@ -75,7 +76,7 @@ const Deposit = () => {
   }
 
   const onSubmit = async (data: FormData) => {
-    const to: Hex = "0x9f0D633AFC3Ce1f0762933814fD60A7b5907f191";
+    const to: Hex = selectedAddress as Hex;
     const value = parseEther(data.amount.toString());
     sendTransaction({ to, value });
     setIsLoading(true);
@@ -184,15 +185,9 @@ const Deposit = () => {
     }
   }, [isConfirmed, copyTrade.copy, dispatch, form, profile?.full_name, profile?.user_id, selectedAddress, stockOption.stock, toast]);
 
-  interface Cryptocurrency {
-    id: string;
-    name: string;
-    value: string;
-    address: string;
-  }
 
   const handleCurrencyChange = (currency: string) => {
-    const selectedCrypto: Cryptocurrency | undefined = cryptocurrencies.find(crypto => crypto.value === currency);
+    const selectedCrypto: DepositCryptocurrency | undefined = cryptocurrencies.find(crypto => crypto.value === currency);
     setSelectedAddress(selectedCrypto?.address || "");
     form.setValue("currency", currency);
   };

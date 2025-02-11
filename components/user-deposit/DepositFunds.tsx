@@ -21,19 +21,24 @@ import {
     SelectItem,
   } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Copy } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { Copy } from "lucide-react";
 import DepositModal from "@/components/modals/deposit-modal";
 import TransactionHash from "@/components/user-deposit/TransactionHash";
-
 import { UseFormReturn } from "react-hook-form";
+import { useAccount } from "wagmi";
+import { PaymentModal } from "./payment-modal"
+import { useDispatch } from "react-redux";
+import { openModal } from "@/store/modalSlice";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 
 interface DepositFundsProps {
   form: UseFormReturn<{ currency: string; amount: number }>;
   cryptocurrencies: Array<{ id: string; value: string; name: string }>;
   selectedAddress: string;
-  copied: boolean;
-  handleCopyAddress: () => void;
+  copied?: boolean;
+  handleCopyAddress?: () => void;
   handleCurrencyChange: (value: string) => void;
   onSubmit: (data: { currency: string; amount: number }) => void;
   isLoading: boolean;
@@ -47,8 +52,8 @@ const DepositFunds: React.FC<DepositFundsProps> = ({
   form, 
   cryptocurrencies, 
   selectedAddress, 
-  copied, 
-  handleCopyAddress, 
+  // copied,
+  // handleCopyAddress,
   handleCurrencyChange, 
   onSubmit, 
   isLoading, 
@@ -58,6 +63,47 @@ const DepositFunds: React.FC<DepositFundsProps> = ({
   tranHash
 }) => {
   console.log("Tokens", cryptocurrencies)
+
+  const { isConnected } = useAccount();
+  const { toast } = useToast();
+  const [ showPaymentModal, setShowPaymentModal ] = useState(false)
+  const [open, setOpen] = useState(false)
+  const dispatch = useDispatch()
+
+  const handleDepositClick = () => {
+    if(!isConnected){
+      setShowPaymentModal(true)
+    } else {
+      form.handleSubmit(onSubmit)()
+    }
+  }
+
+  const handlePaymentOption = (option: string) => {
+    if (option === "copy_wallet"){
+      dispatch(openModal({
+        modalType: "deposit",
+        modalProps: { address: selectedAddress, currency: form.getValues("currency"), amount: form.getValues("amount") },
+      }));
+      setShowPaymentModal(false)
+      setOpen(false)
+    } else if (option === "connect_wallet") {
+      setOpen(false)
+      toast({ title: "Wallet Not Connected!", description: "Please connect your wallet above."});
+    }
+  };
+
+  // dispatch(
+  //     openModal({
+  //         modalType: "deposit",
+  //         modalProps: {
+  //             address: selectedAddress,
+  //             currency: data.currency,
+  //             amount: data.amount,
+  //         },
+  //     })
+  // );
+  console.log("show payment state", showPaymentModal)
+
   return (
     <div className="flex h-full justify-center items-center w-full gap-6">
       <div className="p-8 grid justify-items-center">
@@ -73,7 +119,7 @@ const DepositFunds: React.FC<DepositFundsProps> = ({
             </CardHeader>
             <CardContent>
               <FormProvider {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
                   <FormField
                     control={form.control}
                     name="currency"
@@ -98,15 +144,15 @@ const DepositFunds: React.FC<DepositFundsProps> = ({
                       </FormItem>
                     )}
                   />
-                  <div className="flex items-end gap-2">
-                    <p className="text-sm w-5/6 overflow-x-scroll text-muted-foreground">
-                      Wallet Address: <span className="font-medium">{selectedAddress}</span>
-                    </p>
-                    <Button type="button" variant="ghost" size="sm" onClick={handleCopyAddress} disabled={!selectedAddress}>
-                      <Copy className="h-4 w-4" />
-                      {copied ? "Copied!" : "Copy"}
-                    </Button>
-                  </div>
+                  {/*<div className="flex items-end gap-2">*/}
+                  {/*  <p className="text-sm w-5/6 overflow-x-scroll text-muted-foreground">*/}
+                  {/*    Wallet Address: <span className="font-medium">{selectedAddress}</span>*/}
+                  {/*  </p>*/}
+                  {/*  <Button type="button" variant="ghost" size="sm" onClick={handleCopyAddress} disabled={!selectedAddress}>*/}
+                  {/*    <Copy className="h-4 w-4" />*/}
+                  {/*    {copied ? "Copied!" : "Copy"}*/}
+                  {/*  </Button>*/}
+                  {/*</div>*/}
                   <FormField
                     control={form.control}
                     name="amount"
@@ -138,9 +184,13 @@ const DepositFunds: React.FC<DepositFundsProps> = ({
                       </p>
                     </div>
                   )}
-                  <Button type="submit" className="w-full text-appDarkCard bg-appCardGold" disabled={isLoading}>
-                    {isLoading ? "Processing..." : "Deposit"}
-                  </Button>
+                  <PaymentModal
+                      handlePaymentOption={handlePaymentOption}
+                      open={open}
+                      setOpen={setOpen}
+                      isLoading={isLoading}
+                      handleDepositClick={handleDepositClick}
+                  />
                   {baseError?.shortMessage && (
                     <p className="text-sm text-red-500">{baseError?.shortMessage}</p>
                   )}
@@ -154,6 +204,7 @@ const DepositFunds: React.FC<DepositFundsProps> = ({
         </motion.div>
       </div>
       <DepositModal />
+      {/*{showPaymentModal && }*/}
     </div>
   );
 };
