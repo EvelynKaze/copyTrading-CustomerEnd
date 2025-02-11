@@ -177,7 +177,7 @@ export default function TransactionsPage() {
                       </Badge>
                     </TableCell>
                     <TableCell>{transaction.token_name}</TableCell>
-                    <TableCell>${transaction.amount}</TableCell>
+                    <TableCell>{transaction.amount}</TableCell>
                     <TableCell>
                       {transaction.isWithdraw
                         ? transaction.token_withdraw_address

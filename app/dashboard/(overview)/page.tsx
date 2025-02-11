@@ -7,23 +7,80 @@ import { RootState } from "@/store/store";
 // import { CryptoExchange } from "@/components/exchange";
 import { useProfile } from "../../context/ProfileContext";
 import TradingViewWidget from "@/components/TradingViewWidget"
+import {databases, Query} from "@/lib/appwrite";
+import { useEffect, useState } from "react";
+import ENV from "@/constants/env";
+import { useToast } from "@/hooks/use-toast";
 
 
 
 export default function UserDashboard() {
   const userState = useSelector((state: RootState) => state.user.isLoggedIn);
   const { profile } = useProfile();
+  const [userPortfolio, setUserPortfolio] = useState({ total_investment: 0, current_value: 0, roi: 0})
+  const user_id = profile?.user_id as string;
+  const { toast } = useToast()
 
+    useEffect(() => {
+        const fetchUserPortfolio = async () => {
+            try {
+                const response = await databases.listDocuments(
+                    ENV.databaseId,
+                    ENV.collections.profile,
+                    [Query.equal("user_id", user_id)]
+                );
+
+                const portfolio = response.documents.map((doc) => ({
+                    total_investment: doc?.total_investment,
+                    current_value: doc?.current_value,
+                    roi: doc?.roi
+                }))
+                setUserPortfolio(portfolio[0])
+            } catch (err) {
+                const error = err as Error
+                console.error("Error fetching cryptocurrencies:", error);
+                toast({
+                    title: "Error",
+                    description: "Failed to fetch Portfolio data",
+                    variant: "destructive",
+                });
+            }
+        }
+        
+        fetchUserPortfolio()
+    }, [toast, user_id]);
+    // useEffect(() => {
+    //     const fetchCryptocurrencies = async () => {
+    //         try {
+    //             const response = await databases.listDocuments(
+    //                 ENV.databaseId,
+    //                 ENV.collections.cryptoOptions
+    //             );
+    //             const cryptoData = response.documents.map((doc) => ({
+    //                 id: doc?.$id,
+    //                 name: doc?.token_symbol,
+    //                 value: doc?.token_name,
+    //                 address: doc?.token_address,
+    //             }));
+    //             setCryptocurrencies(cryptoData);
+    //         } catch (error) {
+    //             console.error("Error fetching cryptocurrencies:", error);
+    //             toast({
+    //                 title: "Error",
+    //                 description: "Failed to fetch cryptocurrency data.",
+    //                 variant: "destructive",
+    //             });
+    //         }
+    //     };
+    
 
   console.log("Profileee", profile);
+  console.log("User Portfolio", userPortfolio)
 
   const stats = {
-    total_investment: profile?.total_investment || 0.00,
-    current_value: profile?.current_value || 0.00,
-    roi: profile?.roi || 0,
-    // investmentChange: 0,
-    // valueChange: 0,
-    // roiChange: 0,
+    total_investment: userPortfolio?.total_investment || 0.00,
+    current_value: userPortfolio?.current_value || 0.00,
+    roi: userPortfolio?.roi || 0,
   }
 
   console.log(userState);

@@ -1,16 +1,8 @@
 "use client";
-import type React from "react";
+import React, {useEffect} from "react";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,8 +18,16 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import UserPortfolioCard from "@/components/admin-manage/userPortfolioCard"
-import type { Transaction } from "@/types";
-
+import type {DepositCryptocurrency, Transaction} from "@/types";
+import UserTransactionTable from "@/components/admin-manage/userTransactionTable"
+import {databases, ID} from "@/lib/appwrite";
+import ENV from "@/constants/env";
+import { useToast } from "@/hooks/use-toast";
+import { AdminDepositModal } from "@/components/admin-manage/admin-deposit-modal";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {z} from "zod";
+import { AdminWithdrawalModal } from "@/components/admin-manage/admin-withdrawal-modal";
 
 interface User {
   id: string;
@@ -53,6 +53,23 @@ interface UserDetailsProps {
   onDeleteAccount: (userID: string) => void;
 }
 
+const depositSchema = z.object({
+  currency: z.string().nonempty("Please select a cryptocurrency."),
+  amount: z.preprocess(
+      (val) => (typeof val === "string" ? parseFloat(val) : val),
+      z.number().positive("Amount must be a positive number.")
+  ),
+});
+
+const withdrawalSchema = z.object({
+  currency: z.string().nonempty("Please select a cryptocurrency."),
+  amount: z.preprocess(
+      (val) => (typeof val === "string" ? parseFloat(val) : val),
+      z.number().positive("Amount must be a positive number.")
+  ),
+  address: z.string().nonempty("Please enter a wallet address."),
+});
+
 const UserDetails: React.FC<UserDetailsProps> = ({
   initialUser,
   onBack,
@@ -60,7 +77,14 @@ const UserDetails: React.FC<UserDetailsProps> = ({
   onDeleteAccount,
   onUnSuspendAccount,
 }) => {
+
   const [user, setUser] = useState<User>(initialUser);
+  const [cryptocurrencies, setCryptocurrencies] = useState<{ id: string; name: string; value: string; address: string }[]>([]);
+  const [isWithdrawTransaction, setIsWithdrawTransactionOpen] = useState(false);
+  const [isDepositTransaction, setIsDepositTransactionOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState("");
+  const { toast } = useToast();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -73,6 +97,21 @@ const UserDetails: React.FC<UserDetailsProps> = ({
     });
   };
 
+  const formDeposit = useForm({
+    resolver: zodResolver(depositSchema),
+    defaultValues: { currency: "", amount: 0 },
+  });
+
+  const formWithdrawal = useForm({
+    resolver: zodResolver(withdrawalSchema),
+    defaultValues: {
+      currency: "",
+      amount: 0.00,
+      address: "",
+    },
+  });
+
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleFieldChange = (field: string, value: any) => {
     setUser((prevUser) => ({
@@ -81,17 +120,110 @@ const UserDetails: React.FC<UserDetailsProps> = ({
     }));
   };
 
-  const handleSave = async () => {
+  useEffect(() => {
+    const fetchCryptocurrencies = async () => {
+      try {
+        const response = await databases.listDocuments(
+            ENV.databaseId,
+            ENV.collections.cryptoOptions
+        );
+        const cryptoData = response.documents.map((doc) => ({
+          id: doc?.$id,
+          name: doc?.token_symbol,
+          value: doc?.token_name,
+          address: doc?.token_address,
+        }));
+        setCryptocurrencies(cryptoData);
+      } catch (error) {
+        console.error("Error fetching cryptocurrencies:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch cryptocurrency data.",
+          variant: "destructive",
+        });
+      }
+    };
+
+    fetchCryptocurrencies();
+  }, [toast]);
+
+  const handleCurrencyChange = (currency: string) => {
+    const selectedCrypto: DepositCryptocurrency | undefined = cryptocurrencies.find(crypto => crypto.value === currency);
+    setSelectedAddress(selectedCrypto?.address || "");
+    formDeposit.setValue("currency", currency);
+  };
+
+  const onSubmitDeposit = async () => {
+    setIsLoading(true)
+    try{
+      const transactionPayload = {
+        token_name: formDeposit.getValues().currency,
+        isWithdraw: false,
+        isDeposit: true,
+        status: "approved",
+        amount: formDeposit.getValues().amount,
+        token_deposit_address: selectedAddress,
+        user_id: user?.user_id,
+        full_name: user?.full_name,
+      };
+
+      await databases.createDocument(
+          ENV.databaseId,
+          ENV.collections.transactions,
+          ID.unique(),
+          transactionPayload
+      );
+      setIsDepositTransactionOpen(false)
+      toast({ title: "Deposit Successful", description: "Transaction Created"});
+    } catch(err){
+      const error = err as Error
+      toast({ title: "Error", description: `Failed to create transaction.${error.message}`, variant: "destructive" });
+    } finally{
+      setIsLoading(true);
+    }
+  }
+
+  const onSubmitWithdrawal = async () => {
+    // Construct the transaction payload
+    const transactionPayload = {
+      token_name: formWithdrawal.getValues().currency,
+      isWithdraw: true,
+      isDeposit: false,
+      status: "approved",
+      amount: parseInt(formWithdrawal.getValues().amount.toString()),
+      token_withdraw_address: formWithdrawal.getValues().address,
+      token_deposit_address: null,
+      user_id: user?.user_id,
+      full_name: user?.full_name,
+    };
+
+    console.log("Payload being sent to Appwrite:", transactionPayload);
+    setIsLoading(true)
     try {
-      // Here you would typically call an API to save the changes
-      // For now, we'll just log the updated user object
-      console.log("Saving user changes:", user);
-      // You can add a toast notification here to indicate successful save
+      await databases.createDocument(
+          ENV.databaseId,
+          ENV.collections.transactions,
+          ID.unique(),
+          transactionPayload
+      );
+
+      toast({
+        title: "Success",
+        description: "Withdrawal request created successfully.",
+      });
+
     } catch (error) {
-      console.error("Error saving user changes:", error);
-      // You can add an error toast notification here
+      console.error("Error creating withdrawal transaction:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create withdrawal transaction.",
+        variant: "destructive",
+      });
+    } finally{
+      setIsLoading(false)
     }
   };
+
 
   return (
     <motion.div
@@ -171,35 +303,38 @@ const UserDetails: React.FC<UserDetailsProps> = ({
           handleFieldChange={handleFieldChange}
       />
 
+      <UserTransactionTable
+        transactions={user?.transactions || []}
+      />
+
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>User Transactions</CardTitle>
+          <CardTitle>Admin Actions</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Currency</TableHead>
-                  <TableHead>Date</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {user.transactions?.map((transaction) => (
-                  <TableRow key={transaction.id}>
-                    <TableCell>{transaction.type}</TableCell>
-                    <TableCell>{transaction.amount}</TableCell>
-                    <TableCell>{transaction.status}</TableCell>
-                    <TableCell>{transaction.currency}</TableCell>
-                    <TableCell>{formatDate(transaction.date)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+        <CardContent className="space-x-2">
+
+          <AdminDepositModal
+            cryptocurrencies={cryptocurrencies}
+            handleCurrencyChange={handleCurrencyChange}
+            isTransaction={isDepositTransaction}
+            selectedAddress={selectedAddress}
+            isLoading={isLoading}
+            setIsTransactionOpen={setIsDepositTransactionOpen}
+            onSubmit={onSubmitDeposit}
+            form={formDeposit}
+          />
+
+          <AdminWithdrawalModal
+              cryptocurrencies={cryptocurrencies}
+              // handleCurrencyChange={handleCurrencyChange}
+              isTransaction={isWithdrawTransaction}
+              // selectedAddress={form}
+              isLoading={isLoading}
+              setIsTransactionOpen={setIsWithdrawTransactionOpen}
+              onSubmit={onSubmitWithdrawal}
+              form={formWithdrawal}
+          />
+
         </CardContent>
       </Card>
 
@@ -261,14 +396,14 @@ const UserDetails: React.FC<UserDetailsProps> = ({
         </AlertDialog>
       </div>
 
-      {initialUser.isAdmin && (
-        <Button
-          onClick={handleSave}
-          className="mt-4 bg-appCardGold text-appDarkCard"
-        >
-          Save Changes
-        </Button>
-      )}
+      {/*{initialUser.isAdmin && (*/}
+      {/*  <Button*/}
+      {/*    onClick={handleSave}*/}
+      {/*    className="mt-4 bg-appCardGold text-appDarkCard"*/}
+      {/*  >*/}
+      {/*    Save Changes*/}
+      {/*  </Button>*/}
+      {/*)}*/}
     </motion.div>
   );
 };

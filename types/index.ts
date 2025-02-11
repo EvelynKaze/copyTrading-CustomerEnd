@@ -54,3 +54,10 @@ export interface Cryptocurrency {
   user_id: string;
   user_name: string;
 }
+
+export interface DepositCryptocurrency {
+  id: string;
+  name: string;
+  value: string;
+  address: string;
+}
