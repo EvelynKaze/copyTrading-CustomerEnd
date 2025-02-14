@@ -9,6 +9,7 @@ const initialState = {
         trade_roi_min: 0,
         trade_roi_max: 0,
         trade_risk: "",
+        trade_duration: 0,
     },
 };
 

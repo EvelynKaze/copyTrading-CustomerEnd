@@ -222,7 +222,7 @@ export function EditTradeDialog({
                 )}
                 <Button 
                     disabled={isLoading} 
-                    onClick={() => handleEditTrades(editingTrades)} // Pass correct function argument
+                    onClick={() => editingTrades && handleEditTrades(editingTrades)} // Pass correct function argument
                 >
                     {isLoading ? "Saving Changes..." : "Save Changes"}
                 </Button>

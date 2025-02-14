@@ -17,7 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Trash2, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { databases, ID } from "@/lib/appwrite";
 import { useProfile } from "@/app/context/ProfileContext";
 import { useToast } from "@/hooks/use-toast";
@@ -75,17 +75,16 @@ export default function AdminCopyTrading() {
   console.log("Trades", trades)
 
   const refreshTrades = async () => {
-    try {
-      const response = await fetchTraders();
-      setTrades(response); // Update the state with the fetched data
-    } catch (err) {
-      const error = err as Error;
-      console.error("Error refreshing tokens", error);
-      toast({
-        description: error.message,
-      });
-    }
-  };
+      try {
+        await fetchTraders();
+      } catch (err) {
+        const error = err as Error;
+        console.error("Error refreshing tokens", error);
+        toast({
+          description: error.message,
+        });
+      }
+    };
 
   const handleAddTrade = async (
     newTrade: Omit<Trade, "id" | "user_id" | "user_name">
@@ -165,6 +164,7 @@ export default function AdminCopyTrading() {
       });
       setEditingTrades(null);
       setIsEditDialogOpen(false);
+      await refreshTrades();
     } catch (err) {
       const error = err as Error;
       toast({
