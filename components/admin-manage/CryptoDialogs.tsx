@@ -54,7 +54,15 @@ export function DeleteCryptoDialog({ cryptoId, isLoading, handleRemoveCrypto }: 
 
 
 
-export function EditCryptoDialog({ crypto, isEditDialogOpen, setIsEditDialogOpen, editingCrypto, setEditingCrypto, isLoading, handleEditCrypto }: EditCryptoDialogProps) {
+export function EditCryptoDialog({ 
+    crypto, 
+    isEditDialogOpen, 
+    setIsEditDialogOpen, 
+    editingCrypto, 
+    setEditingCrypto, 
+    isLoading, 
+    handleEditCrypto 
+}: EditCryptoDialogProps) {
     return (
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
             <DialogTrigger asChild>

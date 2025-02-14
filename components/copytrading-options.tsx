@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Check } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Trader } from "@/types/dashboard"
+import { Trade } from "@/types/dashboard"
 import { useState, useEffect } from "react";
 import { databases } from "@/lib/appwrite";
 import ENV from "@/constants/env"
@@ -13,7 +13,7 @@ import { useAppDispatch } from "@/store/hook";
 import {useToast} from "@/hooks/use-toast";
 
 export function CopyTradingOptions() {
-  const [trades, setTrades] = useState<Trader[]>([]);
+  const [trades, setTrades] = useState<Trade[]>([]);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { toast } = useToast()
@@ -36,6 +36,7 @@ export function CopyTradingOptions() {
               trade_roi_max: doc.trade_roi_max,
               trade_description: doc.trade_description,
               trade_risk: doc.trade_risk,
+              trade_duration: doc.trade_duration,
             }))
         );
       } catch (error) {
@@ -46,7 +47,7 @@ export function CopyTradingOptions() {
     fetchTrades();
   }, []);
 
-    const handlePurchase = (trade: Trader) => {
+    const handlePurchase = (trade: Trade) => {
         try{
             dispatch(
                 setCopyTrade({
@@ -56,6 +57,7 @@ export function CopyTradingOptions() {
                     trade_roi_min: trade.trade_roi_min,
                     trade_roi_max: trade.trade_roi_max,
                     trade_risk: trade.trade_risk,
+                    trade_duration: trade.trade_duration,
                 })
             );
 
@@ -89,6 +91,7 @@ export function CopyTradingOptions() {
                 <CardHeader className="flex-1">
                   <h3 className="text-2xl font-bold text-center">{trade?.trade_title}</h3>
                   <p className="text-center text-muted-foreground">{trade?.trade_description}</p>
+                  <p className="text-center text-muted-foreground">{trade?.trade_duration}day{trade?.trade_duration >= 2 ? "s" : ""}</p>
                 </CardHeader>
                 <CardContent className="flex-1">
                   <div className="text-center mb-4">
