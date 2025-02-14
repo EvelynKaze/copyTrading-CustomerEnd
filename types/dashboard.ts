@@ -27,7 +27,7 @@ export interface MonthlyStats {
   value: number;
 }
 
-export interface Trader {
+export interface Trade {
   id: string;
   trade_title: string;
   trade_max: number;
@@ -36,6 +36,7 @@ export interface Trader {
   trade_roi_max: number;
   trade_description: string;
   trade_risk: string;
+  trade_duration: number;
   user_id?: string;
   user_name?: string;
 }
