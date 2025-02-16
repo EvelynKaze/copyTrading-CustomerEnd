@@ -61,3 +61,19 @@ export interface DepositCryptocurrency {
   value: string;
   address: string;
 }
+
+export interface Profile {
+  id: null;
+  full_name: string;
+  phone_number: string;
+  user_name: string;
+  avatar_url: string;
+  copy_trader: null;
+  account_status: null;
+  total_investment: null;
+  current_value: null;
+  roi: null;
+  kyc_status: boolean;
+  isAdmin: boolean;
+  user_id: string;
+}
