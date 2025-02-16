@@ -92,7 +92,7 @@ export default function UserDashboard() {
         <StockOptions />
       </div>
       <div className="w-full lg:w-80 space-y-6">
-        <CopyTradingOptions />
+        <CopyTradingOptions portfolio={userPortfolio} profile={profile} />
         {/*<CryptoExchange />*/}
         {/* <Card className="p-6">
           <QuickTransfer users={quickTransferUsers} />
