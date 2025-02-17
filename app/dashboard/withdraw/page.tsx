@@ -28,11 +28,13 @@ import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 import WithdrawalModal from "@/components/modals/withdrawal-modal";
 // import { openModal } from "@/store/modalSlice";
-// import { useDispatch } from "react-redux";
 import ENV from "@/constants/env";
 import { useProfile } from "@/app/context/ProfileContext";
 import { databases, ID } from "@/lib/appwrite";
 import { useToast } from "@/hooks/use-toast";
+import { clearStockOption } from "@/store/stockOptionsSlice";
+import { clearCopyTrade } from "@/store/copyTradeSlice";
+import { useDispatch } from "react-redux";
 
 const withdrawalSchema = z.object({
     currency: z.string().nonempty("Please select a cryptocurrency."),
@@ -48,7 +50,7 @@ type WithdrawalFormValues = z.infer<typeof withdrawalSchema>;
 const Withdrawal = () => {
     const { profile } = useProfile();
     const { toast } = useToast();
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const [cryptocurrencies, setCryptocurrencies] = useState<
         { name: string; value: string; address: string }[]
     >([]);
@@ -87,6 +89,8 @@ const Withdrawal = () => {
         };
 
         fetchCryptocurrencies();
+        dispatch(clearStockOption());
+        dispatch(clearCopyTrade());
     }, [toast]);
 
     const onSubmit = async (data: WithdrawalFormValues) => {

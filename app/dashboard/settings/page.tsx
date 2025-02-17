@@ -1,15 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SettingsIcon, User } from "lucide-react";
 import GeneralSettings from "./general-settings";
 import UserProfile from "./user-profile";
 // import KYC from "./kyc";
+import { clearStockOption } from "@/store/stockOptionsSlice";
+import { clearCopyTrade } from "@/store/copyTradeSlice";
+import { useDispatch } from "react-redux";
 
 
 const Settings = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(clearStockOption());
+    dispatch(clearCopyTrade());
+  }, [dispatch]);
 
   return (
     <motion.div

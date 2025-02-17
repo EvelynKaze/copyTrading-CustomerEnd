@@ -1,12 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CopyTradingPage from "@/components/copied-trades";
 import PortfolioPage from "@/components/stocks-purchased";
+import { clearStockOption } from "@/store/stockOptionsSlice";
+import { clearCopyTrade } from "@/store/copyTradeSlice";
+import { useDispatch } from "react-redux";
+
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("stocks");
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(clearStockOption());
+    dispatch(clearCopyTrade());
+  }, []);
 
   return (
     <div className="container mx-auto p-6">

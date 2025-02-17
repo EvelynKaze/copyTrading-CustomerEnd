@@ -2,7 +2,7 @@
 import { CopyTradingOptions } from "@/components/copytrading-options";
 import { StatsCards } from "@/components/stats-cards";
 import { StockOptions } from "@/components/stock-options";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 // import { CryptoExchange } from "@/components/exchange";
 import { useProfile } from "../../context/ProfileContext";
@@ -11,12 +11,14 @@ import {databases, Query} from "@/lib/appwrite";
 import { useEffect, useState } from "react";
 import ENV from "@/constants/env";
 import { useToast } from "@/hooks/use-toast";
-
+import { clearStockOption } from "@/store/stockOptionsSlice";
+import { clearCopyTrade } from "@/store/copyTradeSlice";
 
 
 export default function UserDashboard() {
   const userState = useSelector((state: RootState) => state.user.isLoggedIn);
   const { profile } = useProfile();
+  const dispatch = useDispatch();
   const [userPortfolio, setUserPortfolio] = useState({ total_investment: 0, current_value: 0, roi: 0})
   const user_id = profile?.user_id as string;
   const { toast } = useToast()
@@ -50,6 +52,8 @@ export default function UserDashboard() {
     useEffect(() => {
 
         fetchUserPortfolio()
+        dispatch(clearStockOption());
+        dispatch(clearCopyTrade());
     }, [toast, user_id]);
     
     
