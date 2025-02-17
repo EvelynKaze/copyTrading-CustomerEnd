@@ -186,7 +186,7 @@ const CopyTradingPage = () => {
                         label: "Initial Investment",
                         key: "initial_investment",
                       },
-                      { label: "Token", key: "trade_token" },
+                      // { label: "Token", key: "trade_token" },
                       { label: "Current Value", key: "trade_current_value" },
                       { label: "Profit/Loss", key: "trade_profit_loss" },
                       { label: "Win Rate", key: "trade_win_rate" },
@@ -216,7 +216,7 @@ const CopyTradingPage = () => {
                           ? formatCurrency(trade?.initial_investment)
                           : trade?.initial_investment}
                       </TableCell>
-                      <TableCell>{trade?.trade_token}</TableCell>
+                      {/* <TableCell>{trade?.trade_token}</TableCell> */}
                       <TableCell>
                         {trade.trade_status === "pending" ? (
                           <span className="bg-yellow-400 rounded-xl animate-pulse p-2 text-white">

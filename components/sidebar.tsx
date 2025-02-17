@@ -12,6 +12,8 @@ import { account } from "@/lib/appwrite";
 import { useToast } from "@/hooks/use-toast";
 import { clearUser } from "@/store/userSlice";
 import { clearProfile } from "@/store/profileSlice";
+import { clearStockOption } from "@/store/stockOptionsSlice";
+import { clearCopyTrade } from "@/store/copyTradeSlice";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: "iconamoon:home-light" },
@@ -29,7 +31,7 @@ const secondaryNavigation = [
   {
     name: "Support",
     href: "/dashboard/support",
-    icon: "solar:support-agent",
+    icon: "tabler:lifebuoy",
   },
   {
     name: "Settings",
@@ -39,6 +41,7 @@ const secondaryNavigation = [
   { name: "Help", href: "/dashboard/help", icon: "tabler:help" },
   // { name: "Log out", href: "/dashboard/logout", icon: "solar:logout-outline" },
 ];
+
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -53,6 +56,8 @@ export default function Sidebar() {
       await account.deleteSession("current");
       dispatch(clearUser());
       dispatch(clearProfile());
+      dispatch(clearStockOption());
+      dispatch(clearCopyTrade());
       toast({
         description: "Logged out successfully",
       });
