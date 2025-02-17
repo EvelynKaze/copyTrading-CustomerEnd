@@ -4,12 +4,12 @@ import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import { TrendingDown, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { Stock } from "@/types"
+import type { Stocks } from "@/types"
 
 interface StockFormProps {
-    initialData?: Stock;
+    initialData?: Stocks;
     isLoading: boolean;
-    onSubmit: (stock: Omit<Stock, "id">) => void;
+    onSubmit: (stock: Omit<Stocks, "id">) => void;
 }
 
 export function StockForm({ initialData, onSubmit, isLoading }: StockFormProps) {

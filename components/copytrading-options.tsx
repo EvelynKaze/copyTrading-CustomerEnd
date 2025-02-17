@@ -16,10 +16,11 @@ import { useToast } from "@/hooks/use-toast";
 import { TradeFormModal } from "./user-deposit/trade-modal";
 import { Profile } from "@/types";
 
-export function CopyTradingOptions({ portfolio, profile }: 
+export function CopyTradingOptions({ portfolio, profile, fetchPortfolio }: 
   { 
     portfolio: { total_investment: number, current_value: number, roi: number }, 
-    profile: Profile | null 
+    profile: Profile | null,
+    fetchPortfolio: () => void
   }) 
 {
     const [trades, setTrades] = useState<Trade[]>([]);
@@ -126,6 +127,10 @@ export function CopyTradingOptions({ portfolio, profile }:
           profile?.id || "",
           { total_investment: newTotalInvestment }
         );
+        setOpen(false);
+        setSelectedTrade(null);
+        await fetchPortfolio();
+        toast({ title: "Trade Purchased!", description: "Thank you for your purchase!" });
       } catch (error) {
         console.error("Error creating trade:", error);
         toast({ title: "Error creating trade!", description: "Please try again later." });
@@ -184,7 +189,13 @@ export function CopyTradingOptions({ portfolio, profile }:
         </Card>
 
         {selectedTrade && (
-          <TradeFormModal open={open} setOpen={setOpen} portfolio={portfolio?.total_investment} trade={selectedTrade} onTradePurchase={handleTradePurchase} />
+          <TradeFormModal 
+            open={open} 
+            setOpen={setOpen} 
+            portfolio={portfolio?.total_investment} 
+            trade={selectedTrade} 
+            onTradePurchase={handleTradePurchase}
+          />
         )}
       </>
     );

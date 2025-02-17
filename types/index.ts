@@ -5,7 +5,7 @@ export interface Testimonial {
   avatar: string;
 }
 
-export interface Stock {
+export interface Stocks {
   $id: string;
   symbol: string;
   name: string;
@@ -76,4 +76,13 @@ export interface Profile {
   kyc_status: boolean;
   isAdmin: boolean;
   user_id: string;
+}
+
+export interface Stock {
+  id: string;
+  symbol: string;
+  name: string;
+  price: number;
+  change: number;
+  isMinus: boolean;
 }

@@ -171,7 +171,7 @@ const DepositFunds: React.FC<DepositFundsProps> = ({
                       <FormLabel>Total Amount to Deposit</FormLabel>
                       <Input type="number" value={stockOption?.stock?.total} disabled className="mb-2" />
                       <p className="text-sm text-muted-foreground">
-                        Deposit the exact total amount stated above in crypto to complete the stock purchase.
+                        Deposit the amount stated above in crypto to complete the stock purchase.
                       </p>
                     </div>
                   )}
@@ -180,7 +180,7 @@ const DepositFunds: React.FC<DepositFundsProps> = ({
                       <FormLabel>Plan</FormLabel>
                       <Input type="text" value={copyTrade?.copy?.title} disabled className="mb-2" />
                       <p className="text-sm text-muted-foreground">
-                        Deposit an amount within the range of ${copyTrade?.copy?.trade_min} to ${copyTrade?.copy?.trade_max} in crypto to complete the Plan purchase.
+                        Deposit ${copyTrade?.copy?.trade_min} in crypto to complete the Plan purchase.
                       </p>
                     </div>
                   )}
