@@ -5,22 +5,22 @@ import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader,
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {Pencil, Trash2 } from "lucide-react";
 import {Label} from "@/components/ui/label";
-import type { Stock } from "@/types";
+import type { Stocks } from "@/types";
 
 interface StockTableProps {
-    stocks: Stock[];
+    stocks: Stocks[];
     handleDeleteStock: (id: string) => void;
-    handleEditStock: (stock: Stock) => void;
+    handleEditStock: (stock: Stocks) => void;
     isLoading: boolean;
 }
 
 
 export const StockTable = ({ stocks, handleDeleteStock, handleEditStock, isLoading }: StockTableProps) => {
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-    const [editingStock, setEditingStock] = useState<Stock | null>(null);
+    const [editingStock, setEditingStock] = useState<Stocks | null>(null);
 
     interface EditStockProps {
-        stocks: Stock;
+        stocks: Stocks;
     }
 
     const editStock = async ({ stocks }: EditStockProps): Promise<void> => {

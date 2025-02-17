@@ -21,57 +21,37 @@ export default function UserDashboard() {
   const user_id = profile?.user_id as string;
   const { toast } = useToast()
 
-    useEffect(() => {
-        const fetchUserPortfolio = async () => {
-            try {
-                const response = await databases.listDocuments(
-                    ENV.databaseId,
-                    ENV.collections.profile,
-                    [Query.equal("user_id", user_id)]
-                );
 
-                const portfolio = response.documents.map((doc) => ({
-                    total_investment: doc?.total_investment,
-                    current_value: doc?.current_value,
-                    roi: doc?.roi
-                }))
-                setUserPortfolio(portfolio[0])
-            } catch (err) {
-                const error = err as Error
-                console.error("Error fetching cryptocurrencies:", error);
-                toast({
-                    title: "Error",
-                    description: "Failed to fetch Portfolio data",
-                    variant: "destructive",
-                });
-            }
-        }
-        
+  const fetchUserPortfolio = async () => {
+    try {
+        const response = await databases.listDocuments(
+            ENV.databaseId,
+            ENV.collections.profile,
+            [Query.equal("user_id", user_id)]
+        );
+
+        const portfolio = response.documents.map((doc) => ({
+            total_investment: doc?.total_investment,
+            current_value: doc?.current_value,
+            roi: doc?.roi
+        }))
+        setUserPortfolio(portfolio[0])
+    } catch (err) {
+        const error = err as Error
+        console.error("Error fetching cryptocurrencies:", error);
+        toast({
+            title: "Error",
+            description: "Failed to fetch Portfolio data",
+            variant: "destructive",
+        });
+    }
+  }
+
+    useEffect(() => {
+
         fetchUserPortfolio()
     }, [toast, user_id]);
-    // useEffect(() => {
-    //     const fetchCryptocurrencies = async () => {
-    //         try {
-    //             const response = await databases.listDocuments(
-    //                 ENV.databaseId,
-    //                 ENV.collections.cryptoOptions
-    //             );
-    //             const cryptoData = response.documents.map((doc) => ({
-    //                 id: doc?.$id,
-    //                 name: doc?.token_symbol,
-    //                 value: doc?.token_name,
-    //                 address: doc?.token_address,
-    //             }));
-    //             setCryptocurrencies(cryptoData);
-    //         } catch (error) {
-    //             console.error("Error fetching cryptocurrencies:", error);
-    //             toast({
-    //                 title: "Error",
-    //                 description: "Failed to fetch cryptocurrency data.",
-    //                 variant: "destructive",
-    //             });
-    //         }
-    //     };
+    
     
 
   console.log("Profileee", profile);
@@ -89,10 +69,18 @@ export default function UserDashboard() {
       <div className="flex-1 h-full overflow-y-scroll space-y-6">
         <StatsCards stats={stats} />
         <TradingViewWidget />
-        <StockOptions />
+        <StockOptions 
+          portfolio={userPortfolio} 
+          profile={profile} 
+          fetchPortfolio={fetchUserPortfolio} 
+        />
       </div>
       <div className="w-full lg:w-80 space-y-6">
-        <CopyTradingOptions portfolio={userPortfolio} profile={profile} />
+        <CopyTradingOptions 
+          portfolio={userPortfolio} 
+          profile={profile} 
+          fetchPortfolio={fetchUserPortfolio} 
+        />
         {/*<CryptoExchange />*/}
         {/* <Card className="p-6">
           <QuickTransfer users={quickTransferUsers} />

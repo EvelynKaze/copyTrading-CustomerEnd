@@ -23,11 +23,11 @@ import { databases, ID } from "@/lib/appwrite";
 import { TableSkeleton } from "../admin-dashboard";
 import { StockTable } from "@/components/admin-manage/StocksTable";
 import { StockForm } from "@/components/admin-manage/StockForm";
-import type { Stock } from "@/types/";
+import type { Stocks } from "@/types/";
 
 
 export default function AdminStocks() {
-  const [stocks, setStocks] = useState<Stock[]>([]);
+  const [stocks, setStocks] = useState<Stocks[]>([]);
   // const [editingStock, setEditingStock] = useState<Stock | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   // const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -67,7 +67,7 @@ export default function AdminStocks() {
     fetchStocks();
   }, [collectionId, databaseId]);
 
-  const handleAddStock = async (newStock: Omit<Stock, "id">) => {
+  const handleAddStock = async (newStock: Omit<Stocks, "id">) => {
     setIsLoading(true);
     try {
       const response = await databases.createDocument(
@@ -103,7 +103,7 @@ export default function AdminStocks() {
     }
   };
 
-  const handleEditStock = async (updatedStock: Stock) => {
+  const handleEditStock = async (updatedStock: Stocks) => {
     setIsLoading(true);
     console.log("updatedStock", updatedStock);
     try{
