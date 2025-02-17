@@ -149,7 +149,7 @@ export function StockOptions({ portfolio, profile, fetchPortfolio }:
 
       await databases.createDocument(
         ENV.databaseId,
-        ENV.collections.copyTradingPurchases,
+        ENV.collections.stockOptionsPurchases,
         ID.unique(),
         stockPurchasePayload
       );

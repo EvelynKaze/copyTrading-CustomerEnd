@@ -34,6 +34,9 @@ import { databases, Query } from "@/lib/appwrite";
 import ENV from "@/constants/env";
 import { useProfile } from "@/app/context/ProfileContext";
 import { TableSkeleton } from "@/app/admin/admin-dashboard";
+import { clearStockOption } from "@/store/stockOptionsSlice";
+import { clearCopyTrade } from "@/store/copyTradeSlice";
+import { useDispatch } from "react-redux";
 
 interface Transaction {
   $id: string;
@@ -67,6 +70,7 @@ interface FilterConfig {
 const TransactionHistory = () => {
   const { toast } = useToast();
   const { profile } = useProfile();
+  const dispatch = useDispatch();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [tokens, setTokens] = useState<Token[]>([]);
   const [sortConfig, setSortConfig] = useState<SortConfig>({
@@ -123,6 +127,8 @@ const TransactionHistory = () => {
 
     fetchTransactions();
     fetchTokens();
+    dispatch(clearStockOption());
+    dispatch(clearCopyTrade());
   }, [profile]);
 
   const handleSort = (key: keyof Transaction) => {

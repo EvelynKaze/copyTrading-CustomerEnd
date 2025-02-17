@@ -37,6 +37,8 @@ const TradeForm: React.FC<TradeFormProps> = ({ trade, portfolio, onTradePurchase
         const numericValue = parseFloat(value);
         if (isNaN(numericValue) || numericValue > portfolio) {
             setError("Amount cannot exceed total investment.");
+        } else if(isNaN(numericValue) || numericValue < trade.trade_min){
+            setError("Amount cannot be less than minimum trade");
         } else {
             setError("");
         }

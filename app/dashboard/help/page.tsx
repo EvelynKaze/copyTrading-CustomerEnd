@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Card,
@@ -19,9 +19,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { clearStockOption } from "@/store/stockOptionsSlice";
+import { clearCopyTrade } from "@/store/copyTradeSlice";
+import { useDispatch } from "react-redux";
 
 const Help = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const faqs = [
     {
@@ -40,6 +44,14 @@ const Help = () => {
         "You can contact our customer support team by emailing support@copytradingmarkets.com or by using the contact form at the bottom of this page. We aim to respond to all inquiries within 24 hours.",
     },
   ];
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearStockOption());
+      dispatch(clearCopyTrade());
+    };
+  }, []);
+
 
   return (
     <motion.div
