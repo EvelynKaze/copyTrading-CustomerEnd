@@ -63,6 +63,7 @@ const DepositFunds: React.FC<DepositFundsProps> = ({
   tranHash
 }) => {
   console.log("Tokens", cryptocurrencies)
+  console.log("Base Error", baseError)
 
   const { isConnected } = useAccount();
   const { toast } = useToast();
