@@ -191,9 +191,9 @@ const DepositFunds: React.FC<DepositFundsProps> = ({
                       isLoading={isLoading}
                       handleDepositClick={handleDepositClick}
                   />
-                  {baseError?.shortMessage && (
+                  {/* {baseError?.shortMessage && (
                     <p className="text-sm text-red-500">{baseError?.shortMessage}</p>
-                  )}
+                  )} */}
                     {tranHash && (
                         <TransactionHash hash={tranHash} />
                     )}
