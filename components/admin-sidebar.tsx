@@ -30,11 +30,11 @@ const navigation = [
     href: "/admin/manage",
     icon: "material-symbols:manage-accounts-outline-rounded",
   },
-  // {
-  //   name: "Audit Log",
-  //   href: "/admin/audit-log",
-  //   icon: "mdi:clipboard-text-clock-outline",
-  // },
+  {
+    name: "Send Emails",
+    href: "/admin/email",
+    icon: "mdi:email-outline",
+  },
   {
     name: "Support Requests",
     href: "/admin/support-requests",

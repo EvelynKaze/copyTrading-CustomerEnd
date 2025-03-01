@@ -1,7 +1,3 @@
-"use server";
-
-const API_URL = "/api/send-email";
-
 // Send Email
 export async function sendEmail(emailData: {
   from: string;
@@ -10,7 +6,7 @@ export async function sendEmail(emailData: {
   message: string;
 }) {
   try {
-    const response = await fetch(API_URL, {
+    const response = await fetch("/api/send-email", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +31,7 @@ export async function sendEmail(emailData: {
 // Fetch All Emails
 export async function fetchEmails() {
   try {
-    const response = await fetch(API_URL, {
+    const response = await fetch("/api/send-email", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -44,6 +40,7 @@ export async function fetchEmails() {
 
     const data = await response.json();
     return data.emails || [];
+    console.log("emails", data.emails)
   } catch (error) {
     console.error("Error fetching emails:", error);
     return [];

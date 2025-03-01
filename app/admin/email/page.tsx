@@ -31,7 +31,7 @@ import { fetchEmails, sendEmail } from "@/app/actions/email";
 export default function AdminEmailPage() {
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 640px)");
-  const [emails, setEmails] = useState<{ id: string; to: string; subject: string; status: string; createdAt: string }[]>([]);
+  const [emails, setEmails] = useState<{ $id: string; to: string; subject: string; status: string; createdAt: string }[]>([]);
 
   // const resend = new Resend("re_2ad7MSLv_CDv1hRgQzeqzmfnAMYraadfE");
   // Fetch all emails on page load
@@ -66,7 +66,7 @@ export default function AdminEmailPage() {
     const updatedEmail = {
       ...emailData,
       status: result.status,
-      id: result.id,
+      $id: result.id,
       createdAt: new Date().toISOString(),
     };
 
@@ -137,7 +137,7 @@ export default function AdminEmailPage() {
           <TableBody>
             {emails.length > 0 ? (
               emails.map((email) => (
-                <TableRow key={email.id}>
+                <TableRow key={email.$id}>
                   <TableCell>{email.to}</TableCell>
                   <TableCell>{email.subject}</TableCell>
                   <TableCell>
