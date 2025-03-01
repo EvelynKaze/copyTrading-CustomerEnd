@@ -16,12 +16,6 @@ export interface MarketTrend {
   marketCap: string;
 }
 
-export interface QuickTransferUser {
-  id: string;
-  name: string;
-  avatar: string;
-}
-
 export interface MonthlyStats {
   month: string;
   value: number;
