@@ -86,9 +86,6 @@ export default function UserDashboard() {
           fetchPortfolio={fetchUserPortfolio} 
         />
         {/*<CryptoExchange />*/}
-        {/* <Card className="p-6">
-          <QuickTransfer users={quickTransferUsers} />
-        </Card> */}
       </div>
     </div>
   );

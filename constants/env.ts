@@ -12,6 +12,7 @@ interface AppwriteConfig {
         kyc: string;
         support: string;
         deposits: string;
+        emails: string;
         withdrawals: string;
         transactions: string;
         stockOptions: string;
@@ -39,6 +40,7 @@ const ENV: AppwriteConfig = {
         profile: process.env.NEXT_PUBLIC_APPWRITE_PROFILE_COLLECTION_ID!,
         kyc: process.env.NEXT_PUBLIC_APPWRITE_KYC_COLLECTION_ID ?? '',
         support: process.env.NEXT_PUBLIC_APPWRITE_SUPPORT_COLLECTION_ID!,
+        emails: process.env.NEXT_PUBLIC_APPWRITE_ADMIN_EMAIL_COLLECTION_ID!,
         deposits: process.env.NEXT_PUBLIC_APPWRITE_DEPOSITS_COLLECTION_ID!,
         withdrawals: process.env.NEXT_PUBLIC_APPWRITE_WITHDRAWALS_COLLECTION_ID!,
         transactions: process.env.NEXT_PUBLIC_APPWRITE_TRANSACTIONS_COLLECTION_ID!,
