@@ -25,13 +25,14 @@ import { EmailForm, type EmailData } from "@/components/admin-email/EmailForm";
 import { Mail } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { fetchEmails, sendEmail } from "@/app/actions/email";
-// import { Resend } from "resend";
+import { sendEmail } from "@/app/actions/email";
+import { fetchEmails } from "@/app/actions/emails/get-all";
+import { sendWelcomeEmail } from "@/app/actions/emails/welcome";
 
 export default function AdminEmailPage() {
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useMediaQuery("(max-width: 640px)");
-  const [emails, setEmails] = useState<{ $id: string; to: string; subject: string; status: string; createdAt: string }[]>([]);
+  const [emails, setEmails] = useState<{ $id: string; to: string; subject: string; status: string; $createdAt: string }[]>([]);
 
   // const resend = new Resend("re_2ad7MSLv_CDv1hRgQzeqzmfnAMYraadfE");
   // Fetch all emails on page load
@@ -40,34 +41,24 @@ export default function AdminEmailPage() {
       const fetchedEmails = await fetchEmails();
       setEmails(fetchedEmails);
     }
+    // const result = await sendWelcomeEmail(email, name);
     loadEmails();
   }, []);
 
   const handleSubmit = async (emailData: EmailData) => {
     console.log("Sending Email:", emailData);
-    // try{
-    //   const data = await resend.emails.send({
-    //     from: emailData.from,
-    //     to: [emailData.to],
-    //     subject: emailData.subject,
-    //     html: `<p>${emailData.message}</p>`,
-    //   });
-    //   console.log("Successfully sent", data)
-    // } catch(err){
-    //   console.error("failed to send", err)
-    // }
-    
-
     // Send email and determine status
     const result = await sendEmail(emailData);
+    const welcomeResult = await sendWelcomeEmail(emailData.to, "Evelyn")
     console.log("Email Sent:", result);
+    console.log("Welcome Email Sent:", welcomeResult);
 
     // Update email status
     const updatedEmail = {
       ...emailData,
       status: result.status,
       $id: result.id,
-      createdAt: new Date().toISOString(),
+      $createdAt: new Date().toISOString(),
     };
 
     // // Update email list
@@ -77,6 +68,8 @@ export default function AdminEmailPage() {
   };
 
   const Content = <EmailForm onSubmit={handleSubmit} onCancel={() => setIsOpen(false)} />;
+
+  console.log("emails", emails)
 
   return (
     <div className="container mx-auto py-6 space-y-8">
@@ -148,7 +141,7 @@ export default function AdminEmailPage() {
                       {email.status}
                     </Badge>
                   </TableCell>
-                  <TableCell>{new Date(email.createdAt).toLocaleString()}</TableCell>
+                  <TableCell>{new Date(email.$createdAt).toLocaleString()}</TableCell>   
                 </TableRow>
               ))
             ) : (
