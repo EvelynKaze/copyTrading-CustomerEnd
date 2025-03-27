@@ -16,9 +16,9 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await resend.emails.send({
-      from: "Harry <harry@updates.copytradingmarkets.com>",
+      from: "Harry from CopyTradingMarkets <harry@copytradingmarkets.com>",
       to: [email],
-      subject: `Welcome to CopyTradingMarkets`,
+      subject: `Onboarding to CopyTradingMarkets`,
       react: Welcome({ name }),
     });
 
